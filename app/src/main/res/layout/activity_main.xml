@@ -13,7 +13,7 @@
         android:id="@+id/fb_login_id"
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true">
-
     </com.facebook.login.widget.LoginButton>
+
 
 </RelativeLayout>

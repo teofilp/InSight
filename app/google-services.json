@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "436004338627",
+    "firebase_url": "https://discovercluj-5f88f.firebaseio.com",
+    "project_id": "discovercluj-5f88f",
+    "storage_bucket": "discovercluj-5f88f.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:436004338627:android:120cf6ef3a0b1873",
+        "android_client_info": {
+          "package_name": "com.racoders.racodersproject"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "436004338627-f94nsd5t5qe79vaq6ka7nia68agp4i6v.apps.googleusercontent.com",
+          "client_type": 3
+        },
+        {
+          "client_id": "436004338627-f94nsd5t5qe79vaq6ka7nia68agp4i6v.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDEejrv1GIUFsT1tqOAXJ6Ju_a0SnwSDHc"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

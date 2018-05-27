@@ -1,0 +1,72 @@
+package com.racoders.racodersproject;
+
+import android.content.Intent;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.support.v7.app.AppCompatActivity;
+import android.os.Bundle;
+import android.util.Log;
+import android.view.View;
+import android.widget.Button;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import com.facebook.login.LoginManager;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+
+import java.util.HashMap;
+import java.util.Map;
+
+import static com.racoders.racodersproject.MainActivity.mAuth;
+
+public class loggedInUser extends AppCompatActivity {
+    public Button logOut;
+    private TextView username;
+    private TextView phoneNumber;
+    private TextView otherInfo;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_logged_in_user);
+        logOut = findViewById(R.id.logOut);
+        username = findViewById(R.id.username);
+        phoneNumber = findViewById(R.id.phoneNumber);
+        otherInfo = findViewById(R.id.otherInfo);
+
+        username.setText(MainActivity.user.getDisplayName());
+        phoneNumber.setText(MainActivity.user.getPhoneNumber());
+        otherInfo.setText(MainActivity.user.getEmail());
+
+        DatabaseReference dbref = FirebaseDatabase.getInstance().getReference();
+
+        Map<String, String> values = new HashMap<>();
+
+        values.put("id", mAuth.getCurrentUser().getUid());
+        values.put("name", username.getText().toString());
+        values.put("email", otherInfo.getText().toString());
+
+        dbref.push().setValue(values, new DatabaseReference.CompletionListener() {
+            @Override
+            public void onComplete(@Nullable DatabaseError databaseError, @NonNull DatabaseReference databaseReference) {
+                if(databaseError == null){
+                    Toast.makeText(loggedInUser.this, "Successfully updated info", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+
+    }
+    public void signOut(View v) {
+        Log.i("info about user", mAuth.getCurrentUser().getDisplayName() + " " + mAuth.getCurrentUser().getPhoneNumber());
+        mAuth.signOut();
+        LoginManager.getInstance().logOut();
+        logOut.setEnabled(false);
+        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+        startActivity(intent);
+        MainActivity.user = null;
+
+
+    }
+}
