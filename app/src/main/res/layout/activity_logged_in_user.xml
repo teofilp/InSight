@@ -29,4 +29,8 @@
         android:layout_below="@+id/phoneNumber"
         android:layout_centerHorizontal="true"
         android:id="@+id/otherInfo"/>
+    <ImageView
+        android:layout_width="300dp"
+        android:layout_height="300dp"
+        android:id="@+id/profileImage"/>
 </RelativeLayout>

@@ -48,23 +48,6 @@ public class MainActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
         callbackManager.onActivityResult(requestCode, resultCode, data);
     }
-    public void createKeyHash(){
-        try {
-            PackageInfo info = getPackageManager().getPackageInfo(
-                    "com.racoders.racodersproject",
-                    PackageManager.GET_SIGNATURES);
-            for (Signature signature : info.signatures) {
-                MessageDigest md = MessageDigest.getInstance("SHA");
-                md.update(signature.toByteArray());
-                Log.d("KeyHash:", Base64.encodeToString(md.digest(), Base64.DEFAULT));
-            }
-        } catch (PackageManager.NameNotFoundException e) {
-
-        } catch (NoSuchAlgorithmException e) {
-
-        }
-    }
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,9 +55,10 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         user = FirebaseAuth.getInstance().getCurrentUser();
         if(user!=null)
-            toLoggedIntActivity();
+            toLoggedInActivity();
+
 //        createKeyHash();
-        setTitle("Login");
+
         loginButton = findViewById(R.id.fb_login_id);
 
         callbackManager = CallbackManager.Factory.create();
@@ -105,13 +89,26 @@ public class MainActivity extends AppCompatActivity {
 
         Toast.makeText(this, "Welcome to our test app", Toast.LENGTH_SHORT).show();
 
-
-        //https://discovercluj-5f88f.firebaseapp.com/__/auth/handler
-
     }
+    public void createKeyHash(){
+        try {
+            PackageInfo info = getPackageManager().getPackageInfo(
+                    "com.racoders.racodersproject",
+                    PackageManager.GET_SIGNATURES);
+            for (Signature signature : info.signatures) {
+                MessageDigest md = MessageDigest.getInstance("SHA");
+                md.update(signature.toByteArray());
+                Log.d("KeyHash:", Base64.encodeToString(md.digest(), Base64.DEFAULT));
+            }
+        } catch (PackageManager.NameNotFoundException e) {
+
+        } catch (NoSuchAlgorithmException e) {
+
+        }
+    }
+
     private void handleFacebookAccessToken(AccessToken token) {
         Log.d("Report", "handleFacebookAccessToken:" + token);
-
 
         AuthCredential credential = FacebookAuthProvider.getCredential(token.getToken());
         mAuth.signInWithCredential(credential)
@@ -122,25 +119,19 @@ public class MainActivity extends AppCompatActivity {
                             // Sign in success, update UI with the signed-in user's information
                             Log.d("Report", "signInWithCredential:success");
                             user = mAuth.getCurrentUser();
-                            toLoggedIntActivity();
-
+                            toLoggedInActivity();
                         } else {
                             // If sign in fails, display a message to the user.
                             Log.w("Report", "signInWithCredential:failure", task.getException());
                             Toast.makeText(MainActivity.this, "Authentication failed.",
                                     Toast.LENGTH_SHORT).show();
-
                         }
-
-
                     }
                 });
     }
-    private void toLoggedIntActivity(){
+    private void toLoggedInActivity(){
         Intent intent = new Intent(getApplicationContext(), loggedInUser.class);
         startActivity(intent);
     }
-
-
 
 }
