@@ -43,8 +43,6 @@ public class loggedInUser extends AppCompatActivity {
     private ProfilePictureView profileImage;
     private User currentUser;
 
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -91,8 +89,6 @@ public class loggedInUser extends AppCompatActivity {
         };
         dbref.addListenerForSingleValueEvent(eventListener);
 
-
-
     }
     public void signOut(View v) {
 
@@ -121,7 +117,6 @@ public class loggedInUser extends AppCompatActivity {
         emailString = emailString.replace('.', '_');
 
         currentUser.setEmail(emailString);
-
         currentUser.setDisplayName(MainActivity.user.getDisplayName());
         currentUser.setSocialID(MainActivity.FbUserID);
     }
