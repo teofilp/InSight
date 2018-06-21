@@ -35,6 +35,7 @@ import com.google.firebase.database.FirebaseDatabase;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 public class MainActivity extends AppCompatActivity {
@@ -42,6 +43,9 @@ public class MainActivity extends AppCompatActivity {
     private CallbackManager callbackManager;
     public static FirebaseAuth mAuth;
     public static FirebaseUser user;
+    public static String FbUserID;
+    public static User currentUser;
+
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -54,13 +58,15 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         user = FirebaseAuth.getInstance().getCurrentUser();
+
+
         if(user!=null)
             toLoggedInActivity();
 
 //        createKeyHash();
 
         loginButton = findViewById(R.id.fb_login_id);
-
+        loginButton.setReadPermissions(Arrays.asList("email", "public_profile", "user_birthday", "user_friends"));
         callbackManager = CallbackManager.Factory.create();
 
         mAuth = FirebaseAuth.getInstance();
@@ -68,8 +74,11 @@ public class MainActivity extends AppCompatActivity {
         loginButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
             @Override
             public void onSuccess(LoginResult loginResult) {
+
+
                 Log.i("result", "Successful" + loginResult.getAccessToken().getUserId()
                 + " " + loginResult.getAccessToken().getToken());
+                FbUserID = AccessToken.getCurrentAccessToken().getUserId();
                 handleFacebookAccessToken(loginResult.getAccessToken());
 
             }
@@ -120,6 +129,7 @@ public class MainActivity extends AppCompatActivity {
                             Log.d("Report", "signInWithCredential:success");
                             user = mAuth.getCurrentUser();
                             toLoggedInActivity();
+
                         } else {
                             // If sign in fails, display a message to the user.
                             Log.w("Report", "signInWithCredential:failure", task.getException());
@@ -133,5 +143,6 @@ public class MainActivity extends AppCompatActivity {
         Intent intent = new Intent(getApplicationContext(), loggedInUser.class);
         startActivity(intent);
     }
+
 
 }

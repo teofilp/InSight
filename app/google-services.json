@@ -15,6 +15,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "436004338627-dbso4ub11enmquk4a8pbkc4dd6okr91h.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.racoders.racodersproject",
+            "certificate_hash": "50bb10398964287588a7bcc9691cfc540c6e6953"
+          }
+        },
+        {
           "client_id": "436004338627-f94nsd5t5qe79vaq6ka7nia68agp4i6v.apps.googleusercontent.com",
           "client_type": 3
         },
@@ -33,8 +41,13 @@
           "status": 1
         },
         "appinvite_service": {
-          "status": 1,
-          "other_platform_oauth_client": []
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "436004338627-f94nsd5t5qe79vaq6ka7nia68agp4i6v.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         },
         "ads_service": {
           "status": 2
