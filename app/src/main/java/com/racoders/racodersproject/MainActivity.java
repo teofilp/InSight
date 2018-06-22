@@ -44,7 +44,7 @@ public class MainActivity extends AppCompatActivity {
     public static FirebaseAuth mAuth;
     public static FirebaseUser user;
     public static String FbUserID;
-    public static User currentUser;
+
 
 
     @Override

@@ -32,7 +32,7 @@ import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 
-import static com.racoders.racodersproject.MainActivity.currentUser;
+
 import static com.racoders.racodersproject.MainActivity.mAuth;
 import static com.racoders.racodersproject.MainActivity.user;
 
