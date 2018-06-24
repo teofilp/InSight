@@ -57,13 +57,6 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        user = FirebaseAuth.getInstance().getCurrentUser();
-
-
-        if(user!=null)
-            toLoggedInActivity();
-
-//        createKeyHash();
 
         loginButton = findViewById(R.id.fb_login_id);
         loginButton.setReadPermissions(Arrays.asList("email", "public_profile", "user_birthday", "user_friends"));
@@ -99,22 +92,6 @@ public class MainActivity extends AppCompatActivity {
         Toast.makeText(this, "Welcome to our test app", Toast.LENGTH_SHORT).show();
 
     }
-    public void createKeyHash(){
-        try {
-            PackageInfo info = getPackageManager().getPackageInfo(
-                    "com.racoders.racodersproject",
-                    PackageManager.GET_SIGNATURES);
-            for (Signature signature : info.signatures) {
-                MessageDigest md = MessageDigest.getInstance("SHA");
-                md.update(signature.toByteArray());
-                Log.d("KeyHash:", Base64.encodeToString(md.digest(), Base64.DEFAULT));
-            }
-        } catch (PackageManager.NameNotFoundException e) {
-
-        } catch (NoSuchAlgorithmException e) {
-
-        }
-    }
 
     private void handleFacebookAccessToken(AccessToken token) {
         Log.d("Report", "handleFacebookAccessToken:" + token);
@@ -142,6 +119,14 @@ public class MainActivity extends AppCompatActivity {
     private void toLoggedInActivity(){
         Intent intent = new Intent(getApplicationContext(), loggedInUser.class);
         startActivity(intent);
+    }
+    @Override
+    public void onStart(){
+        super.onStart();
+        user = mAuth.getCurrentUser();
+        if(user!=null){
+            toLoggedInActivity();
+        }
     }
 
 
