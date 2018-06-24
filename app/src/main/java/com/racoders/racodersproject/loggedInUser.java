@@ -19,6 +19,7 @@ import android.widget.Toast;
 import com.facebook.Profile;
 import com.facebook.login.LoginManager;
 import com.facebook.login.widget.ProfilePictureView;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.UserInfo;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -33,9 +34,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 
-import static com.racoders.racodersproject.MainActivity.mAuth;
-import static com.racoders.racodersproject.MainActivity.user;
-
 public class loggedInUser extends AppCompatActivity {
 
 
@@ -45,6 +43,9 @@ public class loggedInUser extends AppCompatActivity {
         setContentView(R.layout.activity_logged_in_user);
 
     }
-
+    public void signOut(View view){
+        FirebaseAuth.getInstance().signOut();
+        startActivity(new Intent(getApplicationContext(), MainActivity.class));
+    }
 
 }
