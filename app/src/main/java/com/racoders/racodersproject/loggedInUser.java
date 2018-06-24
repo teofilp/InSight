@@ -37,88 +37,13 @@ import static com.racoders.racodersproject.MainActivity.mAuth;
 import static com.racoders.racodersproject.MainActivity.user;
 
 public class loggedInUser extends AppCompatActivity {
-    public Button logOut;
-    private TextView username;
-    private TextView email;
-    private ProfilePictureView profileImage;
-    private User currentUser;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_logged_in_user);
 
-        setCurrentUserInfo();
-
-        logOut = findViewById(R.id.logOut);
-        username = findViewById(R.id.username);
-        email = findViewById(R.id.email);
-        profileImage = findViewById(R.id.profileImage);
-
-        final DatabaseReference dbref = FirebaseDatabase.getInstance().getReference().child("Users").child(currentUser.getEmail());
-        ValueEventListener eventListener = new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                if (!dataSnapshot.exists()) {
-                    dbref.setValue(currentUser, new DatabaseReference.CompletionListener() {
-                        @Override
-                        public void onComplete(@Nullable DatabaseError databaseError, @NonNull DatabaseReference databaseReference) {
-                            if (databaseError == null) {
-                                Toast.makeText(loggedInUser.this, "Successfully updated info", Toast.LENGTH_SHORT).show();
-                                setCurrentUserInfo();
-                                updateUI(currentUser.getDisplayName(), currentUser.getEmail(), currentUser.getSocialID());
-
-                            }else{
-                                Log.i("error: ", databaseError.getMessage());
-                            }
-                        }
-                    });
-                }
-                else{
-                    currentUser = dataSnapshot.getValue(User.class);
-                    profileImage.setProfileId(currentUser.getSocialID());
-                    updateUI(currentUser.getDisplayName(), currentUser.getEmail(), currentUser.getSocialID());
-                    Log.i("user info", currentUser.getDisplayName()+ " " + currentUser.getSocialID() + " " + currentUser.getEmail());
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        };
-        dbref.addListenerForSingleValueEvent(eventListener);
-
-    }
-    public void signOut(View v) {
-
-        mAuth.signOut();
-        LoginManager.getInstance().logOut();
-        logOut.setEnabled(false);
-        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-        startActivity(intent);
-    }
-    public void updateUI(String displayName, String emailString, String socialID){
-        username.setText(displayName);
-        email.setText(emailString);
-        profileImage.setProfileId(socialID);
-    }
-    public void setCurrentUserInfo(){
-        currentUser = new User();
-        String emailString="N/A";
-
-        if(MainActivity.user!=null){
-            for(UserInfo profile: MainActivity.user.getProviderData()){
-                emailString = profile.getEmail();
-            }
-        }
-
-        emailString = emailString.replace('@', '_');
-        emailString = emailString.replace('.', '_');
-
-        currentUser.setEmail(emailString);
-        currentUser.setDisplayName(MainActivity.user.getDisplayName());
-        currentUser.setSocialID(MainActivity.FbUserID);
     }
 
 
