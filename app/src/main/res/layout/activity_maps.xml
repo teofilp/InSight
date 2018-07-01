@@ -16,5 +16,6 @@
         android:layout_height="wrap_content"
         android:src="@drawable/location_marker"
         android:background="#0000"
-        android:onClick="moveCameraToMe"/>
+        android:onClick="moveCameraToMe"
+        android:id="@+id/locationTrackerButton"/>
 </RelativeLayout>

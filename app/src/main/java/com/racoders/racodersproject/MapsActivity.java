@@ -14,6 +14,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
+import android.widget.ImageButton;
 import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdate;
@@ -31,6 +32,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     LocationManager locationManager;
     LocationListener locationListener;
     LatLng myLocation;
+    ImageButton locationTrackerButton;
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
@@ -56,12 +58,20 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
+
+        locationTrackerButton = findViewById(R.id.locationTrackerButton);
+        locationTrackerButton.setEnabled(false);
         locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
 
         locationListener = new LocationListener() {
             @Override
             public void onLocationChanged(Location location) {
                 Log.i("Location", location.toString());
+                if(!locationTrackerButton.isEnabled())
+                    locationTrackerButton.setEnabled(true);
+                else{
+                    locationTrackerButton.setEnabled(false);
+                }
                 myLocation = new LatLng(location.getLatitude(), location.getLongitude());
                 mMap.clear();
                 mMap.addMarker(new MarkerOptions().position(myLocation).title("You").icon(BitmapDescriptorFactory.fromResource(R.drawable.you_marker)));
@@ -110,6 +120,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     }
     public void moveCameraToMe(View view){
+
         mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(myLocation, 15));
 
     }
