@@ -45,7 +45,12 @@ public class MainActivity extends AppCompatActivity {
     public static FirebaseUser user;
     public static String FbUserID;
 
-
+    public void toLocalRegister(View view){
+        startActivity(new Intent(getApplicationContext(), localRegisterActivity.class));
+    }
+    public void toLocalSignIn(View view){
+        startActivity(new Intent(getApplicationContext(), localSignInActivity.class));
+    }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {

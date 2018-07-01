@@ -15,5 +15,24 @@
         android:layout_centerVertical="true">
     </com.facebook.login.widget.LoginButton>
 
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/registerButton"
+        android:text="Create local account"
+        android:layout_below="@+id/fb_login_id"
+        android:layout_marginTop="40dp"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:onClick="toLocalRegister"/>
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/registerButton"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="40dp"
+        android:text="Sign in with local account"
+        android:onClick="toLocalSignIn"/>
+
 
 </RelativeLayout>

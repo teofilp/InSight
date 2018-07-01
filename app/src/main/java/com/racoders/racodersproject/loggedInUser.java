@@ -66,6 +66,7 @@ public class loggedInUser extends AppCompatActivity {
                             if (databaseError == null) {
                                 Toast.makeText(loggedInUser.this, "Successfully updated info", Toast.LENGTH_SHORT).show();
                                 setCurrentUserInfo();
+                                profileImage.setProfileId(currentUser.getSocialID());
                                 updateUI(currentUser.getDisplayName(), currentUser.getEmail(), currentUser.getSocialID());
 
                             }else{
