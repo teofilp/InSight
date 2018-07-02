@@ -44,6 +44,7 @@
 
         <activity
             android:name=".MapsActivity"
+<<<<<<< HEAD
             android:label="@string/title_activity_maps">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -51,6 +52,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+=======
+            android:label="@string/title_activity_maps"></activity>
+>>>>>>> 9c5c3a56c139b4d5b9c4d11e39f67bd83544ddde
     </application>
 
 </manifest>
