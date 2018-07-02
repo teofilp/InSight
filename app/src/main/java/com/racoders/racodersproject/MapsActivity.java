@@ -76,7 +76,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 mMap.clear();
                 mMap.addMarker(new MarkerOptions().position(myLocation).title("You").icon(BitmapDescriptorFactory.fromResource(R.drawable.you_marker)));
 
-
             }
 
             @Override
@@ -120,8 +119,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     }
     public void moveCameraToMe(View view){
-
         mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(myLocation, 15));
-
     }
 }

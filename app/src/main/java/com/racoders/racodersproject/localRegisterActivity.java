@@ -70,6 +70,6 @@ public class localRegisterActivity extends AppCompatActivity {
     public void onStart(){
         super.onStart();
         if(FirebaseAuth.getInstance().getCurrentUser()!=null)
-            startActivity(new Intent(getApplicationContext(), loggedInUser.class));
+            startActivity(new Intent(getApplicationContext(), MapsActivity.class));
     }
 }

@@ -42,11 +42,14 @@ public class loggedInUser extends AppCompatActivity {
     private TextView email;
     private ProfilePictureView profileImage;
     private User currentUser;
+    private Button buttonMap;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_logged_in_user);
+
+
 
 //        setCurrentUserInfo();
 //
@@ -90,6 +93,10 @@ public class loggedInUser extends AppCompatActivity {
 //        };
 //        dbref.addListenerForSingleValueEvent(eventListener);
 
+    }
+    public void openMap(){
+        Intent intent = new Intent(this, MapsActivity.class);
+        startActivity(intent);
     }
     public void signOut(View v) {
         mAuth.signOut();

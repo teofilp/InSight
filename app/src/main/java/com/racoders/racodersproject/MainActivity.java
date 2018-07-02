@@ -122,7 +122,7 @@ public class MainActivity extends AppCompatActivity {
                 });
     }
     private void toLoggedInActivity(){
-        Intent intent = new Intent(getApplicationContext(), loggedInUser.class);
+        Intent intent = new Intent(getApplicationContext(), MapsActivity.class);
         startActivity(intent);
     }
     @Override
