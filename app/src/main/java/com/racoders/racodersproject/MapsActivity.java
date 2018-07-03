@@ -38,10 +38,12 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import static com.racoders.racodersproject.MainActivity.mAuth;
 
-public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
+public class MapsActivity extends FragmentActivity implements OnMapReadyCallback,
+        GoogleMap.OnMarkerClickListener{
 
     private GoogleMap mMap;
     LocationManager locationManager;
@@ -52,6 +54,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     ImageButton imageButton;
     int contor=0;
     Marker me;
+    HashMap<Marker, String> mMarkers = new HashMap<>();
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
@@ -176,7 +179,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                         if(child!=null){
                             FavoriteLocation favoriteLocation = child.getValue(FavoriteLocation.class);
                             LatLng myLocation = new LatLng(favoriteLocation.getLatitude(), favoriteLocation.getLongitude());
-                            mMap.addMarker(new MarkerOptions().position(myLocation).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE)));
+                            Marker myMarker = mMap.addMarker(new MarkerOptions().position(myLocation).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE)));
+                            mMarkers.put(myMarker, child.getKey());
+                            System.out.println("marker key" + child.getKey());
                         }else{
                             System.out.println("something went very wrong");
                         }
@@ -211,4 +216,13 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         startActivity(intent);
 
     }
+    @Override
+    public boolean onMarkerClick(Marker marker){
+
+        String markerId = mMarkers.get(marker);
+        startActivity(new Intent(getApplicationContext(), MarkerDetailsPopUpWindow.class).putExtra("id", markerId));
+
+        return true;
+    }
+
 }
