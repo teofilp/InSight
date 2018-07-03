@@ -25,30 +25,38 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
+import java.util.ArrayList;
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
 
     private GoogleMap mMap;
     LocationManager locationManager;
     LocationListener locationListener;
-    LatLng myLocation;
-    ImageButton locationTrackerButton;
+    final int LOCATION_REQUEST_CODE = 1;
+    ArrayList<User> arrayList = new ArrayList<>();
+
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if(grantResults.length>0){
+
+        if(grantResults.length > 0){
 
             if(grantResults[0] == PackageManager.PERMISSION_GRANTED){
-                if(ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED)
-                locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 10000, 4, locationListener);
-
+                if(ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED){
+                    locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 2, locationListener);
+                }
             }else{
-                Toast.makeText(this, "", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "We need your location for..", Toast.LENGTH_SHORT).show();
                 ActivityCompat.requestPermissions(this, new String[] {Manifest.permission.ACCESS_FINE_LOCATION}, 1);
             }
         }
     }
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -58,23 +66,15 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
-
-        locationTrackerButton = findViewById(R.id.locationTrackerButton);
-        locationTrackerButton.setEnabled(false);
-        locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
+        locationManager =(LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
 
         locationListener = new LocationListener() {
             @Override
             public void onLocationChanged(Location location) {
-                Log.i("Location", location.toString());
-                if(!locationTrackerButton.isEnabled())
-                    locationTrackerButton.setEnabled(true);
-                else{
-                    locationTrackerButton.setEnabled(false);
-                }
-                myLocation = new LatLng(location.getLatitude(), location.getLongitude());
+
+                LatLng myLocation = new LatLng(location.getLatitude(), location.getLongitude());
                 mMap.clear();
-                mMap.addMarker(new MarkerOptions().position(myLocation).title("You").icon(BitmapDescriptorFactory.fromResource(R.drawable.you_marker)));
+                mMap.addMarker(new MarkerOptions().position(myLocation).title("You"));
 
             }
 
@@ -93,15 +93,45 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
             }
         };
+
         if(ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED){
-
-            ActivityCompat.requestPermissions(this, new String[] {Manifest.permission.ACCESS_FINE_LOCATION}, 1);
-
+            ActivityCompat.requestPermissions(this, new String[] {Manifest.permission.ACCESS_FINE_LOCATION}, LOCATION_REQUEST_CODE);
         }else{
-            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 100, 2, locationListener);
+            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 2, locationListener);
         }
 
-    }
+
+
+
+
+
+
+        DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference().child("Users");
+        mDatabase.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                arrayList.clear();
+
+                for(DataSnapshot child : dataSnapshot.getChildren()){
+                    User user = child.getValue(User.class);
+                    arrayList.add(user);
+
+                }
+                Log.i("size", Integer.toString(arrayList.size()));
+                for(User s : arrayList){
+                    Log.i("user info: ", s.getDisplayName() + " " + s.getEmail() + " " + s.getSocialID());
+                }
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
+
+}
 
 
     /**
@@ -115,10 +145,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
      */
     @Override
     public void onMapReady(GoogleMap googleMap) {
+        LatLng latLng = new LatLng(45.4324242, 26.4343242);
         mMap = googleMap;
-
+        mMap.addMarker(new MarkerOptions().position(latLng).title("You"));
     }
-    public void moveCameraToMe(View view){
-        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(myLocation, 15));
-    }
+//    public void moveCameraToMe(View view){
+//        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(myLocation, 15));
+//    }
 }

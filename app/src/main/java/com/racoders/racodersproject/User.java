@@ -11,15 +11,15 @@ public class User {
     private String email;
     private String userName;
     private String password;
-    private String socialID;
+    private Long socialID;
 
     public User(){
 
     }
-    public String getSocialID(){
+    public Long getSocialID(){
         return socialID;
     }
-    public void setSocialID(String value){
+    public void setSocialID(Long value){
         socialID = value;
     }
     public String getDisplayName(){
