@@ -2,11 +2,13 @@ package com.racoders.racodersproject;
 
 import android.Manifest;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
@@ -17,6 +19,7 @@ import android.view.View;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
+import com.facebook.login.LoginManager;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -24,7 +27,10 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -33,13 +39,19 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 
+import static com.racoders.racodersproject.MainActivity.mAuth;
+
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
 
     private GoogleMap mMap;
     LocationManager locationManager;
     LocationListener locationListener;
     final int LOCATION_REQUEST_CODE = 1;
+    LatLng myLocation;
     ArrayList<User> arrayList = new ArrayList<>();
+    ImageButton imageButton;
+    int contor=0;
+    Marker me;
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
@@ -66,16 +78,24 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
+        imageButton = findViewById(R.id.locationTrackerButton);
+        imageButton.setEnabled(false);
         locationManager =(LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
 
         locationListener = new LocationListener() {
             @Override
             public void onLocationChanged(Location location) {
-
-                LatLng myLocation = new LatLng(location.getLatitude(), location.getLongitude());
-                mMap.clear();
-                mMap.addMarker(new MarkerOptions().position(myLocation).title("You"));
-
+                if(imageButton.isEnabled()==false){
+                    imageButton.setEnabled(true);
+                }
+                myLocation = new LatLng(location.getLatitude(), location.getLongitude());
+                if(me!=null)
+                    me.remove();
+                me = mMap.addMarker(new MarkerOptions().position(myLocation).title("You").icon(BitmapDescriptorFactory.defaultMarker()));
+                if(contor==0){
+                    mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(myLocation, 16));
+                    contor++;
+                }
             }
 
             @Override
@@ -147,9 +167,48 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     public void onMapReady(GoogleMap googleMap) {
         LatLng latLng = new LatLng(45.4324242, 26.4343242);
         mMap = googleMap;
-        mMap.addMarker(new MarkerOptions().position(latLng).title("You"));
+
+        DatabaseReference myLocation = FirebaseDatabase.getInstance().getReference().child("FavoriteLocations").child(FirebaseAuth.getInstance().getUid());
+        myLocation.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for(DataSnapshot child : dataSnapshot.getChildren()){
+                        if(child!=null){
+                            FavoriteLocation favoriteLocation = child.getValue(FavoriteLocation.class);
+                            LatLng myLocation = new LatLng(favoriteLocation.getLatitude(), favoriteLocation.getLongitude());
+                            mMap.addMarker(new MarkerOptions().position(myLocation).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE)));
+                        }else{
+                            System.out.println("something went very wrong");
+                        }
+                }
+
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
+
+
+//        mMap.addMarker(new MarkerOptions().position(latLng).title("You"));
     }
-//    public void moveCameraToMe(View view){
-//        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(myLocation, 15));
-//    }
+    public void moveCameraToMe(View view){
+        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(myLocation, 16));
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        contor = 0;
+    }
+    public void signOut(View view){
+        FirebaseAuth.getInstance().signOut();
+        LoginManager.getInstance().logOut();
+        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+        startActivity(intent);
+
+    }
 }

@@ -30,7 +30,7 @@ public class localSignInActivity extends AppCompatActivity {
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if(task.isSuccessful()){
                             user = mAuth.getCurrentUser();
-                            startActivity(new Intent(getApplicationContext(), loggedInUser.class));
+                            startActivity(new Intent(getApplicationContext(), MapsActivity.class));
 
                         }else{
                             Toast.makeText(localSignInActivity.this, "Something went wrong, check your credentials again or try later", Toast.LENGTH_LONG).show();
