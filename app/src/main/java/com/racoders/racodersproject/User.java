@@ -3,6 +3,7 @@ package com.racoders.racodersproject;
 import java.net.UnknownServiceException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -12,6 +13,7 @@ public class User {
     private String userName;
     private String password;
     private Long socialID;
+    private ArrayList<Integer> myFavPlaces = new ArrayList<>();
 
     public User(){
 
@@ -53,4 +55,11 @@ public class User {
         this.password = password;
     }
 
+    public void addFavPlace(Integer i){
+        myFavPlaces.add(i);
+    }
+
+    public ArrayList<Integer> getMyFavPlaces() {
+        return myFavPlaces;
+    }
 }

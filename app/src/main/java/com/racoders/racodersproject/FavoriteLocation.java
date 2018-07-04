@@ -1,12 +1,41 @@
 package com.racoders.racodersproject;
 
 public class FavoriteLocation {
+    private String title;
+    private String description;
     private double latitude;
     private double longitude;
+    private String adress;
 
     public FavoriteLocation(){
 
     }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public String getAdress() {
+        return adress;
+    }
+
+    public void setAdress(String adress) {
+        this.adress = adress;
+    }
+
+
 
     public FavoriteLocation(double latitude, double longitude) {
         this.latitude = latitude;

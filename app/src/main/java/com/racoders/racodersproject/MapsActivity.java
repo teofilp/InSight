@@ -7,6 +7,7 @@ import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.provider.ContactsContract;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
@@ -35,10 +36,12 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.GenericTypeIndicator;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import static com.racoders.racodersproject.MainActivity.mAuth;
 
@@ -50,7 +53,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     LocationListener locationListener;
     final int LOCATION_REQUEST_CODE = 1;
     LatLng myLocation;
-    ArrayList<User> arrayList = new ArrayList<>();
+    ArrayList<Integer> arrayList = new ArrayList<>();
     ImageButton imageButton;
     int contor=0;
     Marker me;
@@ -128,30 +131,30 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
 
 
-
-        DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference().child("Users");
-        mDatabase.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                arrayList.clear();
-
-                for(DataSnapshot child : dataSnapshot.getChildren()){
-                    User user = child.getValue(User.class);
-                    arrayList.add(user);
-
-                }
-                Log.i("size", Integer.toString(arrayList.size()));
-                for(User s : arrayList){
-                    Log.i("user info: ", s.getDisplayName() + " " + s.getEmail() + " " + s.getSocialID());
-                }
-
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
+// GET MULTIPLE USERS FROM THE DB
+//        DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference().child("Users");
+//        mDatabase.addValueEventListener(new ValueEventListener() {
+//            @Override
+//            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+//                arrayList.clear();
+//
+//                for(DataSnapshot child : dataSnapshot.getChildren()){
+//                    User user = child.getValue(User.class);
+//                    arrayList.add(user);
+//
+//                }
+//                Log.i("size", Integer.toString(arrayList.size()));
+//                for(User s : arrayList){
+//                    Log.i("user info: ", s.getDisplayName() + " " + s.getEmail() + " " + s.getSocialID());
+//                }
+//
+//            }
+//
+//            @Override
+//            public void onCancelled(@NonNull DatabaseError databaseError) {
+//
+//            }
+//        });
 
 
 }
@@ -170,24 +173,42 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     public void onMapReady(GoogleMap googleMap) {
         LatLng latLng = new LatLng(45.4324242, 26.4343242);
         mMap = googleMap;
+        mMap.setOnMarkerClickListener(this);
 
-        DatabaseReference myLocation = FirebaseDatabase.getInstance().getReference().child("FavoriteLocations").child(FirebaseAuth.getInstance().getUid());
-        myLocation.addValueEventListener(new ValueEventListener() {
+        DatabaseReference myLocations = FirebaseDatabase.getInstance().getReference().child("FavoriteLocations").child(FirebaseAuth.getInstance().getUid()).child("0");
+        myLocations.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                for(DataSnapshot child : dataSnapshot.getChildren()){
-                        if(child!=null){
-                            FavoriteLocation favoriteLocation = child.getValue(FavoriteLocation.class);
-                            LatLng myLocation = new LatLng(favoriteLocation.getLatitude(), favoriteLocation.getLongitude());
-                            Marker myMarker = mMap.addMarker(new MarkerOptions().position(myLocation).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE)));
-                            mMarkers.put(myMarker, child.getKey());
-                            System.out.println("marker key" + child.getKey());
-                        }else{
-                            System.out.println("something went very wrong");
-                        }
+                if(dataSnapshot.exists()){
+                    String myString = dataSnapshot.getValue(String.class);
+                    System.out.println(myString);
+                    String[] s = myString.split("%");
+
+                    for(String str : s){
+
+                        DatabaseReference dbref = FirebaseDatabase.getInstance().getReference().child("POIs").child(str);
+                        dbref.addListenerForSingleValueEvent(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                if(dataSnapshot.exists()){
+
+                                    FavoriteLocation favLocation = dataSnapshot.getValue(FavoriteLocation.class);
+                                    Marker marker = mMap.addMarker(new MarkerOptions()
+                                            .position(new LatLng(favLocation.getLatitude(), favLocation.getLongitude()))
+                                            .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE)));
+                                    mMarkers.put(marker, dataSnapshot.getKey());
+
+                                }
+                            }
+
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                            }
+                        });
+
+                    }
                 }
-
-
             }
 
             @Override
@@ -195,6 +216,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
             }
         });
+
+
+
+
 
 
 
@@ -218,10 +243,13 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     }
     @Override
     public boolean onMarkerClick(Marker marker){
-
-        String markerId = mMarkers.get(marker);
-        startActivity(new Intent(getApplicationContext(), MarkerDetailsPopUpWindow.class).putExtra("id", markerId));
-
+        if(!marker.equals(me)) {
+            System.out.println("markerCLicked");
+            String markerId = mMarkers.get(marker);
+            startActivity(new Intent(getApplicationContext(), MarkerDetailsPopUpWindow.class).putExtra("id", markerId));
+        }else{
+            Toast.makeText(this, "This is your location", Toast.LENGTH_SHORT).show();
+        }
         return true;
     }
 
