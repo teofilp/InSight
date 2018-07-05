@@ -13,7 +13,7 @@ public class User {
     private String userName;
     private String password;
     private Long socialID;
-    private ArrayList<Integer> myFavPlaces = new ArrayList<>();
+    private String myFavPlaces;
 
     public User(){
 
@@ -55,11 +55,11 @@ public class User {
         this.password = password;
     }
 
-    public void addFavPlace(Integer i){
-        myFavPlaces.add(i);
+    public void addFavPlace(String i){
+        myFavPlaces+=i;
     }
 
-    public ArrayList<Integer> getMyFavPlaces() {
+    public String getMyFavPlaces() {
         return myFavPlaces;
     }
 }

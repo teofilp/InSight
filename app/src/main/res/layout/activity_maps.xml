@@ -25,4 +25,12 @@
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
         android:onClick="signOut"/>
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/markersState"
+        android:text="All Locations"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:onClick="changeState"/>
 </RelativeLayout>

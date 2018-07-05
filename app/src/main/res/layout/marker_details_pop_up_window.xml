@@ -27,6 +27,16 @@
         android:layout_margin="20dp"
         android:id="@+id/description"
         android:text=""/>
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Add to favorites"
+        android:id="@+id/toggleFavoriteButton"
+        android:layout_below="@+id/description"
+        android:layout_centerHorizontal="true"
+        android:onClick="toggleFavorite"
+        android:background="#0f0"
+        android:textColor="#fff"/>
 
 </RelativeLayout>
 

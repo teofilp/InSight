@@ -1,13 +1,13 @@
 package com.racoders.racodersproject;
 
-public class FavoriteLocation {
+public class PointOfInterest {
     private String title;
     private String description;
     private double latitude;
     private double longitude;
     private String adress;
 
-    public FavoriteLocation(){
+    public PointOfInterest(){
 
     }
 
@@ -37,7 +37,7 @@ public class FavoriteLocation {
 
 
 
-    public FavoriteLocation(double latitude, double longitude) {
+    public PointOfInterest(double latitude, double longitude) {
         this.latitude = latitude;
         this.longitude = longitude;
     }
