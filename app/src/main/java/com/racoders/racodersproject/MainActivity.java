@@ -12,6 +12,7 @@ import android.util.Base64;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.Toast;
 
 import com.facebook.AccessToken;
@@ -39,11 +40,14 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 public class MainActivity extends AppCompatActivity {
-    public LoginButton loginButton;
+    private com.facebook.login.LoginManager FacebookLoginManager;
     private CallbackManager callbackManager;
     public static FirebaseAuth mAuth;
     public static FirebaseUser user;
     public static String FbUserID;
+    private Button fb_login;
+    private EditText email;
+    private EditText password;
 
     public void toLocalRegister(View view){
         startActivity(new Intent(getApplicationContext(), localRegisterActivity.class));
@@ -62,14 +66,21 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        loginButton = findViewById(R.id.fb_login_id);
-        loginButton.setReadPermissions(Arrays.asList("email", "public_profile", "user_birthday", "user_friends"));
+        FacebookLoginManager= com.facebook.login.LoginManager.getInstance();
+        fb_login = findViewById(R.id.fb_login);
+        email = findViewById(R.id.email);
+        password = findViewById(R.id.password);
+        fb_login.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FacebookLoginManager.logInWithReadPermissions(MainActivity.this, Arrays.asList("email", "public_profile", "user_birthday"));
+            }
+        });
         callbackManager = CallbackManager.Factory.create();
 
         mAuth = FirebaseAuth.getInstance();
 
-        loginButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
+        FacebookLoginManager.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
             @Override
             public void onSuccess(LoginResult loginResult) {
 
@@ -132,6 +143,31 @@ public class MainActivity extends AppCompatActivity {
         if(user!=null){
             toLoggedInActivity();
         }
+    }
+    public void signIn(View view){
+        String emailString = email.getText().toString();
+        final String passwordString = password.getText().toString();
+        mAuth.signInWithEmailAndPassword(emailString, passwordString)
+                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        if(task.isSuccessful()){
+                            user = mAuth.getCurrentUser();
+                            startActivity(new Intent(getApplicationContext(), loggedInUser.class));
+
+                        }else{
+                            Toast.makeText(MainActivity.this, "Something went wrong, check your credentials again or try later", Toast.LENGTH_LONG).show();
+                            email.setText("");
+                            password.setText("");
+                        }
+                    }
+                });
+
+
+    }
+
+    public void toRegister(View view){
+        startActivity(new Intent(getApplicationContext(),localRegisterActivity.class));
     }
 
 
