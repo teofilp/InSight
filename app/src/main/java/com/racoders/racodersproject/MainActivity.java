@@ -39,8 +39,9 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 public class MainActivity extends AppCompatActivity {
-    public LoginButton loginButton;
     private CallbackManager callbackManager;
+    private com.facebook.login.LoginManager fbLoginManager;
+    private Button fb_login_btn;
     public static FirebaseAuth mAuth;
     public static FirebaseUser user;
     public static String FbUserID;
@@ -62,14 +63,20 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        loginButton = findViewById(R.id.fb_login_id);
-        loginButton.setReadPermissions(Arrays.asList("email", "public_profile", "user_birthday", "user_friends"));
+        fbLoginManager = com.facebook.login.LoginManager.getInstance();
         callbackManager = CallbackManager.Factory.create();
+        fb_login_btn = findViewById(R.id.fb_login_btn);
+
+        fb_login_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                fbLoginManager.logInWithReadPermissions(MainActivity.this, Arrays.asList("email", "public_profile", "user_birthday"));
+            }
+        });
 
         mAuth = FirebaseAuth.getInstance();
 
-        loginButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
+        fbLoginManager.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
             @Override
             public void onSuccess(LoginResult loginResult) {
 

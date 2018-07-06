@@ -7,13 +7,11 @@
     tools:context=".MainActivity"
     android:background="#4286f4">
 
-    <com.facebook.login.widget.LoginButton
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/fb_login_id"
-        android:layout_margin="40dp"
-        android:layout_centerHorizontal="true">
-    </com.facebook.login.widget.LoginButton>
+    <Button
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:id="@+id/fb_login_btn"
+        android:background="@drawable/fb_icon"/>
 
     <Button
         android:layout_width="match_parent"
@@ -21,7 +19,7 @@
         android:id="@+id/registerButton"
         android:text="Create local account"
         android:textAllCaps="false"
-        android:layout_below="@+id/fb_login_id"
+        android:layout_below="@+id/fb_login_btn"
         android:layout_margin="40dp"
         android:textSize="12sp"
         android:paddingTop="1dp"

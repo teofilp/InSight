@@ -47,7 +47,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private LocationListener locationListener;
     private final int LOCATION_REQUEST_CODE = 1;
     private LatLng myLocation;
-    private ArrayList<Integer> arrayList = new ArrayList<>();
     private ImageButton imageButton;
     private int contor=0;
     private Marker me;
@@ -124,37 +123,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         }else{
             locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationListener);
         }
-
-
-
-
-
-
-// GET MULTIPLE USERS FROM THE DB
-//        DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference().child("Users");
-//        mDatabase.addValueEventListener(new ValueEventListener() {
-//            @Override
-//            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-//                arrayList.clear();
-//
-//                for(DataSnapshot child : dataSnapshot.getChildren()){
-//                    User user = child.getValue(User.class);
-//                    arrayList.add(user);
-//
-//                }
-//                Log.i("size", Integer.toString(arrayList.size()));
-//                for(User s : arrayList){
-//                    Log.i("user info: ", s.getDisplayName() + " " + s.getEmail() + " " + s.getSocialID());
-//                }
-//
-//            }
-//
-//            @Override
-//            public void onCancelled(@NonNull DatabaseError databaseError) {
-//
-//            }
-//        });
-
 
 }
 
