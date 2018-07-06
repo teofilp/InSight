@@ -12,6 +12,7 @@ import android.util.Base64;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.Toast;
 
 import com.facebook.AccessToken;
@@ -39,19 +40,19 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 public class MainActivity extends AppCompatActivity {
+    private com.facebook.login.LoginManager FacebookLoginManager;
     private CallbackManager callbackManager;
-    private com.facebook.login.LoginManager fbLoginManager;
-    private Button fb_login_btn;
     public static FirebaseAuth mAuth;
     public static FirebaseUser user;
     public static String FbUserID;
+    private Button fb_login;
+    private EditText email;
+    private EditText password;
 
     public void toLocalRegister(View view){
         startActivity(new Intent(getApplicationContext(), localRegisterActivity.class));
     }
-    public void toLocalSignIn(View view){
-        startActivity(new Intent(getApplicationContext(), localSignInActivity.class));
-    }
+
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -63,20 +64,21 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        fbLoginManager = com.facebook.login.LoginManager.getInstance();
-        callbackManager = CallbackManager.Factory.create();
-        fb_login_btn = findViewById(R.id.fb_login_btn);
-
-        fb_login_btn.setOnClickListener(new View.OnClickListener() {
+        fb_login = findViewById(R.id.fb_login);
+        email = findViewById(R.id.email);
+        password = findViewById(R.id.password);
+        FacebookLoginManager= com.facebook.login.LoginManager.getInstance();
+        fb_login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                fbLoginManager.logInWithReadPermissions(MainActivity.this, Arrays.asList("email", "public_profile", "user_birthday"));
+                FacebookLoginManager.logInWithReadPermissions(MainActivity.this, Arrays.asList("email", "public_profile", "user_birthday"));
             }
         });
+        callbackManager = CallbackManager.Factory.create();
 
         mAuth = FirebaseAuth.getInstance();
 
-        fbLoginManager.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
+        FacebookLoginManager.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
             @Override
             public void onSuccess(LoginResult loginResult) {
 
