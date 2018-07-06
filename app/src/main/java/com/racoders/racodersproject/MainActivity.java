@@ -8,6 +8,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.AppCompatEditText;
 import android.util.Base64;
 import android.util.Log;
 import android.view.View;
@@ -46,8 +47,8 @@ public class MainActivity extends AppCompatActivity {
     public static FirebaseUser user;
     public static String FbUserID;
     private Button fb_login;
-    private EditText email;
-    private EditText password;
+    private AppCompatEditText email;
+    private AppCompatEditText password;
 
     public void toLocalRegister(View view){
         startActivity(new Intent(getApplicationContext(), localRegisterActivity.class));
@@ -141,6 +142,30 @@ public class MainActivity extends AppCompatActivity {
         if(user!=null){
             toLoggedInActivity();
         }
+    }
+    public void signIn(View view){
+        String emailString = email.getText().toString();
+        String passwordString = password.getText().toString();
+        if(passwordString.length()>0 && emailString.length()>0){
+            mAuth.signInWithEmailAndPassword(emailString, passwordString)
+                    .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                        @Override
+                        public void onComplete(@NonNull Task<AuthResult> task) {
+                            if(task.isSuccessful()){
+                                user = mAuth.getCurrentUser();
+                                startActivity(new Intent(getApplicationContext(), MapsActivity.class));
+
+                            }else{
+                                Toast.makeText(MainActivity.this, "Something went wrong, check your credentials again or try later", Toast.LENGTH_LONG).show();
+                                email.setText("");
+                                password.setText("");
+                            }
+                        }
+                    });
+        }else{
+            Toast.makeText(this, "Something went wrong, check your credentials again or try later", Toast.LENGTH_SHORT).show();
+        }
+
     }
 
 

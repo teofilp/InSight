@@ -9,5 +9,7 @@
         android:topRightRadius="5dp"
         android:bottomLeftRadius="5dp"
         android:bottomRightRadius="5dp"/>
-    <stroke android:width="1dip" android:color="#E94F44" />
+    <stroke android:width="1dip" android:color="#E94F44"
+        android:dashGap="10px"
+        android:dashWidth="10px"/>
 </shape>

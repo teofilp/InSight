@@ -2,4 +2,6 @@
     <string name="app_name">RacodersProject</string>
     <string name="facebook_app_id">2076914259191184</string>
     <string name="title_activity_maps">Map</string>
+    <string name="email">email</string>
+    <string name="password">password</string>
 </resources>
