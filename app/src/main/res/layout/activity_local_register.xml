@@ -41,7 +41,7 @@
             android:id="@+id/displayName"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="@string/Display Name"
+            android:hint="display name"
             android:inputType="text"
             android:textColor="@color/colorPrimaryDark"
             android:backgroundTint="@color/colorPrimaryDark"
@@ -97,13 +97,12 @@
             />
 
     </android.support.design.widget.TextInputLayout>
-    
+
 
     <Button
         android:id="@+id/submit"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="200dp"
         android:onClick="onSubmit"
         android:text="Register!"
         android:layout_gravity="center"
