@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.AppCompatEditText;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
@@ -19,9 +20,9 @@ public class localRegisterActivity extends AppCompatActivity {
 
     public static FirebaseAuth mAuth;
     public static FirebaseUser user;
-    private EditText displayName;
-    private EditText email;
-    private EditText password;
+    private AppCompatEditText displayName;
+    private AppCompatEditText email;
+    private AppCompatEditText password;
 
 
     public void onSubmit(View view) {
@@ -43,7 +44,7 @@ public class localRegisterActivity extends AppCompatActivity {
                             if (task.isSuccessful()) {
                                 Toast.makeText(localRegisterActivity.this, "Successfully created account", Toast.LENGTH_SHORT).show();
                                 user = mAuth.getCurrentUser();
-                                Intent intent = new Intent(getApplicationContext(), loggedInUser.class);
+                                Intent intent = new Intent(getApplicationContext(), MapsActivity.class);
                                 startActivity(intent);
 
 
