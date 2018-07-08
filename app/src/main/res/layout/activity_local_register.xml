@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".localRegisterActivity"
+    android:orientation="vertical"
+    android:background="#fff">
+
+    <ImageView
+        android:layout_width="160dp"
+        android:layout_height="160dp"
+        android:src="@drawable/logo"
+        android:layout_gravity="center"/>
+
+    <TextView
+        android:layout_gravity="center"
+        android:textColor="#e73e32"
+        android:id="@+id/registerHeader"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="12dp"
+        android:text="Create your account"
+        android:textSize="24sp"
+        />
+
+    <android.support.design.widget.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="32dp"
+        android:layout_marginLeft="32dp"
+        android:layout_marginRight="32dp"
+        android:layout_marginBottom="8dp"
+        android:layout_gravity="center"
+        android:id="@+id/display_name_TextInputLayout"
+        android:textColorHint="@color/colorPrimaryDark">
+
+        <android.support.v7.widget.AppCompatEditText
+            android:id="@+id/displayName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="display name"
+            android:inputType="text"
+            android:textColor="@color/colorPrimaryDark"
+            android:backgroundTint="@color/colorPrimaryDark"
+
+            />
+
+    </android.support.design.widget.TextInputLayout>
+
+    <android.support.design.widget.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:layout_marginLeft="32dp"
+        android:layout_marginRight="32dp"
+        android:layout_marginBottom="8dp"
+        android:layout_gravity="center"
+        android:id="@+id/email_TextInputLayout"
+        android:textColorHint="@color/colorPrimaryDark">
+
+        <android.support.v7.widget.AppCompatEditText
+            android:id="@+id/email"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/email"
+            android:inputType="textEmailAddress"
+            android:textColor="@color/colorPrimaryDark"
+            android:backgroundTint="@color/colorPrimaryDark"
+
+            />
+
+    </android.support.design.widget.TextInputLayout>
+
+    <android.support.design.widget.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:layout_marginLeft="32dp"
+        android:layout_marginRight="32dp"
+        android:layout_marginBottom="8dp"
+        android:layout_gravity="center"
+        android:id="@+id/password_TextInputLayout"
+        android:textColorHint="@color/colorPrimaryDark">
+
+        <android.support.v7.widget.AppCompatEditText
+            android:id="@+id/password"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/password"
+            android:inputType="textPassword"
+            android:textColor="@color/colorPrimaryDark"
+            android:backgroundTint="@color/colorPrimaryDark"
+
+            />
+
+    </android.support.design.widget.TextInputLayout>
+
+
+    <Button
+        android:id="@+id/submit"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:onClick="onSubmit"
+        android:text="Register!"
+        android:layout_gravity="center"
+        android:background="@drawable/rounded_button"
+        android:layout_marginTop="32dp" />
+
+</LinearLayout>
