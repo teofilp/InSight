@@ -41,19 +41,17 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 public class MainActivity extends AppCompatActivity {
-    private com.facebook.login.LoginManager FacebookLoginManager;
-    private CallbackManager callbackManager;
+
     public static FirebaseAuth mAuth;
     public static FirebaseUser user;
     public static String FbUserID;
-    private Button fb_login;
     private AppCompatEditText email;
     private AppCompatEditText password;
-
+    private com.facebook.login.LoginManager FacebookLoginManager;
+    private CallbackManager callbackManager;
     public void toLocalRegister(View view){
         startActivity(new Intent(getApplicationContext(), localRegisterActivity.class));
     }
-
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -65,7 +63,8 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        fb_login = findViewById(R.id.fb_login);
+
+        Button fb_login =findViewById(R.id.fb_login);
         email = findViewById(R.id.email);
         password = findViewById(R.id.password);
         FacebookLoginManager= com.facebook.login.LoginManager.getInstance();
@@ -76,26 +75,20 @@ public class MainActivity extends AppCompatActivity {
             }
         });
         callbackManager = CallbackManager.Factory.create();
-
         mAuth = FirebaseAuth.getInstance();
 
         FacebookLoginManager.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
             @Override
             public void onSuccess(LoginResult loginResult) {
-
-
                 Log.i("result", "Successful" + loginResult.getAccessToken().getUserId()
                 + " " + loginResult.getAccessToken().getToken());
                 FbUserID = AccessToken.getCurrentAccessToken().getUserId();
                 handleFacebookAccessToken(loginResult.getAccessToken());
-
             }
 
             @Override
             public void onCancel() {
-
                 Log.i("result", "Cancelled");
-
             }
 
             @Override
@@ -103,31 +96,63 @@ public class MainActivity extends AppCompatActivity {
                 Log.i("result", "Failed" + error.toString());
             }
         });
-
         Toast.makeText(this, "Welcome to our test app", Toast.LENGTH_SHORT).show();
+    }
 
+    @Override
+    public void onStart(){
+        super.onStart();
+        user = mAuth.getCurrentUser();
+        if(user!=null){
+            toLoggedInActivity();
+            finish();
+        }
+    }
+    public void signIn(View view){
+        String emailString = email.getText().toString();
+        String passwordString = password.getText().toString();
+
+        if(passwordValidation(passwordString) && emailValidation(emailString)){
+            mAuth.signInWithEmailAndPassword(emailString, passwordString)
+                    .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                        @Override
+                        public void onComplete(@NonNull Task<AuthResult> task) {
+                            completionResult(task);
+                        }
+                    });
+        } else {
+            Toast.makeText(this, "Something went wrong, check your credentials again or try later", Toast.LENGTH_SHORT).show();
+        }
+
+    }
+    public void completionResult(Task<AuthResult> task){
+        if (task.isSuccessful()) {
+            // Sign in success, update UI with the signed-in user's information
+            user = mAuth.getCurrentUser();
+            toLoggedInActivity();
+        } else {
+            // If sign in fails, display a message to the user.
+            Toast.makeText(MainActivity.this, "Authentication failed. Check your credentials or try again later",
+                    Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    public boolean passwordValidation(String passwordString){
+        return passwordString.length()>0;
+    }
+
+    public boolean emailValidation(String emailString){
+        return emailString.length()>0 && emailString.contains("@");
     }
 
     private void handleFacebookAccessToken(AccessToken token) {
-        Log.d("Report", "handleFacebookAccessToken:" + token);
 
         AuthCredential credential = FacebookAuthProvider.getCredential(token.getToken());
         mAuth.signInWithCredential(credential)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
-                        if (task.isSuccessful()) {
-                            // Sign in success, update UI with the signed-in user's information
-                            Log.d("Report", "signInWithCredential:success");
-                            user = mAuth.getCurrentUser();
-                            toLoggedInActivity();
-
-                        } else {
-                            // If sign in fails, display a message to the user.
-                            Log.w("Report", "signInWithCredential:failure", task.getException());
-                            Toast.makeText(MainActivity.this, "Authentication failed.",
-                                    Toast.LENGTH_SHORT).show();
-                        }
+                        completionResult(task);
                     }
                 });
     }
@@ -136,38 +161,5 @@ public class MainActivity extends AppCompatActivity {
         startActivity(intent);
         finish();
     }
-    @Override
-    public void onStart(){
-        super.onStart();
-        user = mAuth.getCurrentUser();
-        if(user!=null){
-            toLoggedInActivity();
-        }
-    }
-    public void signIn(View view){
-        String emailString = email.getText().toString();
-        String passwordString = password.getText().toString();
-        if(passwordString.length()>0 && emailString.length()>0){
-            mAuth.signInWithEmailAndPassword(emailString, passwordString)
-                    .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-                        @Override
-                        public void onComplete(@NonNull Task<AuthResult> task) {
-                            if(task.isSuccessful()){
-                                user = mAuth.getCurrentUser();
-                                startActivity(new Intent(getApplicationContext(), MapsActivity.class));
-
-                            }else{
-                                Toast.makeText(MainActivity.this, "Something went wrong, check your credentials again or try later", Toast.LENGTH_LONG).show();
-                                email.setText("");
-                                password.setText("");
-                            }
-                        }
-                    });
-        }else{
-            Toast.makeText(this, "Something went wrong, check your credentials again or try later", Toast.LENGTH_SHORT).show();
-        }
-
-    }
-
 
 }

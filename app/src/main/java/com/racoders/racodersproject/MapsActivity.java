@@ -8,6 +8,7 @@ import android.content.res.Resources;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
@@ -80,7 +81,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
-
+        checkForNewUser(FirebaseAuth.getInstance().getCurrentUser().getUid());
         imageButton = findViewById(R.id.locationTrackerButton);
         markersState = findViewById(R.id.markersState);
         imageButton.setEnabled(false);
@@ -120,22 +121,12 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         if(ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED){
             ActivityCompat.requestPermissions(this, new String[] {Manifest.permission.ACCESS_FINE_LOCATION}, LOCATION_REQUEST_CODE);
-        }else{
+         } else {
             locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationListener);
         }
 
-}
+    }
 
-
-    /**
-     * Manipulates the map once available.
-     * This callback is triggered when the map is ready to be used.
-     * This is where we can add markers or lines, add listeners or move the camera. In this case,
-     * we just add a marker near Sydney, Australia.
-     * If Google Play services is not installed on the device, the user will be prompted to install
-     * it inside the SupportMapFragment. This method will only be triggered once the user has
-     * installed Google Play services and returned to the app.
-     */
     @Override
     public void onMapReady(GoogleMap googleMap) {
         LatLng latLng = new LatLng(45.4324242, 26.4343242);
@@ -162,21 +153,23 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         super.onStart();
         contor = 0;
     }
+
     public void signOut(View view){
         FirebaseAuth.getInstance().signOut();
         LoginManager.getInstance().logOut();
         Intent intent = new Intent(getApplicationContext(), MainActivity.class);
         startActivity(intent);
         finish();
-
+        s = null;
     }
+
     @Override
     public boolean onMarkerClick(Marker marker){
         if(!marker.equals(me)) {
             System.out.println("markerCLicked");
             String markerId = mMarkers.get(marker);
             startActivity(new Intent(getApplicationContext(), MarkerDetailsPopUpWindow.class).putExtra("id", markerId));
-        }else{
+        } else {
             Toast.makeText(this, "This is your location", Toast.LENGTH_SHORT).show();
         }
         return true;
@@ -189,18 +182,13 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             mMap.clear();
             me = mMap.addMarker(new MarkerOptions().position(myLocation).icon(BitmapDescriptorFactory.fromResource(R.drawable.you_marker)));
             getAllPOIS();
-
-
-
-        }else{
+        } else {
             isFavOnly = true;
             markersState.setText("All Locations");
             mMap.clear();
             me = mMap.addMarker(new MarkerOptions().position(myLocation).icon(BitmapDescriptorFactory.fromResource(R.drawable.you_marker)));
             getFavPOIS();
         }
-
-
     }
 
     @Override
@@ -214,7 +202,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 getAllPOIS();
             else
                 getFavPOIS();
-
         }
     }
     public void getFavPOIS(){
@@ -273,7 +260,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                         PointOfInterest pointOfInterest = child.getValue(PointOfInterest.class);
                         String id = child.getKey();
 
-                        if(s!=null && Arrays.asList(s).contains(id)){
+                        if(s!=null && Arrays.asList(s).contains(id) && s.length>0){
                             marker= mMap.addMarker(new MarkerOptions()
                                     .position(new LatLng(pointOfInterest.getLatitude(), pointOfInterest.getLongitude()))
                                     .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE)));
@@ -286,6 +273,31 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     }
                 }
 
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+    }
+    public void checkForNewUser(String Uid){
+        final DatabaseReference dbref = FirebaseDatabase.getInstance().getReference().child("FavoriteLocations").child(Uid).child("0");
+        dbref.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if(!dataSnapshot.exists()){
+                    dbref.setValue("", new DatabaseReference.CompletionListener() {
+                        @Override
+                        public void onComplete(@Nullable DatabaseError databaseError, @NonNull DatabaseReference databaseReference) {
+                            if(databaseError==null){
+
+                            } else {
+                                Toast.makeText(MapsActivity.this, "Could create new record, try again later", Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    });
+                }
             }
 
             @Override

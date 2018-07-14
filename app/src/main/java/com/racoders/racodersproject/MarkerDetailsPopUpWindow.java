@@ -31,6 +31,8 @@ public class MarkerDetailsPopUpWindow extends Activity{
     private TextView description;
     private Button button;
     private String id;
+    private final double WIDTH_RATIO = 0.8;
+    private final double HEIGHT_RATIO = 0.7;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -44,9 +46,9 @@ public class MarkerDetailsPopUpWindow extends Activity{
 
         int width = dm.widthPixels;
         int height = dm.heightPixels;
-        width*=.80;
-        height*=.70;
-        System.out.println(width + " " + height);
+        width*= WIDTH_RATIO;
+        height*= HEIGHT_RATIO;
+
         getWindow().setLayout(width, height);
 
         title = findViewById(R.id.title);

@@ -40,18 +40,7 @@ public class localRegisterActivity extends AppCompatActivity {
             mAuth.createUserWithEmailAndPassword(emailString, passwordString)
                     .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                         @Override
-                        public void onComplete(@NonNull Task<AuthResult> task) {
-                            if (task.isSuccessful()) {
-                                Toast.makeText(localRegisterActivity.this, "Successfully created account", Toast.LENGTH_SHORT).show();
-                                user = mAuth.getCurrentUser();
-                                Intent intent = new Intent(getApplicationContext(), MapsActivity.class);
-                                startActivity(intent);
-
-
-                            } else {
-                                Log.i("error", task.getException().toString());
-                                Toast.makeText(localRegisterActivity.this, "Something went wrong, try again later", Toast.LENGTH_SHORT).show();
-                            }
+                        public void onComplete(@NonNull Task<AuthResult> task) { completionResult(task);
                         }
                     });
         }
@@ -70,7 +59,20 @@ public class localRegisterActivity extends AppCompatActivity {
     @Override
     public void onStart(){
         super.onStart();
-        if(FirebaseAuth.getInstance().getCurrentUser()!=null)
+        if(FirebaseAuth.getInstance().getCurrentUser()!=null){
             startActivity(new Intent(getApplicationContext(), MapsActivity.class));
+            finish();
+        }
+    }
+    public void completionResult(Task<AuthResult> task){
+        if (task.isSuccessful()) {
+            // Sign in success, update UI with the signed-in user's information
+            user = mAuth.getCurrentUser();
+            startActivity(new Intent(getApplicationContext(), MapsActivity.class));
+        } else {
+            // If sign in fails, display a message to the user.
+            Toast.makeText(localRegisterActivity.this, "Authentication failed. Check your credentials or try again later",
+                    Toast.LENGTH_SHORT).show();
+        }
     }
 }
