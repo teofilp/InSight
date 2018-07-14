@@ -40,8 +40,9 @@ public class MarkerDetailsPopUpWindow extends Activity{
         setContentView(R.layout.marker_details_pop_up_window);
         button = findViewById(R.id.toggleFavoriteButton);
 
-        DisplayMetrics dm = new DisplayMetrics();
+        id = getIntent().getStringExtra("id");
 
+        DisplayMetrics dm = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(dm);
 
         int width = dm.widthPixels;
@@ -53,8 +54,6 @@ public class MarkerDetailsPopUpWindow extends Activity{
 
         title = findViewById(R.id.title);
         description = findViewById(R.id.description);
-
-        id = getIntent().getStringExtra("id");
 
         if(s!=null && Arrays.asList(s).contains(id)){
             button.setText("Remove from favorites");
