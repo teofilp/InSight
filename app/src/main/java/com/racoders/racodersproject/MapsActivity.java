@@ -100,28 +100,43 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 switch (position){
                     case 0:
                         activeFilter = "All";
-                        mMap.clear();
-                        getAllPOIS();
+                       reloadMap();
+                        if(isFavOnly)
+                            getFavPOIS();
+                        else
+                            getAllPOIS();
                         break;
                     case 1:
                         activeFilter = "Restaurants";
-                        mMap.clear();
-                        getAllPOIS("Restaurants");
+                        reloadMap();
+                        if(isFavOnly)
+                            getFavPOIS(activeFilter);
+                        else
+                            getAllPOIS("Restaurants");
                         break;
                     case 2:
                         activeFilter = "Transport";
-                        mMap.clear();
-                        getAllPOIS("Transport");
+                        reloadMap();
+                        if(isFavOnly)
+                            getFavPOIS(activeFilter);
+                        else
+                            getAllPOIS(activeFilter);
                         break;
                     case 3:
                         activeFilter = "Pubs";
-                        mMap.clear();
-                        getAllPOIS("Pubs");
+                        reloadMap();
+                        if(isFavOnly)
+                            getFavPOIS(activeFilter);
+                        else
+                            getAllPOIS(activeFilter);
                         break;
                     case 4:
                         activeFilter = "Sport";
-                        mMap.clear();
-                        getAllPOIS("Sport");
+                        reloadMap();
+                        if(isFavOnly)
+                            getFavPOIS(activeFilter);
+                        else
+                            getAllPOIS(activeFilter);
                 }
             }
 
@@ -221,17 +236,21 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     public void changeState(View view){
 
         if(isFavOnly){
-            isFavOnly = false;
+            isFavOnly = !isFavOnly;
             markersState.setText("Favorite Locations");
-            mMap.clear();
-            me = mMap.addMarker(new MarkerOptions().position(myLocation).icon(BitmapDescriptorFactory.fromResource(R.drawable.you_marker)));
-            getAllPOIS();
+            reloadMap();
+            if(activeFilter.equals("All"))
+                getAllPOIS();
+            else
+                getAllPOIS(activeFilter);
         } else {
-            isFavOnly = true;
+            isFavOnly = !isFavOnly;
             markersState.setText("All Locations");
-            mMap.clear();
-            me = mMap.addMarker(new MarkerOptions().position(myLocation).icon(BitmapDescriptorFactory.fromResource(R.drawable.you_marker)));
-            getFavPOIS();
+            reloadMap();
+            if(activeFilter.equals("All"))
+                getFavPOIS();
+            else
+                getFavPOIS(activeFilter);
         }
     }
 
@@ -243,7 +262,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             mMap.clear();
             me = mMap.addMarker(new MarkerOptions().position(myLocation).title("You").icon(BitmapDescriptorFactory.fromResource(R.drawable.you_marker)));
             if(markersState.getText().equals("Favorite Locations"))
-                getAllPOIS(activeFilter);
+                if(!activeFilter.equals("All"))
+                    getAllPOIS(activeFilter);
+                else
+                    getAllPOIS();
             else
                 getFavPOIS();
         }
@@ -292,6 +314,53 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         });
 
     }
+
+    public void getFavPOIS(final String category){
+        DatabaseReference myLocations = FirebaseDatabase.getInstance().getReference().child("FavoriteLocations").child(FirebaseAuth.getInstance().getUid()).child("0");
+        myLocations.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if(dataSnapshot.exists()){
+                    String myString = dataSnapshot.getValue(String.class);
+                    if(!myString.equals("")){
+//                        System.out.println(myString);
+                        s = myString.split("%");
+                        for(String str : s){
+                            DatabaseReference dbref = FirebaseDatabase.getInstance().getReference().child("POIs").child(str);
+                            dbref.addListenerForSingleValueEvent(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                    if(dataSnapshot.exists()){
+                                        PointOfInterest favPointOfInterest = dataSnapshot.getValue(PointOfInterest.class);
+                                        if(favPointOfInterest.getCategory().equals(category)){
+                                            Marker marker = mMap.addMarker(new MarkerOptions()
+                                                    .position(new LatLng(favPointOfInterest.getLatitude(), favPointOfInterest.getLongitude()))
+                                                    .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE)));
+                                            mMarkers.put(marker, dataSnapshot.getKey());
+                                        }else if(favPointOfInterest.getCategory().equals("All"))
+                                            getFavPOIS();
+                                    }
+                                }
+
+                                @Override
+                                public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                                }
+                            });
+
+                        }
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
+    }
+
     public void getAllPOIS(){
         DatabaseReference allLocationsReference = FirebaseDatabase.getInstance().getReference().child("POIs");
         allLocationsReference.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -385,6 +454,12 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
             }
         });
+    }
+    public void reloadMap(){
+        mMap.clear();
+        if(myLocation!=null){
+            me = mMap.addMarker(new MarkerOptions().position(myLocation).icon(BitmapDescriptorFactory.fromResource(R.drawable.you_marker)));
+        }
     }
 
 
