@@ -68,7 +68,7 @@ public class localRegisterActivity extends AppCompatActivity {
         if (task.isSuccessful()) {
             // Sign in success, update UI with the signed-in user's information
             user = mAuth.getCurrentUser();
-            startActivity(new Intent(getApplicationContext(), MapsActivity.class));
+            startActivity(new Intent(getApplicationContext(), loggedInUser.class));
         } else {
             // If sign in fails, display a message to the user.
             Toast.makeText(localRegisterActivity.this, "Authentication failed. Check your credentials or try again later",

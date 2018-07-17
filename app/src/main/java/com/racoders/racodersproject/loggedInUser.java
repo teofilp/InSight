@@ -28,6 +28,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.racoders.racodersproject.MapFragment;
 import com.facebook.Profile;
 import com.facebook.login.LoginManager;
 import com.facebook.login.widget.ProfilePictureView;
@@ -53,17 +55,23 @@ import java.util.HashMap;
 import java.util.Map;
 
 
+import static com.facebook.FacebookSdk.getApplicationContext;
 import static com.racoders.racodersproject.MainActivity.mAuth;
 import static com.racoders.racodersproject.MainActivity.user;
+import static com.racoders.racodersproject.MapFragment.activeFilter;
+import static com.racoders.racodersproject.MapFragment.getAllPOIS;
+import static com.racoders.racodersproject.MapFragment.getFavPOIS;
+import static com.racoders.racodersproject.MapFragment.isFavOnly;
+import static com.racoders.racodersproject.MapFragment.mMarkers;
+import static com.racoders.racodersproject.MapFragment.markersState;
+import static com.racoders.racodersproject.MapFragment.me;
+import static com.racoders.racodersproject.MapFragment.reloadMap;
 
-public class loggedInUser extends FragmentActivity implements OnMapReadyCallback {
+public class loggedInUser extends FragmentActivity {
 
     TabLayout tabLayout;
     ViewPager viewPager;
-    private LocationManager locationManager;
-    private LocationListener locationListener;
-    Marker me;
-    GoogleMap mMap;
+    ViewPagerAdapter adapter;
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
@@ -73,7 +81,7 @@ public class loggedInUser extends FragmentActivity implements OnMapReadyCallback
 
             if(grantResults[0] == PackageManager.PERMISSION_GRANTED){
                 if(ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED){
-                    locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationListener);
+                    MapFragment.locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, MapFragment.locationListener);
                 }
             }else{
                 Toast.makeText(this, "We need your location for..", Toast.LENGTH_SHORT).show();
@@ -92,13 +100,11 @@ public class loggedInUser extends FragmentActivity implements OnMapReadyCallback
 
         tabLayout = findViewById(R.id.tabLayout);
 
-        ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
+        adapter = new ViewPagerAdapter(getSupportFragmentManager());
 
         adapter.addFragment(new newsFeed(), "News Feed");
         adapter.addFragment(new com.racoders.racodersproject.Profile(), "Profile");
-        MapFragment mapFragment2 = new MapFragment();
-        getSupportFragmentManager().beginTransaction().replace(R.id.RelativeLayout, mapFragment2);
-        adapter.addFragment(mapFragment2, "Map");
+        adapter.addFragment(new MapFragment(), "Map");
 //        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
 //                .findFragmentById(R.id.map_fragment);
 //        mapFragment.getMapAsync(this);
@@ -108,39 +114,43 @@ public class loggedInUser extends FragmentActivity implements OnMapReadyCallback
         tabLayout.setupWithViewPager(viewPager);
 
 
-        locationManager =(LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
-        locationListener = new LocationListener() {
-            @Override
-            public void onLocationChanged(android.location.Location location) {
-                LatLng myLocation = new LatLng(location.getLatitude(), location.getLongitude());
-                me = mMap.addMarker(new MarkerOptions().position(myLocation).title("You").icon(BitmapDescriptorFactory.fromResource(R.drawable.you_marker)));
-            }
 
-            @Override
-            public void onStatusChanged(String provider, int status, Bundle extras) {
+    }
+    public void moveCameraToMe(View view){
+        MapFragment.mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(MapFragment.myLocation, 16));
+    }
+    public void changeState(View view){
 
-            }
-
-            @Override
-            public void onProviderEnabled(String provider) {
-
-            }
-
-            @Override
-            public void onProviderDisabled(String provider) {
-
-            }
-        };
-
-        if(ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED){
-            ActivityCompat.requestPermissions(this, new String[] {Manifest.permission.ACCESS_FINE_LOCATION}, 1);
+        if(isFavOnly){
+            isFavOnly = !isFavOnly;
+            markersState.setText("Favorite Locations");
+            reloadMap();
+            if(activeFilter.equals("All"))
+                getAllPOIS();
+            else
+                getAllPOIS(activeFilter);
         } else {
-            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationListener);
+            isFavOnly = !isFavOnly;
+            markersState.setText("All Locations");
+            reloadMap();
+            if(activeFilter.equals("All"))
+                getFavPOIS();
+            else
+                getFavPOIS(activeFilter);
         }
     }
 
-    @Override
-    public void onMapReady(GoogleMap googleMap) {
-        mMap = googleMap;
+    public void signOut(View view){
+        FirebaseAuth.getInstance().signOut();
+        LoginManager.getInstance().logOut();
+        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+        startActivity(intent);
+        MapFragment.s = null;
+
+        finish();
+
     }
+
+
+
 }

@@ -23,7 +23,7 @@ import com.google.firebase.database.ValueEventListener;
 import java.sql.BatchUpdateException;
 import java.util.Arrays;
 
-import static com.racoders.racodersproject.MapsActivity.s;
+import static com.racoders.racodersproject.MapFragment.s;
 
 public class MarkerDetailsPopUpWindow extends Activity{
 
@@ -92,20 +92,20 @@ public class MarkerDetailsPopUpWindow extends Activity{
                     if(button.getText().equals("Add to favorites")){
                         if(myString.equals("")){
                             myString=id+"%";
-                            MapsActivity.s = myString.split("%");
+                            MapFragment.s = myString.split("%");
                         }else{
                             myString+=id+"%";
-                            MapsActivity.s = myString.split("%");
+                            MapFragment.s = myString.split("%");
                         }
                     }else{
                         String aux = "";
-                        MapsActivity.s = myString.split("%");
-                        for(String str : MapsActivity.s){
+                        MapFragment.s = myString.split("%");
+                        for(String str : MapFragment.s){
                             if(!str.equals(id))
                                 aux+=str+"%";
                         }
                         myString = aux;
-                        MapsActivity.s = myString.split("%");
+                        MapFragment.s = myString.split("%");
                     }
 
                     getFavLocations.setValue(myString, new DatabaseReference.CompletionListener() {
