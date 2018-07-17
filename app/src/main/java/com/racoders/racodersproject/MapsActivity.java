@@ -86,6 +86,15 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
+
+
+    }
+
+    @Override
+    public void onMapReady(GoogleMap googleMap) {
+        LatLng latLng = new LatLng(45.4324242, 26.4343242);
+        mMap = googleMap;
+        mMap.setOnMarkerClickListener(this);
         checkForNewUser(FirebaseAuth.getInstance().getCurrentUser().getUid());
         imageButton = findViewById(R.id.locationTrackerButton);
         markersState = findViewById(R.id.markersState);
@@ -100,7 +109,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 switch (position){
                     case 0:
                         activeFilter = "All";
-                       reloadMap();
+                        reloadMap();
                         if(isFavOnly)
                             getFavPOIS();
                         else
@@ -180,18 +189,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         if(ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED){
             ActivityCompat.requestPermissions(this, new String[] {Manifest.permission.ACCESS_FINE_LOCATION}, LOCATION_REQUEST_CODE);
-         } else {
+        } else {
             locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationListener);
         }
-
-    }
-
-    @Override
-    public void onMapReady(GoogleMap googleMap) {
-        LatLng latLng = new LatLng(45.4324242, 26.4343242);
-        mMap = googleMap;
-        mMap.setOnMarkerClickListener(this);
-
         try{
             boolean success = mMap.setMapStyle(MapStyleOptions.loadRawResourceStyle(this, R.raw.style_json));
             if(!success){

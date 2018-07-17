@@ -33,7 +33,9 @@
             android:name="com.facebook.sdk.ApplicationId"
             android:value="@string/facebook_app_id" />
 
-        <activity android:name=".loggedInUser" />
+        <activity android:name=".loggedInUser" >
+
+        </activity>
         <activity android:name=".localRegisterActivity" />
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.

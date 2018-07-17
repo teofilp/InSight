@@ -5,34 +5,22 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".loggedInUser">
-    <Button
-        android:layout_width="wrap_content"
+
+
+    <android.support.v4.view.ViewPager
+        android:layout_width="match_parent"
+        android:layout_height="fill_parent"
+        android:id="@+id/viewPager"
+        android:layout_above="@id/tabLayout"/>
+    <android.support.design.widget.TabLayout
+        android:layout_alignParentBottom="true"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:onClick="signOut"
-        android:text="Sign Out"
-        android:id="@+id/logOut"/>
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/username"
-        android:layout_centerVertical="true"
-        android:layout_centerHorizontal="true"/>
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/username"
-        android:layout_centerHorizontal="true"
-        android:id="@+id/phoneNumber"/>
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/phoneNumber"
-        android:layout_centerHorizontal="true"
-        android:id="@+id/email"/>
-    <com.facebook.login.widget.ProfilePictureView
-        android:layout_width="150dp"
-        android:layout_height="150dp"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="50dp"
-        android:id="@+id/profileImage"/>
+        android:id="@+id/tabLayout"
+        android:background="?attr/colorPrimaryDark"
+        app:tabMode="fixed"
+        app:tabGravity="fill"
+        />
+
+
 </RelativeLayout>

@@ -1,12 +1,24 @@
 package com.racoders.racodersproject;
 
+import android.Manifest;
+import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.net.Uri;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.TabLayout;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.content.ContextCompat;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -19,6 +31,14 @@ import android.widget.Toast;
 import com.facebook.Profile;
 import com.facebook.login.LoginManager;
 import com.facebook.login.widget.ProfilePictureView;
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.firebase.auth.UserInfo;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -36,14 +56,31 @@ import java.util.Map;
 import static com.racoders.racodersproject.MainActivity.mAuth;
 import static com.racoders.racodersproject.MainActivity.user;
 
-public class loggedInUser extends AppCompatActivity {
-    public Button logOut;
-    private TextView username;
-    private TextView email;
-    private ProfilePictureView profileImage;
-    private User currentUser;
-    private Button buttonMap;
+public class loggedInUser extends FragmentActivity implements OnMapReadyCallback {
 
+    TabLayout tabLayout;
+    ViewPager viewPager;
+    private LocationManager locationManager;
+    private LocationListener locationListener;
+    Marker me;
+    GoogleMap mMap;
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
+        if(grantResults.length > 0){
+
+            if(grantResults[0] == PackageManager.PERMISSION_GRANTED){
+                if(ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED){
+                    locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationListener);
+                }
+            }else{
+                Toast.makeText(this, "We need your location for..", Toast.LENGTH_SHORT).show();
+                ActivityCompat.requestPermissions(this, new String[] {Manifest.permission.ACCESS_FINE_LOCATION}, 1);
+            }
+        }
+    }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -51,81 +88,59 @@ public class loggedInUser extends AppCompatActivity {
 
 
 
-//        setCurrentUserInfo();
-//
-//        logOut = findViewById(R.id.logOut);
-//        username = findViewById(R.id.username);
-//        email = findViewById(R.id.email);
-//        profileImage = findViewById(R.id.profileImage);
-//
-//        final DatabaseReference dbref = FirebaseDatabase.getInstance().getReference().child("Users").child(currentUser.getEmail());
-//        ValueEventListener eventListener = new ValueEventListener() {
-//            @Override
-//            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-//                if (!dataSnapshot.exists()) {
-//                    dbref.setValue(currentUser, new DatabaseReference.CompletionListener() {
-//                        @Override
-//                        public void onComplete(@Nullable DatabaseError databaseError, @NonNull DatabaseReference databaseReference) {
-//                            if (databaseError == null) {
-//                                Toast.makeText(loggedInUser.this, "Successfully updated info", Toast.LENGTH_SHORT).show();
-//                                setCurrentUserInfo();
-//                                profileImage.setProfileId(currentUser.getSocialID());
-//                                updateUI(currentUser.getDisplayName(), currentUser.getEmail(), currentUser.getSocialID());
-//
-//                            }else{
-//                                Log.i("error: ", databaseError.getMessage());
-//                            }
-//                        }
-//                    });
-//                }
-//                else{
-//                    currentUser = dataSnapshot.getValue(User.class);
-//                    profileImage.setProfileId(currentUser.getSocialID());
-//                    updateUI(currentUser.getDisplayName(), currentUser.getEmail(), currentUser.getSocialID());
-//                    Log.i("user info", currentUser.getDisplayName()+ " " + currentUser.getSocialID() + " " + currentUser.getEmail());
-//                }
-//            }
-//
-//            @Override
-//            public void onCancelled(@NonNull DatabaseError databaseError) {
-//
-//            }
-//        };
-//        dbref.addListenerForSingleValueEvent(eventListener);
+        viewPager = findViewById(R.id.viewPager);
 
-    }
-    public void openMap(){
-        Intent intent = new Intent(this, MapsActivity.class);
-        startActivity(intent);
-    }
-    public void signOut(View v) {
-        mAuth.signOut();
-        LoginManager.getInstance().logOut();
-        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-        startActivity(intent);
-    }
-////    public void updateUI(String displayName, String emailString, String socialID){
-////        username.setText(displayName);
-////        email.setText(emailString);
-////        profileImage.setProfileId(socialID);
-////    }
-////    public void setCurrentUserInfo(){
-////        currentUser = new User();
-////        String emailString="N/A";
-////
-////        if(MainActivity.user!=null){
-////            for(UserInfo profile: MainActivity.user.getProviderData()){
-////                emailString = profile.getEmail();
-////            }
-////        }
-////
-////        emailString = emailString.replace('@', '_');
-////        emailString = emailString.replace('.', '_');
-////
-////        currentUser.setEmail(emailString);
-////        currentUser.setDisplayName(MainActivity.user.getDisplayName());
-////        currentUser.setSocialID(MainActivity.FbUserID);
-////    }
+        tabLayout = findViewById(R.id.tabLayout);
+
+        ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
+
+        adapter.addFragment(new newsFeed(), "News Feed");
+        adapter.addFragment(new com.racoders.racodersproject.Profile(), "Profile");
+        MapFragment mapFragment2 = new MapFragment();
+        getSupportFragmentManager().beginTransaction().replace(R.id.RelativeLayout, mapFragment2);
+        adapter.addFragment(mapFragment2, "Map");
+//        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
+//                .findFragmentById(R.id.map_fragment);
+//        mapFragment.getMapAsync(this);
+
+        viewPager.setAdapter(adapter);
+
+        tabLayout.setupWithViewPager(viewPager);
 
 
+        locationManager =(LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
+        locationListener = new LocationListener() {
+            @Override
+            public void onLocationChanged(android.location.Location location) {
+                LatLng myLocation = new LatLng(location.getLatitude(), location.getLongitude());
+                me = mMap.addMarker(new MarkerOptions().position(myLocation).title("You").icon(BitmapDescriptorFactory.fromResource(R.drawable.you_marker)));
+            }
+
+            @Override
+            public void onStatusChanged(String provider, int status, Bundle extras) {
+
+            }
+
+            @Override
+            public void onProviderEnabled(String provider) {
+
+            }
+
+            @Override
+            public void onProviderDisabled(String provider) {
+
+            }
+        };
+
+        if(ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED){
+            ActivityCompat.requestPermissions(this, new String[] {Manifest.permission.ACCESS_FINE_LOCATION}, 1);
+        } else {
+            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationListener);
+        }
+    }
+
+    @Override
+    public void onMapReady(GoogleMap googleMap) {
+        mMap = googleMap;
+    }
 }
