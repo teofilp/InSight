@@ -61,7 +61,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     public static Button markersState;
     static String[] s;
     private Spinner myFilters;
-    public static String activeFilter = "All";
+    public static String activeFilter;
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
@@ -77,7 +77,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         mapFragment = (SupportMapFragment)getChildFragmentManager().findFragmentById(R.id.map_fragment1);
         if(mMap == null)
             mapFragment.getMapAsync(this);
-
+        activeFilter = "All";
         imageButton = view.findViewById(R.id.locationTrackerButton);
         markersState = view.findViewById(R.id.markersState);
         imageButton.setEnabled(false);
@@ -90,8 +90,9 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
 
     @Override
     public void onMapReady(final GoogleMap googleMap) {
-        isFavOnly = true;
+
         mMap = googleMap;
+
         mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
             @Override
             public boolean onMarkerClick(Marker marker) {
@@ -154,7 +155,11 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         } else {
             locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationListener);
         }
-        getFavPOIS();
+        if(isFavOnly)
+            getFavPOIS();
+
+        else
+            getAllPOIS();
         ArrayAdapter<CharSequence> myFilterAdapter = ArrayAdapter.createFromResource(getActivity(), R.array.filter, android.R.layout.simple_spinner_item);
         myFilters.setAdapter(myFilterAdapter);
         myFilters.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -237,6 +242,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     }
 
     public static void getFavPOIS(){
+        mMap.clear();
         DatabaseReference myLocations = FirebaseDatabase.getInstance().getReference().child("FavoriteLocations").child(FirebaseAuth.getInstance().getUid()).child("0");
         myLocations.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -282,6 +288,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     }
 
     public static void getFavPOIS(final String category){
+        mMap.clear();
         DatabaseReference myLocations = FirebaseDatabase.getInstance().getReference().child("FavoriteLocations").child(FirebaseAuth.getInstance().getUid()).child("0");
         myLocations.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
