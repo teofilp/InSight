@@ -19,6 +19,7 @@ import com.google.firebase.database.Query;
 public class newsFeed extends Fragment {
 
     View view;
+    RecyclerView recyclerView;
     public newsFeed() {
     }
 
@@ -26,8 +27,19 @@ public class newsFeed extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.news_feed, container, false);
-        RecyclerView recyclerView = view.findViewById(R.id.recyclerView);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+
+        recyclerView = view.findViewById(R.id.recyclerView);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+
+
+        return view;
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+
+
         Query query = FirebaseDatabase.getInstance().getReference().child("News");
 
         FirebaseRecyclerOptions<News> options = new FirebaseRecyclerOptions.Builder<News>()
@@ -36,9 +48,19 @@ public class newsFeed extends Fragment {
         FirebaseRecyclerAdapter<News, NewsHolder> adapter = new FirebaseRecyclerAdapter<News, NewsHolder>(options) {
             @Override
             protected void onBindViewHolder(@NonNull NewsHolder holder, int position, @NonNull News model) {
-                    holder.setTitle(model.getTitle());
-                    holder.setAuthor(model.getAuthor());
-                    holder.setDescription(model.getDescription());
+                holder.setTitle(model.getTitle());
+                holder.setAuthor(model.getAuthor());
+                holder.setDescription(model.getDescription());
+
+                final String Uid = getRef(position).getKey();
+                System.out.println(Uid);
+
+                holder.itemView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+
+                    }
+                });
             }
 
             @NonNull
@@ -49,8 +71,8 @@ public class newsFeed extends Fragment {
                 return new NewsHolder(view);
             }
         };
+        adapter.startListening();
+        recyclerView.setAdapter(adapter);
 
-
-        return view;
     }
 }

@@ -56,6 +56,9 @@
         <activity android:name=".MarkerDetailsPopUpWindow"
             android:theme="@style/AppTheme.CustomTheme"
             ></activity>
+        <activity android:name=".AddNews">
+
+        </activity>
 
     </application>
 

@@ -105,9 +105,6 @@ public class loggedInUser extends FragmentActivity {
         adapter.addFragment(new newsFeed(), "News Feed");
         adapter.addFragment(new com.racoders.racodersproject.Profile(), "Profile");
         adapter.addFragment(new MapFragment(), "Map");
-//        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
-//                .findFragmentById(R.id.map_fragment);
-//        mapFragment.getMapAsync(this);
 
         viewPager.setAdapter(adapter);
 
