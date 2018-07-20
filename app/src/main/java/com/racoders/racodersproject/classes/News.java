@@ -1,4 +1,4 @@
-package com.racoders.racodersproject;
+package com.racoders.racodersproject.classes;
 
 import java.util.Date;
 

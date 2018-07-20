@@ -1,4 +1,6 @@
-package com.racoders.racodersproject;
+package com.racoders.racodersproject.activities;
+
+import com.racoders.racodersproject.R;
 
 import android.content.Intent;
 import android.support.annotation.NonNull;

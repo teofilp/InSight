@@ -1,4 +1,4 @@
-package com.racoders.racodersproject;
+package com.racoders.racodersproject.classes;
 
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;

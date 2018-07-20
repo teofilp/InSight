@@ -1,4 +1,4 @@
-package com.racoders.racodersproject;
+package com.racoders.racodersproject.activities;
 
 import android.content.Intent;
 import android.content.pm.PackageInfo;
@@ -34,6 +34,9 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.racoders.racodersproject.R;
+import com.racoders.racodersproject.activities.localRegisterActivity;
+import com.racoders.racodersproject.activities.loggedInUser;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;

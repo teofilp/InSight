@@ -1,8 +1,10 @@
-package com.racoders.racodersproject;
+package com.racoders.racodersproject.classes;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.TextView;
+
+import com.racoders.racodersproject.R;
 
 import org.w3c.dom.Text;
 

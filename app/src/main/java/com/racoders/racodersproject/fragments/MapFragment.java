@@ -1,31 +1,31 @@
-package com.racoders.racodersproject;
+package com.racoders.racodersproject.fragments;
 
 import android.Manifest;
-import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.FragmentActivity;
-import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.Spinner;
 import android.widget.Toast;
 
-import com.facebook.login.LoginManager;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
@@ -39,69 +39,132 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.racoders.racodersproject.R;
+import com.racoders.racodersproject.activities.MarkerDetailsPopUpWindow;
+import com.racoders.racodersproject.classes.PointOfInterest;
 
-import java.util.ArrayList;
+
 import java.util.Arrays;
 import java.util.HashMap;
 
-public class MapsActivity extends FragmentActivity implements OnMapReadyCallback,
-        GoogleMap.OnMarkerClickListener{
+import static com.facebook.FacebookSdk.getApplicationContext;
 
-    private GoogleMap mMap;
-    private LocationManager locationManager;
-    private LocationListener locationListener;
-    private final int LOCATION_REQUEST_CODE = 1;
-    private LatLng myLocation;
-    private ImageButton imageButton;
+
+public class MapFragment extends Fragment implements OnMapReadyCallback {
+
+    public static GoogleMap mMap;
+    SupportMapFragment mapFragment;
+    public static LocationManager locationManager;
+    public static LocationListener locationListener;
+    public static LatLng myLocation;
+    public static ImageButton imageButton;
     private int contor=0;
-    private Marker me;
-    private HashMap<Marker, String> mMarkers = new HashMap<>();
-    private boolean isFavOnly = true;
-    private Button markersState;
-    static String[] s;
+    public static Marker me;
+    public static HashMap<Marker, String> mMarkers = new HashMap<>();
+    public static boolean isFavOnly = true;
+    public static Button markersState;
+    public static String[] s;
     private Spinner myFilters;
-    private String activeFilter = "All";
+    public static String activeFilter;
 
     @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-
-        if(grantResults.length > 0){
-
-            if(grantResults[0] == PackageManager.PERMISSION_GRANTED){
-                if(ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED){
-                    locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationListener);
-                }
-            }else{
-                Toast.makeText(this, "We need your location for..", Toast.LENGTH_SHORT).show();
-                ActivityCompat.requestPermissions(this, new String[] {Manifest.permission.ACCESS_FINE_LOCATION}, 1);
-            }
-        }
-    }
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_maps);
-        // Obtain the SupportMapFragment and get notified when the map is ready to be used.
-        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
-                .findFragmentById(R.id.map);
-        mapFragment.getMapAsync(this);
-
-
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        MapsInitializer.initialize(getActivity());
     }
 
+    @Nullable
     @Override
-    public void onMapReady(GoogleMap googleMap) {
-        LatLng latLng = new LatLng(45.4324242, 26.4343242);
-        mMap = googleMap;
-        mMap.setOnMarkerClickListener(this);
-        checkForNewUser(FirebaseAuth.getInstance().getCurrentUser().getUid());
-        imageButton = findViewById(R.id.locationTrackerButton);
-        markersState = findViewById(R.id.markersState);
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+
+        View view = inflater.inflate(R.layout.map_fragment, container, false);
+        mapFragment = (SupportMapFragment)getChildFragmentManager().findFragmentById(R.id.map_fragment1);
+        if(mMap == null)
+            mapFragment.getMapAsync(this);
+        activeFilter = "All";
+        imageButton = view.findViewById(R.id.locationTrackerButton);
+        markersState = view.findViewById(R.id.markersState);
         imageButton.setEnabled(false);
-        locationManager =(LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
-        myFilters = findViewById(R.id.filter_spinner);
-        ArrayAdapter<CharSequence> myFilterAdapter = ArrayAdapter.createFromResource(this, R.array.filter, android.R.layout.simple_spinner_item);
+        myFilters = view.findViewById(R.id.filter_spinner);
+        checkForNewUser(FirebaseAuth.getInstance().getUid());
+
+        return view;
+
+    }
+
+    @Override
+    public void onMapReady(final GoogleMap googleMap) {
+
+        mMap = googleMap;
+
+        mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
+            @Override
+            public boolean onMarkerClick(Marker marker) {
+                if(!marker.equals(me)) {
+                    System.out.println("markerCLicked");
+                    String markerId = mMarkers.get(marker);
+                    startActivity(new Intent(getApplicationContext(), MarkerDetailsPopUpWindow.class).putExtra("id", markerId));
+                } else {
+                    Toast.makeText(getContext(), "This is your location", Toast.LENGTH_SHORT).show();
+                }
+                return true;
+            }
+        });
+        try{
+            boolean success = mMap.setMapStyle(MapStyleOptions.loadRawResourceStyle(getActivity(), R.raw.style_json));
+            if(!success){
+                Log.i("error", "Style parsing failed");
+            }
+        }catch(Resources.NotFoundException e){
+            Log.i("error", "Can't find the style: " + e.toString());
+        }
+
+        locationManager = (LocationManager)getActivity().getSystemService(getActivity().LOCATION_SERVICE);
+
+        locationListener = new LocationListener() {
+            @Override
+            public void onLocationChanged(android.location.Location location) {
+
+                if(imageButton.isEnabled()==false){
+                    imageButton.setEnabled(true);
+                }
+                myLocation = new LatLng(location.getLatitude(), location.getLongitude());
+                if(me!=null)
+                    me.remove();
+                me = mMap.addMarker(new MarkerOptions().position(myLocation).title("You").icon(BitmapDescriptorFactory.fromResource(R.drawable.you_marker)));
+                if(contor==0){
+                    mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(myLocation, 16));
+                    contor++;
+                }
+            }
+
+            @Override
+            public void onStatusChanged(String provider, int status, Bundle extras) {
+
+            }
+
+            @Override
+            public void onProviderEnabled(String provider) {
+
+            }
+
+            @Override
+            public void onProviderDisabled(String provider) {
+
+            }
+        };
+
+        if(ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED){
+            ActivityCompat.requestPermissions(getActivity(), new String[] {Manifest.permission.ACCESS_FINE_LOCATION}, 1);
+        } else {
+            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationListener);
+        }
+        if(isFavOnly)
+            getFavPOIS();
+
+        else
+            getAllPOIS();
+        ArrayAdapter<CharSequence> myFilterAdapter = ArrayAdapter.createFromResource(getActivity(), R.array.filter, android.R.layout.simple_spinner_item);
         myFilters.setAdapter(myFilterAdapter);
         myFilters.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -155,110 +218,21 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             }
         });
 
-        locationListener = new LocationListener() {
-            @Override
-            public void onLocationChanged(android.location.Location location) {
-                if(imageButton.isEnabled()==false){
-                    imageButton.setEnabled(true);
-                }
-                myLocation = new LatLng(location.getLatitude(), location.getLongitude());
-                if(me!=null)
-                    me.remove();
-                me = mMap.addMarker(new MarkerOptions().position(myLocation).title("You").icon(BitmapDescriptorFactory.fromResource(R.drawable.you_marker)));
-                if(contor==0){
-                    mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(myLocation, 16));
-                    contor++;
-                }
-            }
 
-            @Override
-            public void onStatusChanged(String provider, int status, Bundle extras) {
-
-            }
-
-            @Override
-            public void onProviderEnabled(String provider) {
-
-            }
-
-            @Override
-            public void onProviderDisabled(String provider) {
-
-            }
-        };
-
-        if(ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED){
-            ActivityCompat.requestPermissions(this, new String[] {Manifest.permission.ACCESS_FINE_LOCATION}, LOCATION_REQUEST_CODE);
-        } else {
-            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationListener);
-        }
-        try{
-            boolean success = mMap.setMapStyle(MapStyleOptions.loadRawResourceStyle(this, R.raw.style_json));
-            if(!success){
-                Log.i("error", "Style parsing failed");
-            }
-        }catch(Resources.NotFoundException e){
-            Log.i("error", "Can't find the style: " + e.toString());
-        }
-        getFavPOIS();
-
-    }
-    public void moveCameraToMe(View view){
-        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(myLocation, 16));
     }
 
     @Override
-    protected void onStart() {
+    public void onStart() {
         super.onStart();
-        contor = 0;
-    }
 
-    public void signOut(View view){
-        FirebaseAuth.getInstance().signOut();
-        LoginManager.getInstance().logOut();
-        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-        startActivity(intent);
-        finish();
-        s = null;
+        mapFragment.getMapAsync(this);
     }
 
     @Override
-    public boolean onMarkerClick(Marker marker){
-        if(!marker.equals(me)) {
-            System.out.println("markerCLicked");
-            String markerId = mMarkers.get(marker);
-            startActivity(new Intent(getApplicationContext(), MarkerDetailsPopUpWindow.class).putExtra("id", markerId));
-        } else {
-            Toast.makeText(this, "This is your location", Toast.LENGTH_SHORT).show();
-        }
-        return true;
-    }
-    public void changeState(View view){
-
-        if(isFavOnly){
-            isFavOnly = !isFavOnly;
-            markersState.setText("Favorite Locations");
-            reloadMap();
-            if(activeFilter.equals("All"))
-                getAllPOIS();
-            else
-                getAllPOIS(activeFilter);
-        } else {
-            isFavOnly = !isFavOnly;
-            markersState.setText("All Locations");
-            reloadMap();
-            if(activeFilter.equals("All"))
-                getFavPOIS();
-            else
-                getFavPOIS(activeFilter);
-        }
-    }
-
-    @Override
-    protected void onResume() {
+    public void onResume() {
         super.onResume();
 
-        if(mMap!=null){
+        if(mMap!=null && myLocation!=null){
             mMap.clear();
             me = mMap.addMarker(new MarkerOptions().position(myLocation).title("You").icon(BitmapDescriptorFactory.fromResource(R.drawable.you_marker)));
             if(markersState.getText().equals("Favorite Locations"))
@@ -270,7 +244,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 getFavPOIS();
         }
     }
-    public void getFavPOIS(){
+
+    public static void getFavPOIS(){
+        mMap.clear();
         DatabaseReference myLocations = FirebaseDatabase.getInstance().getReference().child("FavoriteLocations").child(FirebaseAuth.getInstance().getUid()).child("0");
         myLocations.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -315,7 +291,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     }
 
-    public void getFavPOIS(final String category){
+    public static void getFavPOIS(final String category){
+        mMap.clear();
         DatabaseReference myLocations = FirebaseDatabase.getInstance().getReference().child("FavoriteLocations").child(FirebaseAuth.getInstance().getUid()).child("0");
         myLocations.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -361,7 +338,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     }
 
-    public void getAllPOIS(){
+    public static void getAllPOIS(){
         DatabaseReference allLocationsReference = FirebaseDatabase.getInstance().getReference().child("POIs");
         allLocationsReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -394,7 +371,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             }
         });
     }
-    public void checkForNewUser(String Uid){
+    public static void checkForNewUser(String Uid){
         final DatabaseReference dbref = FirebaseDatabase.getInstance().getReference().child("FavoriteLocations").child(Uid).child("0");
         dbref.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -406,7 +383,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                             if(databaseError==null){
 
                             } else {
-                                Toast.makeText(MapsActivity.this, "Could create new record, try again later", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(getApplicationContext(), "Could create new record, try again later", Toast.LENGTH_SHORT).show();
                             }
                         }
                     });
@@ -419,7 +396,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             }
         });
     }
-    public void getAllPOIS(final String category){
+    public static void getAllPOIS(final String category){
         DatabaseReference allLocationsReference = FirebaseDatabase.getInstance().getReference().child("POIs");
         allLocationsReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -455,7 +432,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             }
         });
     }
-    public void reloadMap(){
+    public static void reloadMap(){
         mMap.clear();
         if(myLocation!=null){
             me = mMap.addMarker(new MarkerOptions().position(myLocation).icon(BitmapDescriptorFactory.fromResource(R.drawable.you_marker)));
@@ -464,3 +441,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
 
 }
+
+
+
+

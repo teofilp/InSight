@@ -1,4 +1,5 @@
-package com.racoders.racodersproject;
+package com.racoders.racodersproject.activities;
+
 
 import android.Manifest;
 import android.content.Context;
@@ -29,8 +30,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
-import com.racoders.racodersproject.MapFragment;
-import com.facebook.Profile;
+;
+
 import com.facebook.login.LoginManager;
 import com.facebook.login.widget.ProfilePictureView;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -47,6 +48,11 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.racoders.racodersproject.R;
+
+import com.racoders.racodersproject.classes.ViewPagerAdapter;
+import com.racoders.racodersproject.fragments.MapFragment;
+import com.racoders.racodersproject.fragments.newsFeed;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -56,16 +62,14 @@ import java.util.Map;
 
 
 import static com.facebook.FacebookSdk.getApplicationContext;
-import static com.racoders.racodersproject.MainActivity.mAuth;
-import static com.racoders.racodersproject.MainActivity.user;
-import static com.racoders.racodersproject.MapFragment.activeFilter;
-import static com.racoders.racodersproject.MapFragment.getAllPOIS;
-import static com.racoders.racodersproject.MapFragment.getFavPOIS;
-import static com.racoders.racodersproject.MapFragment.isFavOnly;
-import static com.racoders.racodersproject.MapFragment.mMarkers;
-import static com.racoders.racodersproject.MapFragment.markersState;
-import static com.racoders.racodersproject.MapFragment.me;
-import static com.racoders.racodersproject.MapFragment.reloadMap;
+
+import static com.racoders.racodersproject.fragments.MapFragment.activeFilter;
+import static com.racoders.racodersproject.fragments.MapFragment.getAllPOIS;
+import static com.racoders.racodersproject.fragments.MapFragment.getFavPOIS;
+import static com.racoders.racodersproject.fragments.MapFragment.isFavOnly;
+import static com.racoders.racodersproject.fragments.MapFragment.markersState;
+import static com.racoders.racodersproject.fragments.MapFragment.reloadMap;
+import com.racoders.racodersproject.fragments.Profile;
 
 public class loggedInUser extends FragmentActivity {
 
@@ -103,8 +107,8 @@ public class loggedInUser extends FragmentActivity {
         adapter = new ViewPagerAdapter(getSupportFragmentManager());
 
         adapter.addFragment(new newsFeed(), "News Feed");
-        adapter.addFragment(new com.racoders.racodersproject.Profile(), "Profile");
         adapter.addFragment(new MapFragment(), "Map");
+        adapter.addFragment(new Profile(), "Profile");
 
         viewPager.setAdapter(adapter);
 

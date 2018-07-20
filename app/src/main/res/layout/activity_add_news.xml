@@ -4,12 +4,16 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".AddNews">
+    android:background="#bababa"
+    tools:context="com.racoders.racodersproject.activities.AddNews">
+
+
 
     <EditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/title"
+        android:hint="title"
         android:layout_margin="16dp"/>
 
     <EditText
@@ -17,6 +21,7 @@
         android:layout_height="wrap_content"
         android:id="@+id/author"
         android:layout_margin="16dp"
+        android:hint="author"
         android:layout_below="@+id/title"/>
 
     <EditText
@@ -24,6 +29,7 @@
         android:layout_height="wrap_content"
         android:id="@+id/description"
         android:layout_margin="16dp"
+        android:hint="description"
         android:layout_below="@+id/author"/>
 
     <Button
@@ -32,8 +38,25 @@
         android:id="@+id/save_button"
         android:layout_marginTop="16dp"
         android:text="Save"
+        android:inputType="text|textMultiLine"
         android:layout_centerHorizontal="true"
         android:layout_below="@+id/description"/>
+    <ImageView
+        android:layout_width="200dp"
+        android:layout_height="200dp"
+        android:id="@+id/mImage"
+        android:layout_below="@+id/save_button"
+        android:layout_centerHorizontal="true"/>
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/cropButton"
+        android:layout_marginTop="16dp"
+        android:text="Import Image"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@+id/mImage"/>
+
+
 
 
 

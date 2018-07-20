@@ -1,5 +1,8 @@
-package com.racoders.racodersproject;
+package com.racoders.racodersproject.activities;
 
+import com.racoders.racodersproject.fragments.MapFragment;
+import com.racoders.racodersproject.R;
+import com.racoders.racodersproject.classes.*;
 import android.app.Activity;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -23,7 +26,7 @@ import com.google.firebase.database.ValueEventListener;
 import java.sql.BatchUpdateException;
 import java.util.Arrays;
 
-import static com.racoders.racodersproject.MapFragment.s;
+
 
 public class MarkerDetailsPopUpWindow extends Activity{
 
@@ -55,7 +58,7 @@ public class MarkerDetailsPopUpWindow extends Activity{
         title = findViewById(R.id.title);
         description = findViewById(R.id.description);
 
-        if(s!=null && Arrays.asList(s).contains(id)){
+        if(MapFragment.s!=null && Arrays.asList(MapFragment.s).contains(id)){
             button.setText("Remove from favorites");
             button.setBackgroundColor(getResources().getColor(R.color.red));
         }
