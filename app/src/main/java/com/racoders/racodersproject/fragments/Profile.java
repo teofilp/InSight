@@ -1,5 +1,6 @@
 package com.racoders.racodersproject.fragments;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -11,6 +12,7 @@ import android.widget.Button;
 import android.widget.Toast;
 
 import com.racoders.racodersproject.R;
+import com.racoders.racodersproject.activities.AddNews;
 
 public class Profile extends Fragment {
     View view;
@@ -27,7 +29,7 @@ public class Profile extends Fragment {
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(getActivity(), "Button pressed", Toast.LENGTH_SHORT).show();
+                startActivity(new Intent(getContext(), AddNews.class));
             }
         });
         return view;

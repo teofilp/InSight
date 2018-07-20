@@ -20,8 +20,7 @@ import static com.facebook.FacebookSdk.getApplicationContext;
 
 public class NewsCustomAdapter extends RecyclerView.Adapter<NewsCustomAdapter.ViewHolder> {
 
-    ArrayList<News> mList;
-    News news;
+    private final ArrayList<News> mList;
 
     public NewsCustomAdapter(ArrayList<News> mList){
         this.mList = mList;
@@ -92,5 +91,9 @@ public class NewsCustomAdapter extends RecyclerView.Adapter<NewsCustomAdapter.Vi
     @Override
     public int getItemCount() {
         return mList.size();
+    }
+
+    public ArrayList<News> getmList() {
+        return mList;
     }
 }
