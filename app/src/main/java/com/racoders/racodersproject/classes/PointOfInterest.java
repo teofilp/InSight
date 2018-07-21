@@ -3,6 +3,25 @@ package com.racoders.racodersproject.classes;
 public class PointOfInterest {
     private String title;
     private String description;
+    private String phoneNumber;
+    private String emailAddress;
+
+    public String getPhoneNumber() {
+        return phoneNumber;
+    }
+
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
+    }
+
+    public String getEmailAddress() {
+        return emailAddress;
+    }
+
+    public void setEmailAddress(String emailAddress) {
+        this.emailAddress = emailAddress;
+    }
+
     private double latitude;
     private double longitude;
     private String adress;

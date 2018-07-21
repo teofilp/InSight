@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <LinearLayout
+        android:layout_height="match_parent"
+        android:layout_width="match_parent"
+        android:orientation="vertical"
+        android:background="@color/white"
+        >
+        <TextView
+
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Add a new location"
+            android:textSize="20dp"
+            android:textColor="@color/colorPrimaryDark"
+            android:layout_gravity="center"
+            android:layout_marginTop="40dp"/>
+
+        <TextView
+            android:layout_width="260dp"
+            android:layout_height="wrap_content"
+            android:text="location name will be the primary key for the users to find you"
+            android:textSize="12dp"
+            android:textColor="@color/black"
+            android:layout_marginLeft="30dp"
+            android:layout_marginTop="30dp"/>
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:hint="name"
+            android:textColor="@color/colorPrimaryDark"
+            android:backgroundTint="@color/colorPrimaryDark"
+            android:textColorHint="@color/colorPrimaryDark"
+            android:id="@+id/locationName"/>
+        <TextView
+            android:layout_width="260dp"
+            android:layout_height="wrap_content"
+            android:text="category will help users find exactly what they want"
+            android:textSize="12dp"
+            android:textColor="@color/black"
+            android:layout_marginLeft="30dp"
+            android:layout_marginTop="20dp"/>
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:textColor="@color/colorPrimaryDark"
+            android:backgroundTint="@color/colorPrimaryDark"
+            android:textColorHint="@color/colorPrimaryDark"
+            android:hint="category"
+            android:id="@+id/locationCategory"/>
+        <TextView
+            android:layout_width="260dp"
+            android:layout_height="wrap_content"
+            android:text="the users will be able to contact you faster using a phone number"
+            android:textSize="12dp"
+            android:textColor="@color/black"
+            android:layout_marginLeft="30dp"
+            android:layout_marginTop="20dp"/>
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:inputType="phone"
+            android:textColor="@color/colorPrimaryDark"
+            android:backgroundTint="@color/colorPrimaryDark"
+            android:textColorHint="@color/colorPrimaryDark"
+            android:hint="phone"
+            android:id="@+id/locationPhone"
+            />
+        <TextView
+            android:layout_width="260dp"
+            android:layout_height="wrap_content"
+            android:text="the users will be able to contact you faster using a phone email"
+            android:textSize="12dp"
+            android:textColor="@color/black"
+            android:layout_marginLeft="30dp"
+            android:layout_marginTop="20dp"/>
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:inputType="textEmailAddress"
+            android:textColor="@color/colorPrimaryDark"
+            android:backgroundTint="@color/colorPrimaryDark"
+            android:textColorHint="@color/colorPrimaryDark"
+            android:hint="email"
+            android:id="@+id/locationEmail"
+            />
+
+
+
+    </LinearLayout>
+</RelativeLayout>
