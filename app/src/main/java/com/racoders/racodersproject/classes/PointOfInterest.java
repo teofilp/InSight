@@ -1,10 +1,16 @@
 package com.racoders.racodersproject.classes;
 
+import com.google.android.gms.maps.model.LatLng;
+
 public class PointOfInterest {
     private String title;
     private String description;
     private String phoneNumber;
     private String emailAddress;
+    private double latitude;
+    private double longitude;
+    private String adress;
+    private String category;
 
     public String getPhoneNumber() {
         return phoneNumber;
@@ -22,10 +28,7 @@ public class PointOfInterest {
         this.emailAddress = emailAddress;
     }
 
-    private double latitude;
-    private double longitude;
-    private String adress;
-    private String category;
+
 
     public String getCategory() {
         return category;
@@ -63,12 +66,6 @@ public class PointOfInterest {
         this.adress = adress;
     }
 
-
-
-    public PointOfInterest(double latitude, double longitude) {
-        this.latitude = latitude;
-        this.longitude = longitude;
-    }
 
     public double getLatitude() {
         return latitude;

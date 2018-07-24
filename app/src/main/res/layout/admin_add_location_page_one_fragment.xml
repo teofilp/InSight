@@ -32,11 +32,12 @@
             android:layout_marginTop="10dp"
             android:layout_marginLeft="20dp"
             android:layout_marginRight="20dp"
-            android:hint="name"
+            android:hint="name*"
             android:textColor="@color/colorPrimaryDark"
             android:backgroundTint="@color/colorPrimaryDark"
             android:textColorHint="@color/colorPrimaryDark"
-            android:id="@+id/locationName"/>
+            android:id="@+id/locationName"
+            android:singleLine="true"/>
         <TextView
             android:layout_width="260dp"
             android:layout_height="wrap_content"
@@ -54,8 +55,9 @@
             android:textColor="@color/colorPrimaryDark"
             android:backgroundTint="@color/colorPrimaryDark"
             android:textColorHint="@color/colorPrimaryDark"
-            android:hint="category"
-            android:id="@+id/locationCategory"/>
+            android:hint="category*"
+            android:id="@+id/locationCategory"
+            android:singleLine="true"/>
         <TextView
             android:layout_width="260dp"
             android:layout_height="wrap_content"
@@ -76,6 +78,7 @@
             android:textColorHint="@color/colorPrimaryDark"
             android:hint="phone"
             android:id="@+id/locationPhone"
+            android:singleLine="true"
             />
         <TextView
             android:layout_width="260dp"

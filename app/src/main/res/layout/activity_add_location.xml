@@ -30,12 +30,13 @@
             <Button
                 android:id="@+id/bk_button"
                 android:layout_width="wrap_content"
-                android:layout_height="30dp"
+                android:layout_height="wrap_content"
+                style="@style/Widget.AppCompat.Button.Borderless"
                 android:theme="@style/coloredButtons"
-                android:background="#0000"
+                android:layout_marginLeft="4dp"
                 android:layout_alignParentLeft="true"
                 android:layout_centerVertical="true"
-                android:text="Back"/>
+                android:text="Back" />
 
             <LinearLayout
                 android:layout_width="wrap_content"
@@ -69,13 +70,15 @@
             <Button
                 android:id="@+id/nt_button"
                 android:layout_width="wrap_content"
-                android:layout_height="30dp"
+                android:layout_height="wrap_content"
                 android:theme="@style/coloredButtons"
-                android:background="#0000"
+                style="@style/Widget.AppCompat.Button.Borderless"
+                android:layout_marginRight="4dp"
                 android:layout_gravity="center_vertical"
                 android:layout_centerVertical="true"
                 android:layout_alignParentRight="true"
-                android:text="Next"/>
+                android:text="Next"
+                android:onClick="saveLocation" />
         </RelativeLayout>
     </LinearLayout>
 

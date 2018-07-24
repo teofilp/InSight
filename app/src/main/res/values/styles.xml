@@ -13,8 +13,10 @@
         <item name="android:windowCloseOnTouchOutside">true</item>
     </style>
 
-    <style name="coloredButtons">
+    <style name="coloredButtons" parent="Theme.AppCompat.Light">
         <item name="android:textColor">@color/colorPrimaryDark</item>
+        <item name="colorControlNormal">@color/white</item>
+        <item name="colorControlHighlight">@color/lightGray</item>
     </style>
 
 </resources>

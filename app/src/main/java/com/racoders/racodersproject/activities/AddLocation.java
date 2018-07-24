@@ -1,18 +1,27 @@
 package com.racoders.racodersproject.activities;
 
+import android.Manifest;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
 import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationManager;
+import android.net.Uri;
 import android.opengl.Visibility;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.view.animation.AlphaAnimation;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -28,11 +37,24 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 import com.racoders.racodersproject.R;
+import com.racoders.racodersproject.classes.PointOfInterest;
 import com.racoders.racodersproject.classes.ViewPagerAdapter;
 import com.racoders.racodersproject.fragments.AdminAddLocationPageOneFragment;
 import com.racoders.racodersproject.fragments.AdminAddLocationPageThreeFragment;
 import com.racoders.racodersproject.fragments.AdminAddLocationPageTwoFragment;
+import com.soundcloud.android.crop.Crop;
+
+import java.io.ByteArrayOutputStream;
+import java.io.File;
 
 import static com.facebook.FacebookSdk.getApplicationContext;
 
@@ -43,6 +65,59 @@ public class AddLocation extends AppCompatActivity{
     private Button bk_button;
     private View[] dots;
     private int currTab = 0;
+    private Animation alphaAnimation;
+    private static String locationName;
+    private static String locationCategory;
+    private static String locationPhone;
+    private static String locationEmail;
+    private static String locationAddress;
+    private static String locationDescription;
+    private static Uri locationImageUri;
+    public static LatLng locationLatLng;
+
+    public static Uri getLocationImageUri(){
+        return locationImageUri;
+    }
+
+    public static void setLocationImageUri(Uri uri){
+        locationImageUri = uri;
+    }
+
+    public static void setLocationName(String locationName) {
+        AddLocation.locationName = locationName;
+    }
+
+    public static void setLocationCategory(String locationCategory) {
+        AddLocation.locationCategory = locationCategory;
+    }
+
+    public static void setLocationPhone(String locationPhone) {
+        AddLocation.locationPhone = locationPhone;
+    }
+
+    public static void setLocationEmail(String locationEmail) {
+        AddLocation.locationEmail = locationEmail;
+    }
+
+    public static void setLocationAddress(String locationAddress) {
+        AddLocation.locationAddress = locationAddress;
+    }
+
+    public static void setLocationDescription(String locationDescription) {
+        AddLocation.locationDescription = locationDescription;
+    }
+
+    public static void setLocationLatitude(double locationLatitude) {
+        AddLocation.locationLatitude = locationLatitude;
+    }
+
+    public static void setLocationLongitude(double locationLongitude) {
+        AddLocation.locationLongitude = locationLongitude;
+    }
+
+    private static double locationLatitude;
+    private static double locationLongitude;
+
 
     ViewPager viewPager;
     ViewPagerAdapter pagerAdapter;
@@ -58,13 +133,25 @@ public class AddLocation extends AppCompatActivity{
             }
 
         }
+        else if(requestCode == 1 && grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED){
+            if(ActivityCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED){
+                AdminAddLocationPageThreeFragment.locationImage.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Crop.pickImage(AddLocation.this);
+                    }
+                });
+            }else
+                ActivityCompat.requestPermissions(this, new String[] {Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
+
+        }
+
     }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_location);
-
 
         nt_button = findViewById(R.id.nt_button);
         bk_button = findViewById(R.id.bk_button);
@@ -98,10 +185,12 @@ public class AddLocation extends AppCompatActivity{
                     dots[0].setBackground(getResources().getDrawable(R.drawable.inactive_dots));
                     dots[1].setBackground(getResources().getDrawable(R.drawable.round_dots));
                     dots[2].setBackground(getResources().getDrawable(R.drawable.inactive_dots));
+                    nt_button.setText("Next");
                 }else{
                     dots[0].setBackground(getResources().getDrawable(R.drawable.inactive_dots));
                     dots[1].setBackground(getResources().getDrawable(R.drawable.inactive_dots));
                     dots[2].setBackground(getResources().getDrawable(R.drawable.round_dots));
+                    nt_button.setText("Save");
                 }
             }
 
@@ -112,46 +201,125 @@ public class AddLocation extends AppCompatActivity{
         });
 
         viewPager.setAdapter(pagerAdapter);
-
+        Toast.makeText(this, Integer.toString(currTab), Toast.LENGTH_SHORT).show();
         bk_button.setVisibility(View.GONE);
         nt_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(currTab < 3){
+                if(currTab == 2)
+                    saveLocation();
+                if(currTab < 2)
                     viewPager.setCurrentItem(++currTab);
 
-                    if(!bk_button.isEnabled())
-                        bk_button.setEnabled(true);
-                }
-                else{
-                    nt_button.setText("Save");
-                }
             }
         });
         bk_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(currTab>0){
-                    if(currTab == 1)
-                        bk_button.setEnabled(false);
+                if(currTab>0)
                     viewPager.setCurrentItem(--currTab);
+            }
+        });
 
-                }else{
+    }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(resultCode == RESULT_OK){
+            if(requestCode == Crop.REQUEST_PICK){
+                Uri source_uri = data.getData();
+                Uri destination_uri = Uri.fromFile(new File(getCacheDir(), "cropped"));
+
+                Crop.of(source_uri, destination_uri).asSquare().start(this);
+                AdminAddLocationPageThreeFragment.setImageUri(Crop.getOutput(data));
+
+            }
+            else if (requestCode == Crop.REQUEST_CROP){
+                handle_crop(resultCode, data);
+            }
+        }
+    }
+    public void handle_crop(int code, Intent data){
+
+        if(code == RESULT_OK){
+            AdminAddLocationPageThreeFragment.setImageUri(Crop.getOutput(data));
+        }
+        else if (code == Crop.RESULT_ERROR){
+            Toast.makeText(this, "Something went wrong", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    public void saveLocation(){
+        AdminAddLocationPageThreeFragment.progressBar.setVisibility(View.VISIBLE);
+        PointOfInterest mPoinOfInterest = new PointOfInterest();
+
+        mPoinOfInterest.setTitle(AdminAddLocationPageOneFragment.getLocationName());
+        mPoinOfInterest.setCategory(AdminAddLocationPageOneFragment.getLocationCategory());
+        mPoinOfInterest.setEmailAddress(AdminAddLocationPageOneFragment.getLocationEmail());
+        mPoinOfInterest.setPhoneNumber(AdminAddLocationPageOneFragment.getLocationPhone());
+        mPoinOfInterest.setAdress(AdminAddLocationPageTwoFragment.getLocationAddress());
+        mPoinOfInterest.setDescription(AdminAddLocationPageThreeFragment.getLocationDescription());
+        if(locationLatLng!=null){
+            mPoinOfInterest.setLatitude(locationLatLng.latitude);
+            mPoinOfInterest.setLongitude(locationLatLng.longitude);
+        }else{
+            Toast.makeText(this, "Your location on the map is required", Toast.LENGTH_SHORT).show();
+            AdminAddLocationPageThreeFragment.progressBar.setVisibility(View.GONE);
+            return;
+        }
+        if(mPoinOfInterest.getTitle().equals("") || mPoinOfInterest.getCategory().equals("")){
+            Toast.makeText(this, "All fields with * are required, including " +
+                    "your location on map", Toast.LENGTH_LONG).show();
+            AdminAddLocationPageThreeFragment.progressBar.setVisibility(View.GONE);
+            return;
+        }
+
+
+        ImageView mPointOfInterestImageView = AdminAddLocationPageThreeFragment.getLocationImage();
+
+        DatabaseReference dbref = FirebaseDatabase.getInstance().getReference().child("POIs")
+                .child(mPoinOfInterest.getCategory());
+        String key = dbref.push().getKey();
+
+
+        dbref.child(key).setValue(mPoinOfInterest, new DatabaseReference.CompletionListener() {
+            @Override
+            public void onComplete(@Nullable DatabaseError databaseError, @NonNull DatabaseReference databaseReference) {
+                if(databaseError == null){
+                    System.out.println("Location saved successfully");
                 }
             }
         });
 
+        FirebaseStorage storage = FirebaseStorage.getInstance();
+        StorageReference spaceref = storage.getReference().child("images/pois/" + key + ".jpeg");
 
+        mPointOfInterestImageView.setDrawingCacheEnabled(true);
+        mPointOfInterestImageView.buildDrawingCache();
+
+        Bitmap bitmap = ((BitmapDrawable) mPointOfInterestImageView.getDrawable()).getBitmap();
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+        byte[] data = baos.toByteArray();
+
+        UploadTask uploadTask = spaceref.putBytes(data);
+        uploadTask.addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                System.out.println("Image upload failed");
+                AdminAddLocationPageThreeFragment.progressBar.setVisibility(View.GONE);
+            }
+        }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+            @Override
+            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                Toast.makeText(AddLocation.this, "Successfully", Toast.LENGTH_SHORT).show();
+                AdminAddLocationPageThreeFragment.progressBar.setVisibility(View.GONE);
+            }
+        });
 
 
     }
-
-
-
-
-
-
 
 
 }

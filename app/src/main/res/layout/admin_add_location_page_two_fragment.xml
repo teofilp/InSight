@@ -20,12 +20,13 @@
             android:hint="address"
             android:textColor="@color/colorPrimaryDark"
             android:backgroundTint="@color/colorPrimaryDark"
+            android:singleLine="true"
             android:textColorHint="@color/colorPrimaryDark"
             android:id="@+id/locationAddress"/>
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Find your location on the map"
+            android:text="Find your location on the map*"
             android:textColor="@color/colorPrimaryDark"
             android:backgroundTint="@color/colorPrimaryDark"
             android:layout_marginLeft="20dp"

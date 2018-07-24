@@ -13,11 +13,10 @@ import com.racoders.racodersproject.R;
 
 public class AdminAddLocationPageOneFragment extends Fragment {
 
-    private EditText name;
-    private EditText category;
-    private EditText address;
-    private EditText phone;
-    private EditText email;
+    private static EditText locationName;
+    private static EditText locationCategory;
+    private static EditText locationPhone;
+    private static EditText locationEmail;
 
 
     @Nullable
@@ -26,14 +25,28 @@ public class AdminAddLocationPageOneFragment extends Fragment {
 
         View view = inflater.inflate(R.layout.admin_add_location_page_one_fragment, container, false);
 
-        name = view.findViewById(R.id.locationName);
-        category = view.findViewById(R.id.locationCategory);
-        address = view.findViewById(R.id.locationAddress);
-        phone = view.findViewById(R.id.locationPhone);
-        email = view.findViewById(R.id.locationEmail);
-
-
+        locationName = view.findViewById(R.id.locationName);
+        locationCategory = view.findViewById(R.id.locationCategory);
+        locationPhone = view.findViewById(R.id.locationPhone);
+        locationEmail = view.findViewById(R.id.locationEmail);
 
         return view;
     }
+
+    public static String getLocationName(){
+        return locationName.getText().toString();
+    }
+
+    public static String getLocationCategory(){
+        return locationCategory.getText().toString();
+    }
+
+    public static String getLocationPhone(){
+        return locationPhone.getText().toString();
+    }
+
+    public static String getLocationEmail(){
+        return locationEmail.getText().toString();
+    }
+
 }
