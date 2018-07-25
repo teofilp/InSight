@@ -65,13 +65,7 @@ public class AddLocation extends AppCompatActivity{
     private Button bk_button;
     private View[] dots;
     private int currTab = 0;
-    private Animation alphaAnimation;
-    private static String locationName;
-    private static String locationCategory;
-    private static String locationPhone;
-    private static String locationEmail;
-    private static String locationAddress;
-    private static String locationDescription;
+
     private static Uri locationImageUri;
     public static LatLng locationLatLng;
 
@@ -82,41 +76,6 @@ public class AddLocation extends AppCompatActivity{
     public static void setLocationImageUri(Uri uri){
         locationImageUri = uri;
     }
-
-    public static void setLocationName(String locationName) {
-        AddLocation.locationName = locationName;
-    }
-
-    public static void setLocationCategory(String locationCategory) {
-        AddLocation.locationCategory = locationCategory;
-    }
-
-    public static void setLocationPhone(String locationPhone) {
-        AddLocation.locationPhone = locationPhone;
-    }
-
-    public static void setLocationEmail(String locationEmail) {
-        AddLocation.locationEmail = locationEmail;
-    }
-
-    public static void setLocationAddress(String locationAddress) {
-        AddLocation.locationAddress = locationAddress;
-    }
-
-    public static void setLocationDescription(String locationDescription) {
-        AddLocation.locationDescription = locationDescription;
-    }
-
-    public static void setLocationLatitude(double locationLatitude) {
-        AddLocation.locationLatitude = locationLatitude;
-    }
-
-    public static void setLocationLongitude(double locationLongitude) {
-        AddLocation.locationLongitude = locationLongitude;
-    }
-
-    private static double locationLatitude;
-    private static double locationLongitude;
 
 
     ViewPager viewPager;
@@ -286,7 +245,10 @@ public class AddLocation extends AppCompatActivity{
         DatabaseReference dbref = FirebaseDatabase.getInstance().getReference().child("POIs")
                 .child(mPoinOfInterest.getCategory());
         String key = dbref.push().getKey();
+        String value = FirebaseDatabase.getInstance().getReference().child("POIs").child(mPoinOfInterest.getCategory()).toString();
+        value+="/"+key;
 
+        mPoinOfInterest.setKey(value);
 
         dbref.child(key).setValue(mPoinOfInterest, new DatabaseReference.CompletionListener() {
             @Override

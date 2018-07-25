@@ -11,6 +11,15 @@ public class PointOfInterest {
     private double longitude;
     private String adress;
     private String category;
+    private String key;
+
+    public void setKey(String value)
+    {
+        key = value;
+    }
+    public String getKey() {
+        return key;
+    }
 
     public String getPhoneNumber() {
         return phoneNumber;

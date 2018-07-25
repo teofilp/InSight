@@ -263,9 +263,12 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                 mMarkers.clear();
                 GenericTypeIndicator<List<String>> t = new GenericTypeIndicator<List<String>>(){};
                 mString = dataSnapshot.getValue(t);
+                System.out.println("mString size " + mString.size());
                 for(int i=0; i<mString.size(); i++){
+                    System.out.println("i: " + i);
                     str = mString.get(i);
-                    DatabaseReference dbref = FirebaseDatabase.getInstance().getReferenceFromUrl(str);
+                    System.out.println(str);
+                    final DatabaseReference dbref = FirebaseDatabase.getInstance().getReferenceFromUrl(str);
                     dbref.addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -274,7 +277,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                                 Marker marker = mMap.addMarker(new MarkerOptions()
                                     .position(new LatLng(favPointOfInterest.getLatitude(), favPointOfInterest.getLongitude()))
                                         .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE)));
-                                mMarkers.put(marker, str);
+                                mMarkers.put(marker, favPointOfInterest.getKey());
                                 mFavPOIs.put(dataSnapshot.getKey(), favPointOfInterest);
 
                             }
@@ -309,7 +312,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                     GenericTypeIndicator<List<String>> t = new GenericTypeIndicator<List<String>>(){};
                     mString = dataSnapshot.getValue(t);
                     if(mString!=null){
-//                        System.out.println(myString);
 
                         for(int i=0; i<mString.size(); i++){
                             str = mString.get(i);
@@ -324,7 +326,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                                             Marker marker = mMap.addMarker(new MarkerOptions()
                                                     .position(new LatLng(favPointOfInterest.getLatitude(), favPointOfInterest.getLongitude()))
                                                     .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE)));
-                                            mMarkers.put(marker, str);
+                                            mMarkers.put(marker, favPointOfInterest.getKey());
                                         }else if(favPointOfInterest.getCategory().equals("All"))
                                             getFavPOIS();
                                     }
@@ -360,20 +362,18 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                         for(DataSnapshot childOfChild : child.getChildren()){
                             Marker marker;
                             PointOfInterest pointOfInterest = childOfChild.getValue(PointOfInterest.class);
-                            String id = childOfChild.getKey();
-                            String key = FirebaseDatabase.getInstance().getReference().toString()+ "/" + pointOfInterest.getCategory()+"/"+id;
-                            PointOfInterest pointOfInterest1 = mFavPOIs.get(id);
-                            if(pointOfInterest1 == null){
-                                marker= mMap.addMarker(new MarkerOptions()
-                                        .position(new LatLng(pointOfInterest.getLatitude(), pointOfInterest.getLongitude()))
-                                        .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_YELLOW)));
-                            }else{
+
+                            if(mString.contains(pointOfInterest.getKey())){
                                 marker= mMap.addMarker(new MarkerOptions()
                                         .position(new LatLng(pointOfInterest.getLatitude(), pointOfInterest.getLongitude()))
                                         .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE)));
+                            }else{
+                                marker= mMap.addMarker(new MarkerOptions()
+                                        .position(new LatLng(pointOfInterest.getLatitude(), pointOfInterest.getLongitude()))
+                                        .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_YELLOW)));
                             }
 
-                            mMarkers.put(marker, key);
+                            mMarkers.put(marker, pointOfInterest.getKey());
                         }
 
                     }
@@ -422,20 +422,17 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                     for(DataSnapshot child : dataSnapshot.getChildren()){
                         Marker marker;
                         PointOfInterest pointOfInterest = child.getValue(PointOfInterest.class);
-                        String id = child.getKey();
-                        String key = FirebaseDatabase.getInstance().getReference().toString()+ "/" + pointOfInterest.getCategory()+"/"+id;
-                            PointOfInterest pointOfInterest1 = mFavPOIs.get(id);
-                            if(pointOfInterest1 == null){
-                                marker= mMap.addMarker(new MarkerOptions()
-                                        .position(new LatLng(pointOfInterest.getLatitude(), pointOfInterest.getLongitude()))
-                                        .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_YELLOW)));
-                            }else{
+                            if(mString.contains(pointOfInterest.getKey())){
                                 marker= mMap.addMarker(new MarkerOptions()
                                         .position(new LatLng(pointOfInterest.getLatitude(), pointOfInterest.getLongitude()))
                                         .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE)));
+                            }else{
+                                marker= mMap.addMarker(new MarkerOptions()
+                                        .position(new LatLng(pointOfInterest.getLatitude(), pointOfInterest.getLongitude()))
+                                        .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_YELLOW)));
                             }
                             // check if the pois is favorite or not
-                            mMarkers.put(marker, key);
+                            mMarkers.put(marker, pointOfInterest.getKey());
                         }
 
                     }
