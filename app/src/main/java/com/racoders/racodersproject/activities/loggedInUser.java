@@ -146,7 +146,7 @@ public class loggedInUser extends FragmentActivity {
         LoginManager.getInstance().logOut();
         Intent intent = new Intent(getApplicationContext(), MainActivity.class);
         startActivity(intent);
-        MapFragment.s = null;
+
 
         finish();
 
