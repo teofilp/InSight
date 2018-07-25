@@ -153,6 +153,8 @@ public class AddLocation extends AppCompatActivity{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_location);
 
+
+
         nt_button = findViewById(R.id.nt_button);
         bk_button = findViewById(R.id.bk_button);
         dots = new View[3];
@@ -180,17 +182,20 @@ public class AddLocation extends AppCompatActivity{
                     dots[0].setBackground(getResources().getDrawable(R.drawable.round_dots));
                     dots[1].setBackground(getResources().getDrawable(R.drawable.inactive_dots));
                     dots[2].setBackground(getResources().getDrawable(R.drawable.inactive_dots));
+                    currTab = 0;
                 }else if(position ==1){
                     bk_button.setVisibility(View.VISIBLE);
                     dots[0].setBackground(getResources().getDrawable(R.drawable.inactive_dots));
                     dots[1].setBackground(getResources().getDrawable(R.drawable.round_dots));
                     dots[2].setBackground(getResources().getDrawable(R.drawable.inactive_dots));
                     nt_button.setText("Next");
+                    currTab = 1;
                 }else{
                     dots[0].setBackground(getResources().getDrawable(R.drawable.inactive_dots));
                     dots[1].setBackground(getResources().getDrawable(R.drawable.inactive_dots));
                     dots[2].setBackground(getResources().getDrawable(R.drawable.round_dots));
                     nt_button.setText("Save");
+                    currTab = 2;
                 }
             }
 
@@ -206,7 +211,7 @@ public class AddLocation extends AppCompatActivity{
         nt_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(currTab == 2)
+                if(viewPager.getCurrentItem() == 2)
                     saveLocation();
                 if(currTab < 2)
                     viewPager.setCurrentItem(++currTab);
