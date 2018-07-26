@@ -49,6 +49,7 @@ public class MarkerDetailsPopUpWindow extends Activity{
 
         id = getIntent().getStringExtra("id");
 
+
         DisplayMetrics dm = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(dm);
 
@@ -61,32 +62,42 @@ public class MarkerDetailsPopUpWindow extends Activity{
 
         title = findViewById(R.id.title);
         description = findViewById(R.id.description);
-
-        mFavLocationsSet = new HashSet<>(MapFragment.getmFavLocationsString());
-        if(mFavLocationsSet.contains(id)){
-            button.setText("Remove from favorites");
-            button.setBackgroundColor(getResources().getColor(R.color.red));
+        /**
+         * check for new user
+         * if user already exists get the Array of fav locations
+         * else create a new Array
+         */
+        if(MapFragment.getmFavLocationsString()!=null){
+            mFavLocationsSet = new HashSet<>(MapFragment.getmFavLocationsString());
+            if(mFavLocationsSet.contains(id)){
+                button.setText("Remove from favorites");
+                button.setBackgroundColor(getResources().getColor(R.color.red));
+            }
+        }else{
+            mFavLocationsSet = new HashSet<>();
         }
-
-        final DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReferenceFromUrl(id);
-        databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                if(dataSnapshot.exists()){
-                    PointOfInterest pointOfInterest = dataSnapshot.getValue(PointOfInterest.class);
-                    title.setText(pointOfInterest.getTitle());
-                    description.setText(pointOfInterest.getDescription());
-                    System.out.println(pointOfInterest.getTitle());
-                    System.out.println(pointOfInterest.getDescription());
+        if(id!=null){
+            final DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReferenceFromUrl(id);
+            databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    if(dataSnapshot.exists()){
+                        PointOfInterest pointOfInterest = dataSnapshot.getValue(PointOfInterest.class);
+                        title.setText(pointOfInterest.getTitle());
+                        description.setText(pointOfInterest.getDescription());
+                        System.out.println(pointOfInterest.getTitle());
+                        System.out.println(pointOfInterest.getDescription());
+                    }
                 }
-            }
 
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
 
-            }
-        });
-
+                }
+            });
+        }else{
+            finish();
+        }
 
     }
     public void toggleFavorite(View view){
