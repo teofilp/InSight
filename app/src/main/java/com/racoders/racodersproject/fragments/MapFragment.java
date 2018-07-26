@@ -45,7 +45,6 @@ import com.racoders.racodersproject.activities.MarkerDetailsPopUpWindow;
 import com.racoders.racodersproject.classes.PointOfInterest;
 
 
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
@@ -65,7 +64,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     public static HashMap<Marker, String> mMarkers = new HashMap<>();
     public static boolean isFavOnly = true;
     public static Button markersState;
-    public static List<String> mString;
+    private static List<String> mFavLocationsString;
     private Spinner myFilters;
     public static String activeFilter;
     private static String str;
@@ -262,11 +261,11 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 mMarkers.clear();
                 GenericTypeIndicator<List<String>> t = new GenericTypeIndicator<List<String>>(){};
-                mString = dataSnapshot.getValue(t);
-                System.out.println("mString size " + mString.size());
-                for(int i=0; i<mString.size(); i++){
+                mFavLocationsString = dataSnapshot.getValue(t);
+                System.out.println("mFavLocationsString size " + mFavLocationsString.size());
+                for(int i = 0; i< mFavLocationsString.size(); i++){
                     System.out.println("i: " + i);
-                    str = mString.get(i);
+                    str = mFavLocationsString.get(i);
                     System.out.println(str);
                     final DatabaseReference dbref = FirebaseDatabase.getInstance().getReferenceFromUrl(str);
                     dbref.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -310,11 +309,11 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if(dataSnapshot.exists()){
                     GenericTypeIndicator<List<String>> t = new GenericTypeIndicator<List<String>>(){};
-                    mString = dataSnapshot.getValue(t);
-                    if(mString!=null){
+                    mFavLocationsString = dataSnapshot.getValue(t);
+                    if(mFavLocationsString !=null){
 
-                        for(int i=0; i<mString.size(); i++){
-                            str = mString.get(i);
+                        for(int i = 0; i< mFavLocationsString.size(); i++){
+                            str = mFavLocationsString.get(i);
 
                             DatabaseReference dbref = FirebaseDatabase.getInstance().getReferenceFromUrl(str);
                             dbref.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -363,7 +362,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                             Marker marker;
                             PointOfInterest pointOfInterest = childOfChild.getValue(PointOfInterest.class);
 
-                            if(mString.contains(pointOfInterest.getKey())){
+                            if(mFavLocationsString.contains(pointOfInterest.getKey())){
                                 marker= mMap.addMarker(new MarkerOptions()
                                         .position(new LatLng(pointOfInterest.getLatitude(), pointOfInterest.getLongitude()))
                                         .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE)));
@@ -422,7 +421,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                     for(DataSnapshot child : dataSnapshot.getChildren()){
                         Marker marker;
                         PointOfInterest pointOfInterest = child.getValue(PointOfInterest.class);
-                            if(mString.contains(pointOfInterest.getKey())){
+                            if(mFavLocationsString.contains(pointOfInterest.getKey())){
                                 marker= mMap.addMarker(new MarkerOptions()
                                         .position(new LatLng(pointOfInterest.getLatitude(), pointOfInterest.getLongitude()))
                                         .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE)));
@@ -452,6 +451,14 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
             me = mMap.addMarker(new MarkerOptions().position(myLocation).icon(BitmapDescriptorFactory.fromResource(R.drawable.you_marker)));
         }
     }
+    public static List<String> getmFavLocationsString() {
+        return mFavLocationsString;
+    }
+
+    public static void setmFavLocationsString(List<String> mFavLocationsString) {
+        MapFragment.mFavLocationsString = mFavLocationsString;
+    }
+
 
 
 }

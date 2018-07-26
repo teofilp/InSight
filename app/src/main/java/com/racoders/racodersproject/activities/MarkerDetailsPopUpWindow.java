@@ -24,8 +24,11 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.sql.BatchUpdateException;
+import java.util.ArrayList;
 import java.util.Arrays;
-
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 
 public class MarkerDetailsPopUpWindow extends Activity{
@@ -36,6 +39,7 @@ public class MarkerDetailsPopUpWindow extends Activity{
     private String id;
     private final double WIDTH_RATIO = 0.8;
     private final double HEIGHT_RATIO = 0.7;
+    private Set<String> mFavLocationsSet;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -58,10 +62,12 @@ public class MarkerDetailsPopUpWindow extends Activity{
         title = findViewById(R.id.title);
         description = findViewById(R.id.description);
 
-//        if(MapFragment.s!=null && Arrays.asList(MapFragment.s).contains(id)){
-//            button.setText("Remove from favorites");
-//            button.setBackgroundColor(getResources().getColor(R.color.red));
-//        }
+        mFavLocationsSet = new HashSet<>(MapFragment.getmFavLocationsString());
+        if(mFavLocationsSet.contains(id)){
+            button.setText("Remove from favorites");
+            button.setBackgroundColor(getResources().getColor(R.color.red));
+        }
+
         final DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReferenceFromUrl(id);
         databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -83,62 +89,47 @@ public class MarkerDetailsPopUpWindow extends Activity{
 
 
     }
-//    public void toggleFavorite(View view){
-//        button = (Button) view;
-//
-//        final DatabaseReference getFavLocations = FirebaseDatabase.getInstance().getReference().child("FavoriteLocations").child(FirebaseAuth.getInstance().getUid()).child("0");
-//        getFavLocations.addListenerForSingleValueEvent(new ValueEventListener() {
-//            @Override
-//            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-//                if(dataSnapshot.exists()){
-//                    String myString = dataSnapshot.getValue(String.class);
-//                    if(button.getText().equals("Add to favorites")){
-//                        if(myString.equals("")){
-//                            myString=id+"%";
-//                            MapFragment.s = myString.split("%");
-//                        }else{
-//                            myString+=id+"%";
-//                            MapFragment.s = myString.split("%");
-//                        }
-//                    }else{
-//                        String aux = "";
-//                        MapFragment.s = myString.split("%");
-//                        for(String str : MapFragment.s){
-//                            if(!str.equals(id))
-//                                aux+=str+"%";
-//                        }
-//                        myString = aux;
-//                        MapFragment.s = myString.split("%");
-//                    }
-//
-//                    getFavLocations.setValue(myString, new DatabaseReference.CompletionListener() {
-//                        @Override
-//                        public void onComplete(@Nullable DatabaseError databaseError, @NonNull DatabaseReference databaseReference) {
-//                            if(databaseError == null){
-//                                if(button.getText().equals("Add to favorites")){
-//                                    button.setText("Remove from favorites");
-//                                    button.setBackgroundColor(getResources().getColor(R.color.red));
-//                                }else{
-//                                    button.setText("Add to favorites");
-//                                    button.setBackgroundColor(getResources().getColor(R.color.green));
-//                                }
-//                            }
-//                        }
-//                    });
-//
-//                }
-//
-//            }
-//
-//            @Override
-//            public void onCancelled(@NonNull DatabaseError databaseError) {
-//
-//            }
-//        });
-//
-//
-//
-//    }
+    public void toggleFavorite(View view){
+        Button mButton = (Button) view;
+
+        if(mButton.getText().toString().equals("Remove from favorites")){
+            mFavLocationsSet.remove(id);
+            List<String> mList = new ArrayList<>(mFavLocationsSet);
+            MapFragment.setmFavLocationsString(mList);
+
+            DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference()
+                    .child("FavoriteLocations").child(FirebaseAuth.getInstance().getUid());
+
+            databaseReference.setValue(mList, new DatabaseReference.CompletionListener() {
+                @Override
+                public void onComplete(@Nullable DatabaseError databaseError, @NonNull DatabaseReference databaseReference) {
+                    if(databaseError == null){
+                        button.setText("Add to favorites");
+                        button.setBackgroundColor(getResources().getColor(R.color.green));
+                    }
+                }
+            });
+
+        }else{
+            mFavLocationsSet.add(id);
+            List<String> mList = new ArrayList<>(mFavLocationsSet);
+            MapFragment.setmFavLocationsString(mList);
+
+            DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference()
+                    .child("FavoriteLocations").child(FirebaseAuth.getInstance().getUid());
+
+            databaseReference.setValue(mList, new DatabaseReference.CompletionListener() {
+                @Override
+                public void onComplete(@Nullable DatabaseError databaseError, @NonNull DatabaseReference databaseReference) {
+                    if(databaseError == null){
+                        button.setText("Remove from favorites");
+                        button.setBackgroundColor(getResources().getColor(R.color.red));
+                    }
+                }
+            });
+
+        }
+    }
 
 
 }
