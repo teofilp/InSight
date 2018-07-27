@@ -5,12 +5,15 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.EditText;
 import android.widget.Toast;
 
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
@@ -29,8 +32,10 @@ import java.util.ArrayList;
 
 public class newsFeed extends Fragment {
 
-    View view;
-    RecyclerView recyclerView;
+    private View view;
+    private RecyclerView recyclerView;
+
+
     public newsFeed() {
     }
 
@@ -38,6 +43,7 @@ public class newsFeed extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.news_feed, container, false);
+
 
         recyclerView = view.findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
@@ -50,12 +56,15 @@ public class newsFeed extends Fragment {
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 mArrayList.clear();
                 for(DataSnapshot ds : dataSnapshot.getChildren()){
-                    News news = ds.getValue(News.class);
-                    mArrayList.add(news);
+                    for(DataSnapshot child : ds.getChildren()){
+                        News news = child.getValue(News.class);
+                        mArrayList.add(news);
+                    }
                 }
                 System.out.println("arr size: " + mArrayList.size());
                 NewsCustomAdapter adapter = new NewsCustomAdapter(mArrayList);
                 recyclerView.setAdapter(adapter);
+
             }
 
             @Override

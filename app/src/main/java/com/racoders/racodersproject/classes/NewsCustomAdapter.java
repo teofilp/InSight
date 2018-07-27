@@ -1,18 +1,21 @@
 package com.racoders.racodersproject.classes;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.racoders.racodersproject.AppGlideModule.GlideApp;
 import com.racoders.racodersproject.R;
+import com.racoders.racodersproject.activities.NewsActivity;
 
 import java.util.ArrayList;
 
@@ -32,6 +35,7 @@ public class NewsCustomAdapter extends RecyclerView.Adapter<NewsCustomAdapter.Vi
         private final  TextView author;
         private final TextView description;
         private final ImageView imageView;
+        private final LinearLayout layout;
 
         public ViewHolder(View itemView) {
             super(itemView);
@@ -40,6 +44,7 @@ public class NewsCustomAdapter extends RecyclerView.Adapter<NewsCustomAdapter.Vi
             author = itemView.findViewById(R.id.author);
             description = itemView.findViewById(R.id.description);
             imageView = itemView.findViewById(R.id.imageView);
+            layout = itemView.findViewById(R.id.layout);
 
         }
 
@@ -54,6 +59,10 @@ public class NewsCustomAdapter extends RecyclerView.Adapter<NewsCustomAdapter.Vi
         public void setDescription(String text){
             description.setText(text);
         }
+
+        public void setLayoutTag(int tag) { layout.setTag(tag);}
+
+        public Object getLayoutTag() { return layout.getTag();}
         public void setImageView(String id, Context context){
             StorageReference storage = FirebaseStorage.getInstance().getReference().child("images/" + id + ".jpeg");
             GlideApp.with(getApplicationContext()).load(storage).into(imageView);
@@ -76,14 +85,17 @@ public class NewsCustomAdapter extends RecyclerView.Adapter<NewsCustomAdapter.Vi
         holder.setAuthor(mList.get(position).getAuthor());
         holder.setDescription(mList.get(position).getDescription());
         holder.setImageView(mList.get(position).getId(), getApplicationContext());
+        holder.setLayoutTag(position);
+
 
         final String Uid = mList.get(position).getId();
         System.out.println(Uid);
 
-        holder.itemView.setOnClickListener(new View.OnClickListener() {
+        holder.layout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                getApplicationContext().startActivity(new Intent(getApplicationContext(), NewsActivity.class)
+                    .putExtra("reference", mList.get((int)v.getTag()).getReference()));
             }
         });
     }

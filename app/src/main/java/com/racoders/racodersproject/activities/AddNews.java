@@ -28,6 +28,7 @@ import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -139,8 +140,11 @@ public class AddNews extends AppCompatActivity {
             public void onClick(View v) {
 
 
-                DatabaseReference mDbref = FirebaseDatabase.getInstance().getReference().child("News");
+                DatabaseReference mDbref = FirebaseDatabase.getInstance().getReference().child("News")
+                        .child(FirebaseAuth.getInstance().getUid());
                 String mId = mDbref.push().getKey();
+                String key = mDbref.toString();
+                key+="/"+mId;
 
                 FirebaseStorage storage = FirebaseStorage.getInstance();
                 StorageReference spaceref = storage.getReference().child("images/" + mId + ".jpeg");
@@ -167,7 +171,7 @@ public class AddNews extends AppCompatActivity {
                 });
 
                 News mNews = new News(title.getText().toString(), author.getText().toString(),
-                        description.getText().toString(), Calendar.getInstance().getTime(), mId);
+                        description.getText().toString(), Calendar.getInstance().getTime(), mId,key, 0);
 
                 System.out.println(mId);
                 mDbref.child(mId).setValue(mNews, new DatabaseReference.CompletionListener() {

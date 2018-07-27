@@ -143,19 +143,13 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
             }
 
             @Override
-            public void onStatusChanged(String provider, int status, Bundle extras) {
-
-            }
+            public void onStatusChanged(String provider, int status, Bundle extras) { }
 
             @Override
-            public void onProviderEnabled(String provider) {
-
-            }
+            public void onProviderEnabled(String provider) { }
 
             @Override
-            public void onProviderDisabled(String provider) {
-
-            }
+            public void onProviderDisabled(String provider) { }
         };
 
         if(ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED){
@@ -163,11 +157,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         } else {
             locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationListener);
         }
-        if(isFavOnly)
-            getFavPOIS();
 
-        else
-            getAllPOIS();
 
         ArrayAdapter<CharSequence> myFilterAdapter = ArrayAdapter.createFromResource(getActivity(), R.array.filter, android.R.layout.simple_spinner_item);
         myFilters.setAdapter(myFilterAdapter);
@@ -229,7 +219,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     @Override
     public void onStart() {
         super.onStart();
-        mapFragment.getMapAsync(this);
+        //mapFragment.getMapAsync(this);
 
     }
 
@@ -245,16 +235,18 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                 locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationListener);
             }
             me = mMap.addMarker(new MarkerOptions().position(myLocation).title("You").icon(BitmapDescriptorFactory.fromResource(R.drawable.you_marker)));
-            if(markersState.getText().equals("Favorite Locations"))
-                if(!activeFilter.equals("All"))
+            if(markersState.getText().equals("Favorite Locations")) {
+                if (!activeFilter.equals("All"))
                     getAllPOIS(activeFilter);
                 else
                     getAllPOIS();
-            else if(!activeFilter.equals("All"))
+            }
+            else {
+                if(!activeFilter.equals("All"))
                     getFavPOIS(activeFilter);
                 else
                     getFavPOIS();
-
+            }
         }
     }
 
@@ -420,7 +412,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                     });
                 }
             }
-
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
 

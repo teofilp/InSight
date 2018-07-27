@@ -9,32 +9,31 @@ public class News {
     private String description;
     private Date publicationDate;
     private String id;
+    private String reference;
+    private int viewsNumber;
 
     public News() { }
 
-    public News(String title, String author, String description, Date publicationDate, String id) {
+    public News(String title, String author, String description, Date publicationDate, String id, String reference, int viewsNumber) {
         this.title = title;
         this.author = author;
         this.description = description;
         this.publicationDate = publicationDate;
         this.id = id;
+        this.reference = reference;
+        this.viewsNumber = viewsNumber;
     }
+    public String getReference(){return reference;}
 
-    public String getTitle() {
-        return title;
-    }
+    public void setReference(String value){ reference = value;}
 
-    public void setTitle(String title) {
-        this.title = title;
-    }
+    public String getTitle() { return title; }
 
-    public String getAuthor() {
-        return author;
-    }
+    public void setTitle(String title) {this.title = title; }
 
-    public void setAuthor(String author) {
-        this.author = author;
-    }
+    public String getAuthor() {return author; }
+
+    public void setAuthor(String author) {this.author = author; }
 
     public String getDescription() {
         return description;
@@ -58,5 +57,11 @@ public class News {
 
     public void setId(String id) {
         this.id = id;
+    }
+    public void increaseViewsNumber(){
+        viewsNumber++;
+    }
+    public int getViewsNumber(){
+        return viewsNumber;
     }
 }
