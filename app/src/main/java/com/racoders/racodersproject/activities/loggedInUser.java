@@ -67,6 +67,9 @@ import static com.racoders.racodersproject.fragments.MapFragment.activeFilter;
 import static com.racoders.racodersproject.fragments.MapFragment.getAllPOIS;
 import static com.racoders.racodersproject.fragments.MapFragment.getFavPOIS;
 import static com.racoders.racodersproject.fragments.MapFragment.isFavOnly;
+import static com.racoders.racodersproject.fragments.MapFragment.mFavPOIs;
+import static com.racoders.racodersproject.fragments.MapFragment.mMap;
+import static com.racoders.racodersproject.fragments.MapFragment.mMarkers;
 import static com.racoders.racodersproject.fragments.MapFragment.markersState;
 import static com.racoders.racodersproject.fragments.MapFragment.reloadMap;
 import com.racoders.racodersproject.fragments.Profile;
@@ -146,7 +149,12 @@ public class loggedInUser extends FragmentActivity {
         LoginManager.getInstance().logOut();
         Intent intent = new Intent(getApplicationContext(), MainActivity.class);
         startActivity(intent);
-
+        mMap.clear();
+        mMarkers.clear();
+        mFavPOIs.clear();
+        isFavOnly = true;
+        MapFragment.setmFavLocationsString(null);
+        MapFragment.mMap = null;
 
         finish();
 

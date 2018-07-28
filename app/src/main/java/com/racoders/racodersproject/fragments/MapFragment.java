@@ -68,7 +68,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     private Spinner myFilters;
     public static String activeFilter;
     private static String str;
-    private static HashMap<String, PointOfInterest> mFavPOIs = new HashMap<>();
+    public static HashMap<String, PointOfInterest> mFavPOIs = new HashMap<>();
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
@@ -133,13 +133,16 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                     imageButton.setEnabled(true);
                 }
                 myLocation = new LatLng(location.getLatitude(), location.getLongitude());
-                if(me!=null)
-                    me.remove();
-                me = mMap.addMarker(new MarkerOptions().position(myLocation).title("You").icon(BitmapDescriptorFactory.fromResource(R.drawable.you_marker)));
-                if(contor==0){
-                    mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(myLocation, 16));
-                    contor++;
+                if(mMap!=null){
+                    if(me!=null)
+                        me.remove();
+                    me = mMap.addMarker(new MarkerOptions().position(myLocation).title("You").icon(BitmapDescriptorFactory.fromResource(R.drawable.you_marker)));
+                    if(contor==0){
+                        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(myLocation, 16));
+                        contor++;
+                    }
                 }
+
             }
 
             @Override
@@ -219,7 +222,8 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     @Override
     public void onStart() {
         super.onStart();
-        //mapFragment.getMapAsync(this);
+        if(mMap == null)
+            mapFragment.getMapAsync(this);
 
     }
 
@@ -253,7 +257,8 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     @Override
     public void onPause() {
         super.onPause();
-        mMap.clear();
+        if(mMap!=null)
+            mMap.clear();
         locationManager.removeUpdates(locationListener);
     }
 
