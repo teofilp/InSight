@@ -65,21 +65,14 @@ public class AddLocation extends AppCompatActivity{
     private Button bk_button;
     private View[] dots;
     private int currTab = 0;
-
     private static Uri locationImageUri;
     public static LatLng locationLatLng;
-
-    public static Uri getLocationImageUri(){
-        return locationImageUri;
-    }
-
-    public static void setLocationImageUri(Uri uri){
-        locationImageUri = uri;
-    }
+    private ViewPager viewPager;
+    private ViewPagerAdapter pagerAdapter;
+    private boolean locationSaved = false;
+    private boolean imageSaved = false;
 
 
-    ViewPager viewPager;
-    ViewPagerAdapter pagerAdapter;
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
@@ -254,7 +247,9 @@ public class AddLocation extends AppCompatActivity{
             @Override
             public void onComplete(@Nullable DatabaseError databaseError, @NonNull DatabaseReference databaseReference) {
                 if(databaseError == null){
-                    System.out.println("Location saved successfully");
+                    locationSaved = true;
+                    if(imageSaved)
+                        startActivity(new Intent(getApplicationContext(), AdminPanel.class));
                 }
             }
         });
@@ -280,12 +275,21 @@ public class AddLocation extends AppCompatActivity{
         }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
             @Override
             public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                Toast.makeText(AddLocation.this, "Successfully", Toast.LENGTH_SHORT).show();
+                imageSaved = true;
                 AdminAddLocationPageThreeFragment.progressBar.setVisibility(View.GONE);
+                if(locationSaved)
+                    startActivity(new Intent(getApplicationContext(), AdminPanel.class));
             }
         });
 
 
+    }
+    public static Uri getLocationImageUri(){
+        return locationImageUri;
+    }
+
+    public static void setLocationImageUri(Uri uri){
+        locationImageUri = uri;
     }
 
 

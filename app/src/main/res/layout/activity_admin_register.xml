@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".activities.localRegisterActivity"
+    tools:context=".activities.AdminRegister"
     android:orientation="vertical"
     android:background="#fff">
 
@@ -16,7 +16,7 @@
 
     <TextView
         android:layout_gravity="center"
-        android:textColor="#e73e32"
+        android:textColor="@color/AdminBlue"
         android:id="@+id/registerHeader"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -35,7 +35,7 @@
         android:layout_marginBottom="8dp"
         android:layout_gravity="center"
         android:id="@+id/display_name_TextInputLayout"
-        android:textColorHint="@color/colorPrimaryDark">
+        android:textColorHint="@color/AdminBlue">
 
         <android.support.v7.widget.AppCompatEditText
             android:id="@+id/displayName"
@@ -43,8 +43,8 @@
             android:layout_height="wrap_content"
             android:hint="display name"
             android:inputType="text"
-            android:textColor="@color/colorPrimaryDark"
-            android:backgroundTint="@color/colorPrimaryDark"
+            android:textColor="@color/AdminBlue"
+            android:backgroundTint="@color/AdminBlue"
 
             />
 
@@ -59,7 +59,7 @@
         android:layout_marginBottom="8dp"
         android:layout_gravity="center"
         android:id="@+id/email_TextInputLayout"
-        android:textColorHint="@color/colorPrimaryDark">
+        android:textColorHint="@color/AdminBlue">
 
         <android.support.v7.widget.AppCompatEditText
             android:id="@+id/email"
@@ -67,8 +67,8 @@
             android:layout_height="wrap_content"
             android:hint="@string/email"
             android:inputType="textEmailAddress"
-            android:textColor="@color/colorPrimaryDark"
-            android:backgroundTint="@color/colorPrimaryDark"
+            android:textColor="@color/AdminBlue"
+            android:backgroundTint="@color/AdminBlue"
 
             />
 
@@ -83,7 +83,7 @@
         android:layout_marginBottom="8dp"
         android:layout_gravity="center"
         android:id="@+id/password_TextInputLayout"
-        android:textColorHint="@color/colorPrimaryDark">
+        android:textColorHint="@color/AdminBlue">
 
         <android.support.v7.widget.AppCompatEditText
             android:id="@+id/password"
@@ -91,8 +91,8 @@
             android:layout_height="wrap_content"
             android:hint="@string/password"
             android:inputType="textPassword"
-            android:textColor="@color/colorPrimaryDark"
-            android:backgroundTint="@color/colorPrimaryDark"
+            android:textColor="@color/AdminBlue"
+            android:backgroundTint="@color/AdminBlue"
 
             />
 
@@ -106,7 +106,7 @@
         android:onClick="onSubmit"
         android:text="Register!"
         android:layout_gravity="center"
-        android:background="@drawable/rounded_button"
+        android:background="@drawable/admin_rounded_button"
         android:layout_marginTop="32dp" />
 
 </LinearLayout>

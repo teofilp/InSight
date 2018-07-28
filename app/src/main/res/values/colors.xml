@@ -10,4 +10,5 @@
     <color name="black">#000</color>
     <color name="transparent">#0000</color>
     <color name="lightGray">#dedede</color>
+    <color name="AdminBlue">#4286f4</color>
 </resources>

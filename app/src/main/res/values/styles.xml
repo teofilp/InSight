@@ -19,4 +19,8 @@
         <item name="colorControlHighlight">@color/lightGray</item>
     </style>
 
+    <style name="AdminStatusBar">
+        <item name="android:statusBarColor">@color/AdminBlue</item>
+    </style>
+
 </resources>
