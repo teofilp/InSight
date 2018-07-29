@@ -1,26 +1,19 @@
-package com.racoders.racodersproject.activities;
+package com.racoders.racodersproject.fragments;
 
 import android.Manifest;
-import android.app.Activity;
-import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.content.res.Resources;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.Matrix;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
-import android.os.Environment;
-import android.provider.MediaStore;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
-import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
-import android.util.Log;
-import android.util.TypedValue;
+import android.support.v4.app.Fragment;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -29,98 +22,54 @@ import android.widget.Toast;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
-import com.google.firebase.storage.StorageTask;
 import com.google.firebase.storage.UploadTask;
 import com.racoders.racodersproject.R;
 import com.racoders.racodersproject.classes.News;
 import com.soundcloud.android.crop.Crop;
 
-
 import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.IOException;
 import java.util.Calendar;
-import java.util.Date;
 
-public class AddNews extends AppCompatActivity {
+import static android.app.Activity.RESULT_OK;
+import static com.facebook.FacebookSdk.getApplicationContext;
 
+public class AddNews extends Fragment {
     private EditText title;
     private EditText author;
     private EditText description;
     private Button saveButton;
     private Bitmap newsImage;
-    private Button cropButton;
-    private  Uri selectedImage;
-    private ImageView mImage;
+    private static Button cropButton;
+    private Uri selectedImage;
+    private static ImageView mImage;
     boolean imageSaved = false;
     boolean textDetailsSaved = false;
 
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-
-        if(requestCode == 0 && grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED){
-            if(ActivityCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED){
-                cropButton.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        Intent photoPickerIntent = new Intent(Intent.ACTION_PICK);
-                        photoPickerIntent.setType("image/*");
-                        startActivityForResult(photoPickerIntent, 0);
-                    }
-                });
-            }else
-                ActivityCompat.requestPermissions(this, new String[] {Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
-
-        }
+    public static Button getCropButton() {
+        return cropButton;
     }
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if(resultCode == RESULT_OK){
-            if(requestCode == Crop.REQUEST_PICK){
-                Uri source_uri = data.getData();
-                Uri destination_uri = Uri.fromFile(new File(getCacheDir(), "cropped"));
-
-                Crop.of(source_uri, destination_uri).asSquare().start(this);
-                mImage.setImageURI(Crop.getOutput(data));
-
-            }
-            else if (requestCode == Crop.REQUEST_CROP){
-                handle_crop(resultCode, data);
-            }
-        }
-    }
-    public void handle_crop(int code, Intent data){
-
-        if(code == RESULT_OK){
-            mImage.setImageURI(Crop.getOutput(data));
-        }
-        else if (code == Crop.RESULT_ERROR){
-            Toast.makeText(this, "Something went wrong", Toast.LENGTH_SHORT).show();
-        }
+    public static ImageView getmImage() {
+        return mImage;
     }
 
+    @Nullable
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_add_news);
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
-        mImage = findViewById(R.id.mImage);
-        title = findViewById(R.id.title);
-        author = findViewById(R.id.author);
-        description = findViewById(R.id.description);
-        saveButton = findViewById(R.id.save_button);
+        View view = inflater.inflate(R.layout.activity_add_news, container, false);
+        mImage = view.findViewById(R.id.mImage);
+        title = view.findViewById(R.id.title);
+        author = view.findViewById(R.id.author);
+        description = view.findViewById(R.id.description);
+        saveButton = view.findViewById(R.id.save_button);
 
-        cropButton = findViewById(R.id.cropButton);
+        cropButton = view.findViewById(R.id.cropButton);
 
         mImage.setImageDrawable(getResources().getDrawable(R.drawable.noimage));
 
@@ -128,11 +77,11 @@ public class AddNews extends AppCompatActivity {
             cropButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Crop.pickImage(AddNews.this);
+                    Crop.pickImage(getActivity());
                 }
             });
         else
-            ActivityCompat.requestPermissions(this,new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, 0);
+            ActivityCompat.requestPermissions(getActivity(),new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, 0);
 
 
         saveButton.setOnClickListener(new View.OnClickListener() {
@@ -166,11 +115,11 @@ public class AddNews extends AppCompatActivity {
                 }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                     @Override
                     public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                            imageSaved = true;
+                        imageSaved = true;
                     }
                 });
 
-                News mNews = new News(title.getText().toString(), author.getText().toString(),
+                final News mNews = new News(title.getText().toString(), author.getText().toString(),
                         description.getText().toString(), Calendar.getInstance().getTime(), mId,key, 0);
 
                 System.out.println(mId);
@@ -179,8 +128,13 @@ public class AddNews extends AppCompatActivity {
                     public void onComplete(@Nullable DatabaseError databaseError, @NonNull DatabaseReference databaseReference) {
                         if(databaseError == null){
                             textDetailsSaved = true;
-                            if(imageSaved && textDetailsSaved)
-                                Toast.makeText(AddNews.this, "Saved Successfully", Toast.LENGTH_SHORT).show();
+                            if(imageSaved && textDetailsSaved){
+                                Toast.makeText(getActivity(), "Saved Successfully", Toast.LENGTH_SHORT).show();
+                                AdminNews.getmList().add(mNews);
+                                AdminNews.getAdapter().notifyDataSetChanged();
+                            }
+
+
                         }else{
                             textDetailsSaved = false;
                         }
@@ -193,6 +147,8 @@ public class AddNews extends AppCompatActivity {
 
 
 
-    }
 
+
+        return view;
+    }
 }

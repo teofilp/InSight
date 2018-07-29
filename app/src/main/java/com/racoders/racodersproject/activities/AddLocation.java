@@ -39,6 +39,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
@@ -217,6 +218,8 @@ public class AddLocation extends AppCompatActivity{
         mPoinOfInterest.setPhoneNumber(AdminAddLocationPageOneFragment.getLocationPhone());
         mPoinOfInterest.setAdress(AdminAddLocationPageTwoFragment.getLocationAddress());
         mPoinOfInterest.setDescription(AdminAddLocationPageThreeFragment.getLocationDescription());
+        mPoinOfInterest.setRatingNumb(0);
+        mPoinOfInterest.setRatingSum(0);
         if(locationLatLng!=null){
             mPoinOfInterest.setLatitude(locationLatLng.latitude);
             mPoinOfInterest.setLongitude(locationLatLng.longitude);
@@ -235,15 +238,15 @@ public class AddLocation extends AppCompatActivity{
 
         ImageView mPointOfInterestImageView = AdminAddLocationPageThreeFragment.getLocationImage();
 
-        DatabaseReference dbref = FirebaseDatabase.getInstance().getReference().child("POIs")
-                .child(mPoinOfInterest.getCategory());
-        String key = dbref.push().getKey();
-        String value = FirebaseDatabase.getInstance().getReference().child("POIs").child(mPoinOfInterest.getCategory()).toString();
-        value+="/"+key;
+        DatabaseReference dbref = FirebaseDatabase.getInstance().getReference().child("POIs").child(mPoinOfInterest.getCategory())
+                .child(FirebaseAuth.getInstance().getCurrentUser().getUid());
+
+        String value = FirebaseDatabase.getInstance().getReference().child("POIs").child(mPoinOfInterest.getCategory())
+                .child(FirebaseAuth.getInstance().getCurrentUser().getUid()).toString();
 
         mPoinOfInterest.setKey(value);
 
-        dbref.child(key).setValue(mPoinOfInterest, new DatabaseReference.CompletionListener() {
+        dbref.setValue(mPoinOfInterest, new DatabaseReference.CompletionListener() {
             @Override
             public void onComplete(@Nullable DatabaseError databaseError, @NonNull DatabaseReference databaseReference) {
                 if(databaseError == null){
@@ -255,7 +258,7 @@ public class AddLocation extends AppCompatActivity{
         });
 
         FirebaseStorage storage = FirebaseStorage.getInstance();
-        StorageReference spaceref = storage.getReference().child("images/pois/" + key + ".jpeg");
+        StorageReference spaceref = storage.getReference().child("images/pois/" + FirebaseAuth.getInstance().getCurrentUser().getUid() + ".jpeg");
 
         mPointOfInterestImageView.setDrawingCacheEnabled(true);
         mPointOfInterestImageView.buildDrawingCache();

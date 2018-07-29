@@ -12,6 +12,24 @@ public class PointOfInterest {
     private String adress;
     private String category;
     private String key;
+    private float ratingSum;
+    private int ratingNumb;
+
+    public float getRatingSum() {
+        return ratingSum;
+    }
+
+    public void setRatingSum(float ratingSum) {
+        this.ratingSum = ratingSum;
+    }
+
+    public int getRatingNumb() {
+        return ratingNumb;
+    }
+
+    public void setRatingNumb(int ratingNumb) {
+        this.ratingNumb = ratingNumb;
+    }
 
     public void setKey(String value)
     {
