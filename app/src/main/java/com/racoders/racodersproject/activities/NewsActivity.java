@@ -35,6 +35,8 @@ import com.racoders.racodersproject.classes.News;
 import com.racoders.racodersproject.fragments.AdminNews;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 
 import static com.facebook.FacebookSdk.getApplicationContext;
 
@@ -140,8 +142,6 @@ public class NewsActivity extends AppCompatActivity {
 
                                 AdminNews.getmList().remove(position);
                                 AdminNews.setAdapter(new ArrayList<>(AdminNews.getmList()));
-
-
 
                                 finish();
                             }

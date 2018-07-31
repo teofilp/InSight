@@ -34,6 +34,8 @@ import com.soundcloud.android.crop.Crop;
 
 import java.io.ByteArrayOutputStream;
 import java.util.Calendar;
+import java.util.Collections;
+import java.util.Comparator;
 
 import static android.app.Activity.RESULT_OK;
 import static com.facebook.FacebookSdk.getApplicationContext;
@@ -45,11 +47,8 @@ public class AddNews extends Fragment {
     private Button saveButton;
     private Bitmap newsImage;
     private static Button cropButton;
-    private Uri selectedImage;
+//    private Uri selectedImage;
     private static ImageView mImage;
-    boolean imageSaved = false;
-    boolean textDetailsSaved = false;
-
     public static Button getCropButton() {
         return cropButton;
     }
@@ -96,7 +95,7 @@ public class AddNews extends Fragment {
                 key+="/"+mId;
 
                 FirebaseStorage storage = FirebaseStorage.getInstance();
-                StorageReference spaceref = storage.getReference().child("images/" + mId + ".jpeg");
+                final StorageReference spaceref = storage.getReference().child("images/" + mId + ".jpeg");
 
                 mImage.setDrawingCacheEnabled(true);
                 mImage.buildDrawingCache();
@@ -104,23 +103,9 @@ public class AddNews extends Fragment {
                 Bitmap bitmap = ((BitmapDrawable) mImage.getDrawable()).getBitmap();
                 ByteArrayOutputStream baos = new ByteArrayOutputStream();
                 bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
-                byte[] data = baos.toByteArray();
+                final byte[] data = baos.toByteArray();
 
-                UploadTask uploadTask = spaceref.putBytes(data);
-                uploadTask.addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
 
-                    }
-                }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                    @Override
-                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                        imageSaved = true;
-                        if(imageSaved && textDetailsSaved){
-                            Toast.makeText(getActivity(), "Saved Successfully", Toast.LENGTH_SHORT).show();
-                        }
-                    }
-                });
 
                 final News mNews = new News(title.getText().toString(), author.getText().toString(),
                         description.getText().toString(), Calendar.getInstance().getTime(), mId,key, 0);
@@ -130,18 +115,23 @@ public class AddNews extends Fragment {
                     @Override
                     public void onComplete(@Nullable DatabaseError databaseError, @NonNull DatabaseReference databaseReference) {
                         if(databaseError == null){
-                            textDetailsSaved = true;
-                            if(imageSaved && textDetailsSaved){
-                                Toast.makeText(getActivity(), "Saved Successfully", Toast.LENGTH_SHORT).show();
-                                AdminNews.getmList().add(mNews);
-                                AdminNews.setAdapter(AdminNews.getmList());
+                            UploadTask uploadTask = spaceref.putBytes(data);
+                            uploadTask.addOnFailureListener(new OnFailureListener() {
+                                @Override
+                                public void onFailure(@NonNull Exception e) {
+                                    Toast.makeText(getApplicationContext(), "Something went wrong", Toast.LENGTH_SHORT).show();
+                                }
+                            }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                                @Override
+                                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                                    Toast.makeText(getActivity(), "Saved Successfully", Toast.LENGTH_SHORT).show();
+                                    AdminNews.getmList().add(mNews);
+                                    AdminNews.setAdapter(AdminNews.getmList());
 
-
-                            }
-
-
+                                }
+                            });
                         }else{
-                            textDetailsSaved = false;
+                            Toast.makeText(getApplicationContext(), "Something went wrong", Toast.LENGTH_SHORT).show();
                         }
                     }
                 });

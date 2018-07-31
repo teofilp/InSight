@@ -1,5 +1,6 @@
 package com.racoders.racodersproject.classes;
 
+import java.util.Comparator;
 import java.util.Date;
 
 public class News {
@@ -23,6 +24,8 @@ public class News {
         this.reference = reference;
         this.viewsNumber = viewsNumber;
     }
+
+
     public String getReference(){return reference;}
 
     public void setReference(String value){ reference = value;}

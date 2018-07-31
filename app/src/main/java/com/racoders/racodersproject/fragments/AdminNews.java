@@ -21,6 +21,8 @@ import com.racoders.racodersproject.classes.News;
 import com.racoders.racodersproject.classes.NewsCustomAdapter;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 public class AdminNews extends Fragment {
@@ -80,6 +82,7 @@ public class AdminNews extends Fragment {
                 if(dataSnapshot.exists())
                     for(DataSnapshot child : dataSnapshot.getChildren())
                         mList.add(child.getValue(News.class));
+
 
                 adapter = new NewsCustomAdapter(mList);
                 recyclerView.setAdapter(adapter);
