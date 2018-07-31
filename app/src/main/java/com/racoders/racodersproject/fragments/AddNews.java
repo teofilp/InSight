@@ -134,7 +134,8 @@ public class AddNews extends Fragment {
                             if(imageSaved && textDetailsSaved){
                                 Toast.makeText(getActivity(), "Saved Successfully", Toast.LENGTH_SHORT).show();
                                 AdminNews.getmList().add(mNews);
-                                AdminNews.getAdapter().notifyItemInserted(AdminNews.getmList().size()-1);
+                                AdminNews.setAdapter(AdminNews.getmList());
+
 
                             }
 

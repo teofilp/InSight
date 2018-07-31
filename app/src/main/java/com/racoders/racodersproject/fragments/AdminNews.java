@@ -21,6 +21,7 @@ import com.racoders.racodersproject.classes.News;
 import com.racoders.racodersproject.classes.NewsCustomAdapter;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class AdminNews extends Fragment {
 
@@ -61,12 +62,17 @@ public class AdminNews extends Fragment {
     public static ArrayList<News> getmList(){
         return  mList;
     }
+    public static void setAdapter(ArrayList<News> list){
+        adapter = new NewsCustomAdapter(list);
+        recyclerView.setAdapter(adapter);
+    }
     public  static NewsCustomAdapter getAdapter(){
         return adapter;
 
     }
     public static void loadRecyclerView(){
         mList.clear();
+
         DatabaseReference dbref = FirebaseDatabase.getInstance().getReference().child("News").child(FirebaseAuth.getInstance().getCurrentUser().getUid());
         dbref.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -76,6 +82,7 @@ public class AdminNews extends Fragment {
                         mList.add(child.getValue(News.class));
 
                 adapter = new NewsCustomAdapter(mList);
+                recyclerView.setAdapter(adapter);
             }
 
             @Override
@@ -85,5 +92,10 @@ public class AdminNews extends Fragment {
         });
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        //loadRecyclerView();
 
+    }
 }

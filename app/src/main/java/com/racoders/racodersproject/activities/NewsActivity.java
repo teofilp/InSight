@@ -34,6 +34,8 @@ import com.racoders.racodersproject.R;
 import com.racoders.racodersproject.classes.News;
 import com.racoders.racodersproject.fragments.AdminNews;
 
+import java.util.ArrayList;
+
 import static com.facebook.FacebookSdk.getApplicationContext;
 
 public class NewsActivity extends AppCompatActivity {
@@ -135,9 +137,13 @@ public class NewsActivity extends AppCompatActivity {
                         @Override
                         public void onComplete(@Nullable DatabaseError databaseError, @NonNull DatabaseReference databaseReference) {
                             if(databaseError==null){
-                                finish();
+
                                 AdminNews.getmList().remove(position);
-                                AdminNews.getAdapter().notifyItemRemoved(position);
+                                AdminNews.setAdapter(new ArrayList<>(AdminNews.getmList()));
+
+
+
+                                finish();
                             }
                         }
                     });
