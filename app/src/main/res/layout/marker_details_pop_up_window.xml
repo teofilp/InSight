@@ -37,6 +37,17 @@
         android:onClick="toggleFavorite"
         android:background="#0f0"
         android:textColor="#fff"/>
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/createRoute"
+        android:layout_below="@id/toggleFavoriteButton"
+        android:layout_marginTop="10dp"
+        android:layout_centerHorizontal="true"
+        android:text="Create route"
+        android:textAllCaps="false"
+        android:onClick="createRoute"
+        />
 
 </RelativeLayout>
 

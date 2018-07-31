@@ -6,6 +6,7 @@ import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -33,6 +34,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -42,9 +44,21 @@ import com.google.firebase.database.GenericTypeIndicator;
 import com.google.firebase.database.ValueEventListener;
 import com.racoders.racodersproject.R;
 import com.racoders.racodersproject.activities.MarkerDetailsPopUpWindow;
+import com.racoders.racodersproject.classes.DirectionsParser;
 import com.racoders.racodersproject.classes.PointOfInterest;
 
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -69,6 +83,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     public static String activeFilter;
     private static String str;
     public static HashMap<String, PointOfInterest> mFavPOIs = new HashMap<>();
+    private static boolean routeCreated = false;
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
@@ -231,7 +246,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     public void onResume() {
         super.onResume();
 
-        if(mMap!=null && myLocation!=null){
+        if(mMap!=null && myLocation!=null && !routeCreated){
             mMap.clear();
             if(ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED){
                 ActivityCompat.requestPermissions(getActivity(), new String[] {Manifest.permission.ACCESS_FINE_LOCATION}, 1);
@@ -529,6 +544,149 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         return categoryMarker;
     }
 
+    public static void createRoute(LatLng locationLatLng){
+        mMap.clear();
+        routeCreated = true;
+        me = mMap.addMarker(new MarkerOptions().position(new LatLng(myLocation.latitude, myLocation.longitude))
+                .icon(BitmapDescriptorFactory.fromResource(R.drawable.you_marker)));
+        Marker destination = mMap.addMarker(new MarkerOptions().position(new LatLng(locationLatLng.latitude, locationLatLng.longitude))
+                .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_YELLOW)));
+
+        String url = getRequestUrl(myLocation, locationLatLng);
+        TaskRequestDirections taskRequestDirections = new TaskRequestDirections();
+        taskRequestDirections.execute(url);
+
+
+    }
+
+    private static String getRequestUrl(LatLng origin, LatLng destination) {
+        String str_org = "origin=" + origin.latitude + "," + origin.longitude;
+        String str_des = "destination=" + destination.latitude + "," + destination.longitude;
+        String sensor = "sensor=false";
+        String mode = "mode=driving";
+        String param = str_org + "&" + str_des + "&" + sensor + "&" + mode;
+        String output = "json";
+        String url = "https://maps.googleapis.com/maps/api/directions/" + output + "?" + param;
+
+        return url;
+    }
+
+    private static String requestDirection(String reqUrl) throws IOException {
+        String  responseString = "";
+        InputStream inputStream = null;
+        HttpURLConnection httpURLConnection = null;
+        try{
+            URL url = new URL(reqUrl);
+            httpURLConnection = (HttpURLConnection) url.openConnection();
+            httpURLConnection.connect();
+
+            // Get the response result
+            inputStream = httpURLConnection.getInputStream();
+            InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
+            BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
+
+            StringBuffer stringBuffer = new StringBuffer();
+            String line = "";
+            while((line = bufferedReader.readLine())!=null){
+                stringBuffer.append(line);
+            }
+
+            responseString = stringBuffer.toString();
+            bufferedReader.close();
+            inputStreamReader.close();
+
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }finally {
+            if(inputStream != null){
+                inputStream.close();
+            }
+            httpURLConnection.disconnect();
+        }
+
+        return responseString;
+    }
+
+    public static class TaskRequestDirections extends AsyncTask<String, Void, String>{
+
+        @Override
+        protected String doInBackground(String... strings) {
+            String responseString = "";
+            try{
+                responseString = requestDirection(strings[0]);
+            }catch(IOException e){
+                e.printStackTrace();
+            }
+
+            return responseString;
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+            super.onPostExecute(s);
+
+            TaskParser taskParser = new TaskParser();
+            taskParser.execute(s);
+
+        }
+    }
+    public static class TaskParser extends AsyncTask<String, Void, List<List<HashMap<String, String>>>>{
+
+        @Override
+        protected List<List<HashMap<String, String>>> doInBackground(String... strings) {
+            JSONObject jsonObject = null;
+            List<List<HashMap<String, String>>> routes = null;
+
+            try {
+
+                jsonObject = new JSONObject(strings[0]);
+                DirectionsParser directionsParser = new DirectionsParser();
+                routes = directionsParser.parse(jsonObject);
+
+            } catch (JSONException e) {
+
+                e.printStackTrace();
+            }
+
+            return routes;
+        }
+
+        @Override
+        protected void onPostExecute(List<List<HashMap<String, String>>> lists) {
+            // Get list route and display it in map
+
+            ArrayList points = null;
+
+            PolylineOptions polylineOptions = null;
+            for (List<HashMap<String, String>> path : lists){
+                points = new ArrayList();
+                polylineOptions = new PolylineOptions();
+
+                for (HashMap<String, String> point : path){
+                    double lat = Double.parseDouble(point.get("lat"));
+                    double lon = Double.parseDouble(point.get("lon"));
+
+                    points.add(new LatLng(lat, lon));
+
+
+                }
+
+                polylineOptions.addAll(points);
+                polylineOptions.width(10);
+                polylineOptions.color(R.color.colorPrimary);
+                polylineOptions.geodesic(true);
+
+            }
+            if(polylineOptions!=null){
+
+                mMap.addPolyline(polylineOptions);
+
+            }else
+                Toast.makeText(getApplicationContext(), "Something went wrong", Toast.LENGTH_SHORT).show();
+
+        }
+    }
 }
 
 

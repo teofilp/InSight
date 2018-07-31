@@ -1,5 +1,6 @@
 package com.racoders.racodersproject.activities;
 
+import com.google.android.gms.maps.model.LatLng;
 import com.racoders.racodersproject.fragments.MapFragment;
 import com.racoders.racodersproject.R;
 import com.racoders.racodersproject.classes.*;
@@ -40,12 +41,18 @@ public class MarkerDetailsPopUpWindow extends Activity{
     private final double WIDTH_RATIO = 0.8;
     private final double HEIGHT_RATIO = 0.7;
     private Set<String> mFavLocationsSet;
+    private PointOfInterest pointOfInterest;
+    private Button createRoute;
+
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.marker_details_pop_up_window);
         button = findViewById(R.id.toggleFavoriteButton);
+        createRoute = findViewById(R.id.createRoute);
+
+        createRoute.setEnabled(false);
 
         id = getIntent().getStringExtra("id");
 
@@ -82,7 +89,8 @@ public class MarkerDetailsPopUpWindow extends Activity{
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                     if(dataSnapshot.exists()){
-                        PointOfInterest pointOfInterest = dataSnapshot.getValue(PointOfInterest.class);
+                        pointOfInterest = dataSnapshot.getValue(PointOfInterest.class);
+                        createRoute.setEnabled(true);
                         title.setText(pointOfInterest.getTitle());
                         description.setText(pointOfInterest.getDescription());
                         System.out.println(pointOfInterest.getTitle());
@@ -140,6 +148,13 @@ public class MarkerDetailsPopUpWindow extends Activity{
             });
 
         }
+    }
+    public void createRoute(View view){
+
+        MapFragment.createRoute(new LatLng(pointOfInterest.getLatitude(), pointOfInterest.getLongitude()));
+        finish();
+
+
     }
 
 
