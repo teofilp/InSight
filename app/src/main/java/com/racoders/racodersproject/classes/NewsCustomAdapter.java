@@ -95,7 +95,7 @@ public class NewsCustomAdapter extends RecyclerView.Adapter<NewsCustomAdapter.Vi
             @Override
             public void onClick(View v) {
                 getApplicationContext().startActivity(new Intent(getApplicationContext(), NewsActivity.class)
-                    .putExtra("reference", mList.get((int)v.getTag()).getReference()));
+                    .putExtra("reference", mList.get((int)v.getTag()).getReference()).putExtra("position", (int)v.getTag()));
             }
         });
     }

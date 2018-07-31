@@ -24,7 +24,7 @@ import java.util.ArrayList;
 
 public class AdminNews extends Fragment {
 
-    private RecyclerView recyclerView;
+    private static RecyclerView recyclerView;
     private static ArrayList<News> mList = new ArrayList<>();
     private static NewsCustomAdapter adapter;
     @Nullable
@@ -35,8 +35,8 @@ public class AdminNews extends Fragment {
 
         recyclerView = view.findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        mList.clear();
 
+        mList.clear();
         DatabaseReference dbref = FirebaseDatabase.getInstance().getReference().child("News").child(FirebaseAuth.getInstance().getCurrentUser().getUid());
         dbref.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -47,7 +47,6 @@ public class AdminNews extends Fragment {
 
                 adapter = new NewsCustomAdapter(mList);
                 recyclerView.setAdapter(adapter);
-
 
             }
 
@@ -66,5 +65,25 @@ public class AdminNews extends Fragment {
         return adapter;
 
     }
+    public static void loadRecyclerView(){
+        mList.clear();
+        DatabaseReference dbref = FirebaseDatabase.getInstance().getReference().child("News").child(FirebaseAuth.getInstance().getCurrentUser().getUid());
+        dbref.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if(dataSnapshot.exists())
+                    for(DataSnapshot child : dataSnapshot.getChildren())
+                        mList.add(child.getValue(News.class));
+
+                adapter = new NewsCustomAdapter(mList);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+    }
+
 
 }

@@ -120,6 +120,7 @@ public class AdminPanel extends AppCompatActivity {
         super.onStart();
 
         final String uId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+
         DatabaseReference dbref = FirebaseDatabase.getInstance().getReference().child("POIs");
         dbref.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override

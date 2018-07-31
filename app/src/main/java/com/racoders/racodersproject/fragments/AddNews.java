@@ -116,6 +116,9 @@ public class AddNews extends Fragment {
                     @Override
                     public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                         imageSaved = true;
+                        if(imageSaved && textDetailsSaved){
+                            Toast.makeText(getActivity(), "Saved Successfully", Toast.LENGTH_SHORT).show();
+                        }
                     }
                 });
 
@@ -131,7 +134,8 @@ public class AddNews extends Fragment {
                             if(imageSaved && textDetailsSaved){
                                 Toast.makeText(getActivity(), "Saved Successfully", Toast.LENGTH_SHORT).show();
                                 AdminNews.getmList().add(mNews);
-                                AdminNews.getAdapter().notifyDataSetChanged();
+                                AdminNews.getAdapter().notifyItemInserted(AdminNews.getmList().size()-1);
+
                             }
 
 
