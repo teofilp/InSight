@@ -47,7 +47,12 @@ public class AdminNews extends Fragment {
                 if(dataSnapshot.exists())
                     for(DataSnapshot child : dataSnapshot.getChildren())
                         mList.add(child.getValue(News.class));
-
+                Collections.sort(mList, new Comparator<News>() {
+                    @Override
+                    public int compare(News o1, News o2) {
+                        return o2.getPublicationDate().compareTo(o1.getPublicationDate());
+                    }
+                });
                 adapter = new NewsCustomAdapter(mList);
                 recyclerView.setAdapter(adapter);
 
@@ -82,7 +87,6 @@ public class AdminNews extends Fragment {
                 if(dataSnapshot.exists())
                     for(DataSnapshot child : dataSnapshot.getChildren())
                         mList.add(child.getValue(News.class));
-
 
                 adapter = new NewsCustomAdapter(mList);
                 recyclerView.setAdapter(adapter);

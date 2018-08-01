@@ -14,6 +14,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
+import android.view.DragEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,7 +22,10 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -42,9 +46,13 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.GenericTypeIndicator;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.racoders.racodersproject.AppGlideModule.MyAppGlideModule;
 import com.racoders.racodersproject.R;
 import com.racoders.racodersproject.activities.MarkerDetailsPopUpWindow;
 import com.racoders.racodersproject.classes.DirectionsParser;
+import com.racoders.racodersproject.classes.DistanceCalculator;
 import com.racoders.racodersproject.classes.PointOfInterest;
 
 
@@ -58,9 +66,12 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+
+import de.hdodenhof.circleimageview.CircleImageView;
 
 import static com.facebook.FacebookSdk.getApplicationContext;
 
@@ -79,11 +90,16 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     public static boolean isFavOnly = true;
     public static Button markersState;
     private static List<String> mFavLocationsString;
-    private Spinner myFilters;
+    private static Spinner myFilters;
     public static String activeFilter;
     private static String str;
     public static HashMap<String, PointOfInterest> mFavPOIs = new HashMap<>();
     private static boolean routeCreated = false;
+    private static RelativeLayout routePopUp;
+    private static CircleImageView routeProfile;
+    private static TextView routeTitle;
+    private static TextView routeDistance;
+    private ImageView cancelRouteButton;
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
@@ -104,10 +120,31 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         markersState = view.findViewById(R.id.markersState);
         imageButton.setEnabled(false);
         myFilters = view.findViewById(R.id.filter_spinner);
+        routePopUp = view.findViewById(R.id.routePopUp);
+        routeProfile = view.findViewById(R.id.route_profile);
+        routeTitle = view.findViewById(R.id.route_title);
+        routeDistance = view.findViewById(R.id.routeDistance);
+        cancelRouteButton = view.findViewById(R.id.cancel_route);
+
+        cancelRouteButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                canceRoute();
+            }
+        });
 //        checkForNewUser(FirebaseAuth.getInstance().getUid());
+        routePopUp.setVisibility(View.GONE);
 
         return view;
 
+    }
+
+    private void canceRoute() {
+        routePopUp.animate().translationY(480).setDuration(400);
+        routePopUp.setVisibility(View.GONE);
+        makeViewsVisible();
+        routeCreated = false;
+        onResume();
     }
 
     @Override
@@ -545,16 +582,49 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     }
 
     public static void createRoute(LatLng locationLatLng){
+
+        clearView();
         mMap.clear();
         routeCreated = true;
         me = mMap.addMarker(new MarkerOptions().position(new LatLng(myLocation.latitude, myLocation.longitude))
                 .icon(BitmapDescriptorFactory.fromResource(R.drawable.you_marker)));
+
         Marker destination = mMap.addMarker(new MarkerOptions().position(new LatLng(locationLatLng.latitude, locationLatLng.longitude))
-                .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_YELLOW)));
+                    .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE)));
 
         String url = getRequestUrl(myLocation, locationLatLng);
         TaskRequestDirections taskRequestDirections = new TaskRequestDirections();
         taskRequestDirections.execute(url);
+
+
+    }
+
+    private static void clearView() {
+        markersState.setVisibility(View.GONE);
+        myFilters.setVisibility(View.GONE);
+        imageButton.setVisibility(View.GONE);
+        animateRoutePopUp();
+
+    }
+    private void makeViewsVisible(){
+        markersState.setVisibility(View.VISIBLE);
+        myFilters.setVisibility(View.VISIBLE);
+        imageButton.setVisibility(View.VISIBLE);
+    }
+
+    private static void animateRoutePopUp() {
+
+        routePopUp.setVisibility(View.VISIBLE);
+        routePopUp.animate().translationY(-480).setDuration(600);
+
+    }
+    public static void loadRouteInfo(String id, PointOfInterest pointOfInterest){
+        StorageReference storage = FirebaseStorage.getInstance().getReference().child("images/pois/" + id + ".jpeg");
+        com.racoders.racodersproject.AppGlideModule.GlideApp.with(getApplicationContext()).load(storage).into(routeProfile);
+        routeTitle.setText(pointOfInterest.getTitle());
+        double routeDistanceDouble = DistanceCalculator.distance(myLocation.latitude, myLocation.longitude, pointOfInterest.getLatitude(), pointOfInterest.getLongitude());
+        DecimalFormat numberFormat = new DecimalFormat("#.00");
+        routeDistance.setText(numberFormat.format(routeDistanceDouble) + " km to destination");
 
 
     }
@@ -674,7 +744,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
 
                 polylineOptions.addAll(points);
                 polylineOptions.width(10);
-                polylineOptions.color(R.color.colorPrimary);
+                polylineOptions.color(getApplicationContext().getResources().getColor(R.color.colorPrimary));
                 polylineOptions.geodesic(true);
 
             }

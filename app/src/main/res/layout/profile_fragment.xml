@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context="com.racoders.racodersproject.fragments.Profile">
+    tools:context="com.racoders.racodersproject.activities.loggedInUser">
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -15,5 +15,12 @@
         android:layout_height="wrap_content"
         android:text="press me"
         android:id="@+id/button"/>
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Sign out"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:onClick="signOut"/>
 
 </RelativeLayout>

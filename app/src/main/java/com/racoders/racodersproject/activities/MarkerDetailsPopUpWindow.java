@@ -43,6 +43,7 @@ public class MarkerDetailsPopUpWindow extends Activity{
     private Set<String> mFavLocationsSet;
     private PointOfInterest pointOfInterest;
     private Button createRoute;
+    private String key;
 
 
     @Override
@@ -95,6 +96,7 @@ public class MarkerDetailsPopUpWindow extends Activity{
                         description.setText(pointOfInterest.getDescription());
                         System.out.println(pointOfInterest.getTitle());
                         System.out.println(pointOfInterest.getDescription());
+                        key = dataSnapshot.getKey();
                     }
                 }
 
@@ -150,7 +152,7 @@ public class MarkerDetailsPopUpWindow extends Activity{
         }
     }
     public void createRoute(View view){
-
+        MapFragment.loadRouteInfo(key, pointOfInterest);
         MapFragment.createRoute(new LatLng(pointOfInterest.getLatitude(), pointOfInterest.getLongitude()));
         finish();
 
