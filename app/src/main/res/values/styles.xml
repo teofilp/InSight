@@ -20,7 +20,7 @@
     </style>
 
     <style name="AdminStatusBar">
-        <item name="statusBarColor">@color/AdminBlue</item>
+        <item name="android:statusBarColor">@color/AdminBlue</item>
     </style>
 
     <style name="RatingBar" parent="Theme.AppCompat">

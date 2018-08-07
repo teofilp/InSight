@@ -129,7 +129,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         cancelRouteButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                canceRoute();
+                cancelRoute();
             }
         });
 //        checkForNewUser(FirebaseAuth.getInstance().getUid());
@@ -139,7 +139,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
 
     }
 
-    private void canceRoute() {
+    private void cancelRoute() {
         routePopUp.animate().translationY(480).setDuration(400);
         routePopUp.setVisibility(View.GONE);
         makeViewsVisible();
@@ -678,7 +678,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         return responseString;
     }
 
-    public static class TaskRequestDirections extends AsyncTask<String, Void, String>{
+    private static class TaskRequestDirections extends AsyncTask<String, Void, String>{
 
         @Override
         protected String doInBackground(String... strings) {
@@ -701,7 +701,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
 
         }
     }
-    public static class TaskParser extends AsyncTask<String, Void, List<List<HashMap<String, String>>>>{
+    private static class TaskParser extends AsyncTask<String, Void, List<List<HashMap<String, String>>>>{
 
         @Override
         protected List<List<HashMap<String, String>>> doInBackground(String... strings) {
@@ -726,11 +726,11 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         protected void onPostExecute(List<List<HashMap<String, String>>> lists) {
             // Get list route and display it in map
 
-            ArrayList points = null;
+            ArrayList<LatLng> points = null;
 
             PolylineOptions polylineOptions = null;
             for (List<HashMap<String, String>> path : lists){
-                points = new ArrayList();
+                points = new ArrayList<>();
                 polylineOptions = new PolylineOptions();
 
                 for (HashMap<String, String> point : path){
