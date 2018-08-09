@@ -22,6 +22,7 @@
         android:layout_height="wrap_content"
         android:id="@+id/tabLayout"
         android:background="@color/AdminDarkBlue"
+        app:tabIndicatorColor="@color/white"
         app:tabMode="fixed"
         app:tabGravity="fill"
         />

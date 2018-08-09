@@ -107,7 +107,7 @@ public class AddNews extends Fragment {
 
 
 
-                final News mNews = new News(title.getText().toString(), author.getText().toString(),
+                final News mNews = new News(title.getText().toString(), FirebaseAuth.getInstance().getCurrentUser().getUid(),
                         description.getText().toString(), Calendar.getInstance().getTime(), mId,key, 0);
 
                 System.out.println(mId);

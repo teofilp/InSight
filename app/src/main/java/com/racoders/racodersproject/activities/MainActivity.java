@@ -102,15 +102,6 @@ public class MainActivity extends AppCompatActivity {
         Toast.makeText(this, "Welcome to our test app", Toast.LENGTH_SHORT).show();
     }
 
-    @Override
-    public void onStart(){
-        super.onStart();
-        user = mAuth.getCurrentUser();
-        if(user!=null){
-            toLoggedInActivity();
-            finish();
-        }
-    }
     public void signIn(View view){
         String emailString = email.getText().toString();
         String passwordString = password.getText().toString();
@@ -146,6 +137,12 @@ public class MainActivity extends AppCompatActivity {
 
     public boolean emailValidation(String emailString){
         return emailString.length()>0 && emailString.contains("@");
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        finish();
     }
 
     private void handleFacebookAccessToken(AccessToken token) {

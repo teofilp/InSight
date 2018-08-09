@@ -34,7 +34,7 @@ public class newsFeed extends Fragment {
 
     private View view;
     private RecyclerView recyclerView;
-
+    private int color;
 
     public newsFeed() {
     }
@@ -47,7 +47,7 @@ public class newsFeed extends Fragment {
 
         recyclerView = view.findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-
+        color = getActivity().getResources().getColor(R.color.colorPrimaryDark);
         final ArrayList<News> mArrayList = new ArrayList<>();
 
         DatabaseReference dbref = FirebaseDatabase.getInstance().getReference().child("News");
@@ -61,7 +61,7 @@ public class newsFeed extends Fragment {
                         mArrayList.add(news);
                     }
                 }
-                NewsCustomAdapter adapter = new NewsCustomAdapter(mArrayList);
+                NewsCustomAdapter adapter = new NewsCustomAdapter(mArrayList, color);
                 recyclerView.setAdapter(adapter);
 
             }

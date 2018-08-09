@@ -99,20 +99,13 @@ public class AdminSignIn extends AppCompatActivity {
 
                 }
             });
-            startActivity(new Intent(getApplicationContext(), AdminPanel.class));
+
 
         } else {
             // If sign in fails, display a message to the user.
             Toast.makeText(AdminSignIn.this, "Authentication failed. Check your credentials or try again later",
                     Toast.LENGTH_SHORT).show();
         }
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-        if(FirebaseAuth.getInstance().getCurrentUser()!=null)
-            startActivity(new Intent(getApplicationContext(), AdminPanel.class));
     }
 
     public boolean passwordValidation(String passwordString){
@@ -124,6 +117,13 @@ public class AdminSignIn extends AppCompatActivity {
     }
     public void toLocalRegister(View view){
         startActivity(new Intent(getApplicationContext(), AdminRegister.class));
+        finish();
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        startActivity(new Intent(getApplicationContext(), toggleLoginActivity.class));
         finish();
     }
 }

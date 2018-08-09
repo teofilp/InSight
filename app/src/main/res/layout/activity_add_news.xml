@@ -19,32 +19,21 @@
             android:id="@+id/cropButton"
             android:layout_marginTop="16dp"
             android:text="Import Image"
-            android:layout_centerHorizontal="true"
-            />
+            android:layout_centerHorizontal="true"/>
         <ImageView
             android:layout_width="200dp"
             android:layout_height="200dp"
             android:id="@+id/mImage"
             android:layout_below="@+id/cropButton"
-            android:layout_centerHorizontal="true"
-            />
+            android:layout_centerHorizontal="true"/>
 
         <EditText
+            android:hint="title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/title"
-            android:hint="title"
             android:layout_margin="16dp"
-            android:layout_below="@+id/mImage"
-            />
-
-        <EditText
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/author"
-            android:layout_margin="16dp"
-            android:hint="author"
-            android:layout_below="@+id/title"/>
+            android:layout_below="@+id/mImage"/>
 
         <EditText
             android:layout_width="match_parent"
@@ -52,8 +41,7 @@
             android:id="@+id/description"
             android:layout_margin="16dp"
             android:hint="description"
-            android:layout_below="@+id/author"/>
-
+            android:layout_below="@+id/title"/>
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

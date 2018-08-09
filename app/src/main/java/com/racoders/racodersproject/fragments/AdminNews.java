@@ -1,5 +1,6 @@
 package com.racoders.racodersproject.fragments;
 
+import android.content.res.Resources;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -17,6 +18,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.racoders.racodersproject.R;
+import com.racoders.racodersproject.activities.AdminPanel;
 import com.racoders.racodersproject.classes.News;
 import com.racoders.racodersproject.classes.NewsCustomAdapter;
 
@@ -30,6 +32,7 @@ public class AdminNews extends Fragment {
     private static RecyclerView recyclerView;
     private static ArrayList<News> mList = new ArrayList<>();
     private static NewsCustomAdapter adapter;
+    private static int color;
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -38,7 +41,7 @@ public class AdminNews extends Fragment {
 
         recyclerView = view.findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-
+        color = getActivity().getResources().getColor(R.color.AdminBlue);
         mList.clear();
         DatabaseReference dbref = FirebaseDatabase.getInstance().getReference().child("News").child(FirebaseAuth.getInstance().getCurrentUser().getUid());
         dbref.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -53,7 +56,7 @@ public class AdminNews extends Fragment {
                         return o2.getPublicationDate().compareTo(o1.getPublicationDate());
                     }
                 });
-                adapter = new NewsCustomAdapter(mList);
+                adapter = new NewsCustomAdapter(mList, color);
                 recyclerView.setAdapter(adapter);
 
             }
@@ -70,39 +73,9 @@ public class AdminNews extends Fragment {
         return  mList;
     }
     public static void setAdapter(ArrayList<News> list){
-        adapter = new NewsCustomAdapter(list);
+        adapter = new NewsCustomAdapter(list, color);
         recyclerView.setAdapter(adapter);
     }
-    public  static NewsCustomAdapter getAdapter(){
-        return adapter;
 
-    }
-    public static void loadRecyclerView(){
-        mList.clear();
 
-        DatabaseReference dbref = FirebaseDatabase.getInstance().getReference().child("News").child(FirebaseAuth.getInstance().getCurrentUser().getUid());
-        dbref.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                if(dataSnapshot.exists())
-                    for(DataSnapshot child : dataSnapshot.getChildren())
-                        mList.add(child.getValue(News.class));
-
-                adapter = new NewsCustomAdapter(mList);
-                recyclerView.setAdapter(adapter);
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        //loadRecyclerView();
-
-    }
 }

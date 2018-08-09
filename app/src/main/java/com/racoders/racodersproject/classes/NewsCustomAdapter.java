@@ -9,8 +9,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.racoders.racodersproject.AppGlideModule.GlideApp;
@@ -19,14 +25,18 @@ import com.racoders.racodersproject.activities.NewsActivity;
 
 import java.util.ArrayList;
 
+import de.hdodenhof.circleimageview.CircleImageView;
+
 import static com.facebook.FacebookSdk.getApplicationContext;
 
 public class NewsCustomAdapter extends RecyclerView.Adapter<NewsCustomAdapter.ViewHolder> {
 
     private final ArrayList<News> mList;
+    private final int color;
 
-    public NewsCustomAdapter(ArrayList<News> mList){
+    public NewsCustomAdapter(ArrayList<News> mList, int color){
         this.mList = mList;
+        this.color = color;
     }
 
     class ViewHolder extends RecyclerView.ViewHolder {
@@ -34,8 +44,9 @@ public class NewsCustomAdapter extends RecyclerView.Adapter<NewsCustomAdapter.Vi
         private final TextView title;
         private final  TextView author;
         private final TextView description;
-        private final ImageView imageView;
-        private final LinearLayout layout;
+        private final ImageView newsImage;
+        private final RelativeLayout layout;
+        private final CircleImageView author_profile;
 
         public ViewHolder(View itemView) {
             super(itemView);
@@ -43,17 +54,34 @@ public class NewsCustomAdapter extends RecyclerView.Adapter<NewsCustomAdapter.Vi
             title = itemView.findViewById(R.id.title);
             author = itemView.findViewById(R.id.author);
             description = itemView.findViewById(R.id.description);
-            imageView = itemView.findViewById(R.id.imageView);
+            newsImage = itemView.findViewById(R.id.imageView);
             layout = itemView.findViewById(R.id.layout);
-
+            author_profile = itemView.findViewById(R.id.author_profile_image);
         }
 
         public void setTitle(String text){
             title.setText(text);
         }
 
-        public void setAuthor(String text){
-            author.setText(text);
+        public void setAuthor(final String text){
+            DatabaseReference dbref = FirebaseDatabase.getInstance().getReference().child("POIs");
+            dbref.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    if(dataSnapshot.exists()){
+                        for(DataSnapshot childs : dataSnapshot.getChildren())
+                            for(DataSnapshot childsOfChilds : childs.getChildren())
+                                if(childsOfChilds.getKey().equals(text))
+                                    author.setText(childsOfChilds.getValue(PointOfInterest.class).getTitle());
+                    }
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                }
+            });
+
         }
 
         public void setDescription(String text){
@@ -63,9 +91,17 @@ public class NewsCustomAdapter extends RecyclerView.Adapter<NewsCustomAdapter.Vi
         public void setLayoutTag(int tag) { layout.setTag(tag);}
 
         public Object getLayoutTag() { return layout.getTag();}
-        public void setImageView(String id, Context context){
+
+        public void setNewsImage(String id){
             StorageReference storage = FirebaseStorage.getInstance().getReference().child("images/" + id + ".jpeg");
-            GlideApp.with(getApplicationContext()).load(storage).into(imageView);
+            GlideApp.with(getApplicationContext()).load(storage).into(newsImage);
+        }
+        public void setAuthorImage(String id){
+            StorageReference storage = FirebaseStorage.getInstance().getReference().child("images/pois/" + id + ".jpeg");
+            GlideApp.with(getApplicationContext()).load(storage).into(author_profile);
+        }
+        public void setLayoutColor(){
+            layout.setBackgroundColor(color);
         }
 
 
@@ -84,10 +120,10 @@ public class NewsCustomAdapter extends RecyclerView.Adapter<NewsCustomAdapter.Vi
         holder.setTitle(mList.get(position).getTitle());
         holder.setAuthor(mList.get(position).getAuthor());
         holder.setDescription(mList.get(position).getDescription());
-        holder.setImageView(mList.get(position).getId(), getApplicationContext());
+        holder.setNewsImage(mList.get(position).getId());
+        holder.setAuthorImage(mList.get(position).getAuthor());
         holder.setLayoutTag(position);
-
-
+        holder.setLayoutColor();
         final String Uid = mList.get(position).getId();
         System.out.println(Uid);
 

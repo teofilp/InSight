@@ -13,6 +13,8 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.TableLayout;
 import android.widget.Toast;
@@ -115,34 +117,29 @@ public class AdminPanel extends AppCompatActivity {
         tabLayout.setupWithViewPager(viewPager);
     }
 
+
     @Override
-    protected void onStart() {
-        super.onStart();
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.profile_admin_menu, menu);
 
-        final String uId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        return true;
+    }
 
-        DatabaseReference dbref = FirebaseDatabase.getInstance().getReference().child("POIs");
-        dbref.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                for(DataSnapshot snapshotChild : dataSnapshot.getChildren())
-                    for(DataSnapshot child : snapshotChild.getChildren())
-                        if(child.getKey().equals(uId)){
-                            isValid = true;
-                            break;
-                        }
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
 
-                if(!isValid){
-                    startActivity(new Intent(getApplicationContext(), loggedInUser.class));
-                    finish();
-                }
-            }
+        if(item.getItemId() == R.id.logout);
+        {
+            FirebaseAuth.getInstance().signOut();
+            startActivity(new Intent(getApplicationContext(), AdminSignIn.class));
+            finish();
+        }
+        return super.onOptionsItemSelected(item);
+    }
 
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
-
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        finish();
     }
 }
