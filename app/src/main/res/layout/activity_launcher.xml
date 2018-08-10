@@ -20,4 +20,13 @@
             android:layout_below="@+id/launcher_app_logo"
             android:id="@+id/launcherProgressBar"
             />
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_below="@id/launcher_app_logo"
+            android:id="@+id/reloadButton"
+            android:visibility="gone"
+            app:srcCompat="@drawable/reload_icon"
+            android:onClick="reload"/>
 </RelativeLayout>

@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".activities.PublicLocationProfile"
+    android:background="@color/lightGray">
+    <View
+        android:id="@+id/coverPhoto"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:background="@color/AdminDarkBlue"
+        />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="256dp"
+        android:layout_below="@+id/coverPhoto"
+        android:background="@color/white"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginTop="32dp">
+        <TextView
+            android:id="@+id/profileName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textStyle="bold"
+            android:textSize="24sp"
+            android:textColor="@color/black"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="56dp"/>
+        <TextView
+            android:id="@+id/category"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/profileName"
+            android:textColor="#3f3f3f"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="8dp"/>
+        <TextView
+            android:id="@+id/location"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/category"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="8dp"
+            android:textColor="@color/AdminBlue"/>
+        <View
+            android:id="@+id/separatorView"
+            android:layout_width="2dp"
+            android:layout_height="18dp"
+            android:background="@color/lightGray"
+            android:layout_below="@+id/location"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="16dp"/>
+        <TextView
+            android:id="@+id/followersNumbers"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toLeftOf="@+id/separatorView"
+            android:layout_below="@+id/location"
+            android:layout_marginTop="16dp"
+            android:layout_marginRight="12dp"
+            android:text="1,232,001 followers"
+            android:textColor="@color/black"/>
+
+        <TextView
+            android:id="@+id/viewsNumber"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@+id/separatorView"
+            android:layout_below="@+id/location"
+            android:layout_marginTop="16dp"
+            android:layout_marginLeft="12dp"
+            android:text="1,160,000 views"
+            android:textColor="@color/black"/>
+
+    </RelativeLayout>
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        android:id="@+id/public_profile_image"
+        android:layout_marginTop="125dp"
+        android:layout_centerHorizontal="true"
+        />
+    
+
+</RelativeLayout>

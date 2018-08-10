@@ -22,8 +22,10 @@ import com.google.firebase.storage.StorageReference;
 import com.racoders.racodersproject.AppGlideModule.GlideApp;
 import com.racoders.racodersproject.R;
 import com.racoders.racodersproject.activities.NewsActivity;
+import com.racoders.racodersproject.activities.PublicLocationProfile;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -31,10 +33,10 @@ import static com.facebook.FacebookSdk.getApplicationContext;
 
 public class NewsCustomAdapter extends RecyclerView.Adapter<NewsCustomAdapter.ViewHolder> {
 
-    private final ArrayList<News> mList;
+    private final List<News> mList;
     private final int color;
 
-    public NewsCustomAdapter(ArrayList<News> mList, int color){
+    public NewsCustomAdapter(List<News> mList, int color){
         this.mList = mList;
         this.color = color;
     }
@@ -85,7 +87,11 @@ public class NewsCustomAdapter extends RecyclerView.Adapter<NewsCustomAdapter.Vi
         }
 
         public void setDescription(String text){
-            description.setText(text);
+            if(text.length() > 125){
+                String formatedText = text.substring(0, 124) + "...";
+                description.setText(formatedText);
+            }else
+                description.setText(text);
         }
 
         public void setLayoutTag(int tag) { layout.setTag(tag);}
@@ -96,14 +102,15 @@ public class NewsCustomAdapter extends RecyclerView.Adapter<NewsCustomAdapter.Vi
             StorageReference storage = FirebaseStorage.getInstance().getReference().child("images/" + id + ".jpeg");
             GlideApp.with(getApplicationContext()).load(storage).into(newsImage);
         }
+
         public void setAuthorImage(String id){
             StorageReference storage = FirebaseStorage.getInstance().getReference().child("images/pois/" + id + ".jpeg");
             GlideApp.with(getApplicationContext()).load(storage).into(author_profile);
         }
+
         public void setLayoutColor(){
             layout.setBackgroundColor(color);
         }
-
 
     }
 
@@ -116,7 +123,7 @@ public class NewsCustomAdapter extends RecyclerView.Adapter<NewsCustomAdapter.Vi
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull ViewHolder holder, final int position) {
         holder.setTitle(mList.get(position).getTitle());
         holder.setAuthor(mList.get(position).getAuthor());
         holder.setDescription(mList.get(position).getDescription());
@@ -127,6 +134,7 @@ public class NewsCustomAdapter extends RecyclerView.Adapter<NewsCustomAdapter.Vi
         final String Uid = mList.get(position).getId();
         System.out.println(Uid);
 
+
         holder.layout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -134,6 +142,16 @@ public class NewsCustomAdapter extends RecyclerView.Adapter<NewsCustomAdapter.Vi
                     .putExtra("reference", mList.get((int)v.getTag()).getReference()).putExtra("position", (int)v.getTag()));
             }
         });
+
+        holder.author_profile.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                getApplicationContext()
+                        .startActivity(new Intent(getApplicationContext(), PublicLocationProfile.class)
+                        .putExtra("id", mList.get(position).getAuthor()));
+            }
+        });
+
     }
 
     @Override
@@ -141,7 +159,7 @@ public class NewsCustomAdapter extends RecyclerView.Adapter<NewsCustomAdapter.Vi
         return mList.size();
     }
 
-    public ArrayList<News> getmList() {
+    public List<News> getmList() {
         return mList;
     }
 }

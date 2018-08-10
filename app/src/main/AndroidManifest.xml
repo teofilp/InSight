@@ -21,7 +21,7 @@
         android:theme="@style/AppTheme">
         <activity
             android:name=".activities.MainActivity"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait" />
         <activity android:name="com.soundcloud.android.crop.CropImageActivity" />
 
         <meta-data
@@ -51,7 +51,9 @@
         <activity android:name=".activities.NewsActivity" />
         <activity android:name=".activities.AdminSignIn" />
         <activity android:name=".activities.AdminRegister" />
-        <activity android:name=".activities.AdminPanel" />
+        <activity
+            android:name=".activities.AdminPanel"
+            android:windowSoftInputMode="stateHidden|adjustPan" />
         <activity android:name=".activities.LauncherActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -59,7 +61,8 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".activities.toggleLoginActivity"></activity>
+        <activity android:name=".activities.toggleLoginActivity" />
+        <activity android:name=".activities.PublicLocationProfile"></activity>
     </application>
 
 </manifest>

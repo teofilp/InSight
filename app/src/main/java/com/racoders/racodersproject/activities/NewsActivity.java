@@ -70,7 +70,7 @@ public class NewsActivity extends AppCompatActivity {
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if(dataSnapshot.exists()){
                     news = dataSnapshot.getValue(News.class);
-                    toolbar.setTitle(news.getAuthor());
+                    toolbar.setTitle("News");
                     viewsNumber.setText(news.getViewsNumber()+1 +" views");
                     title.setText(news.getTitle());
                     /**

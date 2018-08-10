@@ -226,6 +226,7 @@ public class AddLocation extends AppCompatActivity{
         }else{
             Toast.makeText(this, "Your location on the map is required", Toast.LENGTH_SHORT).show();
             AdminAddLocationPageThreeFragment.progressBar.setVisibility(View.GONE);
+            viewPager.setCurrentItem(1, true);
             return;
         }
         if(mPoinOfInterest.getTitle().equals("") || mPoinOfInterest.getCategory().equals("")){
