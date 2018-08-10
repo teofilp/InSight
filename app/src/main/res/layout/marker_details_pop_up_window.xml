@@ -3,7 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorPrimary"
+    android:background="#FFF"
     >
 <LinearLayout
     android:layout_width="match_parent"
@@ -11,10 +11,17 @@
     android:orientation="vertical"
     >
 
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="150dp"
+        android:scaleType="centerCrop"
+        android:src="@drawable/city"/>
+
     <LinearLayout
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:background="#0000">
 
         <TextView
             android:id="@+id/title"
@@ -22,21 +29,22 @@
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
             android:layout_marginBottom="16dp"
-            android:layout_marginTop="32dp"
-            android:layout_marginLeft="100dp"
-            android:text="TITLE" />
+            android:layout_marginTop="8dp"
+            android:layout_marginLeft="50dp"
+            android:text="TITLE"
+            android:textColor="@color/colorPrimary"/>
 
         <Button
             android:id="@+id/toggleFavoriteButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="100dp"
-            android:layout_marginTop="32dp"
-            android:background="@color/colorPrimary"
+            android:layout_marginLeft="150dp"
+            android:layout_marginTop="8dp"
+            android:background="#0000"
             android:onClick="toggleFavorite"
             android:textSize="12sp"
             android:text="Add to favorites"
-            android:textColor="#fff" />
+            android:textColor="@color/colorPrimary" />
 
     </LinearLayout>
 
@@ -46,6 +54,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/title"
         android:layout_centerHorizontal="true"
+        android:textColor="@color/colorPrimary"
         android:layout_margin="20dp"
         android:id="@+id/description"
         android:text="Description
@@ -56,8 +65,8 @@ Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem
         android:id="@+id/createRoute"
         android:layout_width="wrap_content"
         android:layout_height="36dp"
-        android:background="@drawable/rounded_button_white"
-        android:textColor="@color/colorPrimary"
+        android:background="@drawable/rounded_button"
+        android:textColor="#FFF"
         android:onClick="createRoute"
         android:text="Create route"
         android:textAllCaps="false"
