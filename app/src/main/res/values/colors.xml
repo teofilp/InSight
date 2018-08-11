@@ -12,4 +12,5 @@
     <color name="lightGray">#dedede</color>
     <color name="AdminBlue">#4286f4</color>
     <color name="AdminDarkBlue">#3b78db</color>
+    <color name="CustomTabLayoutActive">#89b6ff</color>
 </resources>

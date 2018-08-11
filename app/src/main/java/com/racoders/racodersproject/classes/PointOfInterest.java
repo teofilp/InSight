@@ -56,7 +56,6 @@ public class PointOfInterest {
     }
 
 
-
     public String getCategory() {
         return category;
     }
