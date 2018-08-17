@@ -6,7 +6,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".activities.PublicLocationProfile"
-    android:background="@color/lightGray">
+    android:background="@color/lightGray"
+    android:theme="@style/LocationProfileEdge">
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -25,6 +26,16 @@
             android:layout_marginTop="16dp"
             android:layout_marginLeft="16dp"
             android:onClick="goBack"/>
+        <ImageView
+            android:id="@+id/bookmarkImageView"
+            android:layout_width="56dp"
+            android:layout_height="56dp"
+            app:srcCompat="@drawable/not_favorite"
+            android:layout_marginTop="16dp"
+            android:layout_marginRight="16dp"
+            android:layout_alignParentEnd="true"
+            android:onClick="toggleFavorite"
+            />
 
         <RelativeLayout
             android:id="@+id/profile_topPanel"
@@ -43,7 +54,7 @@
                 android:textSize="24sp"
                 android:textColor="@color/black"
                 android:layout_centerHorizontal="true"
-                android:layout_marginTop="56dp"/>
+                android:layout_marginTop="48dp"/>
             <TextView
                 android:id="@+id/category"
                 android:layout_width="wrap_content"
@@ -67,16 +78,15 @@
                 android:background="@color/lightGray"
                 android:layout_below="@+id/location"
                 android:layout_centerHorizontal="true"
-                android:layout_marginTop="16dp"/>
+                android:layout_marginTop="12dp"/>
             <TextView
                 android:id="@+id/followersNumbers"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_toLeftOf="@+id/separatorView"
                 android:layout_below="@+id/location"
-                android:layout_marginTop="16dp"
+                android:layout_marginTop="12dp"
                 android:layout_marginRight="12dp"
-                android:text="1,232,001 followers"
                 android:textColor="@color/black"/>
 
             <TextView
@@ -85,11 +95,20 @@
                 android:layout_height="wrap_content"
                 android:layout_toRightOf="@+id/separatorView"
                 android:layout_below="@+id/location"
-                android:layout_marginTop="16dp"
+                android:layout_marginTop="12dp"
                 android:layout_marginLeft="12dp"
-                android:text="1,160,000 views"
                 android:textColor="@color/black"/>
-
+            <RatingBar
+                android:id="@+id/locationRating"
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                style="?android:attr/ratingBarStyleSmall"
+                android:theme="@style/RatingBar"
+                android:numStars="5"
+                android:layout_below="@+id/viewsNumber"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="8dp"
+                />
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="48dp"
@@ -99,7 +118,7 @@
                     android:id="@+id/posts_button"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
-                    android:layout_weight="0.5"
+                    android:layout_weight="0.3333"
                     android:layout_margin="0dp"
                     android:background="@color/CustomTabLayoutActive"
                     android:textColor="@color/white"
@@ -111,7 +130,7 @@
                     android:id="@+id/about_button"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
-                    android:layout_weight="0.5"
+                    android:layout_weight="0.3333"
                     android:layout_margin="0dp"
                     android:background="@color/white"
                     android:textColor="@color/AdminDarkBlue"
@@ -119,9 +138,30 @@
                     android:onClick="toggleScreen"
                     android:tag="1"
                     />
+                <Button
+                    android:id="@+id/reviews_button"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="0.3333"
+                    android:layout_margin="0dp"
+                    android:background="@color/white"
+                    android:textColor="@color/AdminDarkBlue"
+                    android:text="Reviews"
+                    android:onClick="toggleScreen"
+                    android:tag="2"
+                    />
             </LinearLayout>
 
         </RelativeLayout>
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:layout_width="150dp"
+            android:layout_height="150dp"
+            android:id="@+id/public_profile_image"
+            android:layout_marginTop="125dp"
+            android:layout_centerHorizontal="true"
+            />
+
         <android.support.v7.widget.RecyclerView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -202,16 +242,102 @@
 
             </LinearLayout>
 
-
         </RelativeLayout>
+        <LinearLayout
+            android:id="@+id/reviewLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/profile_topPanel"
+            android:layout_marginTop="8dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="8dp"
+            android:orientation="vertical">
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                android:background="@color/white">
+                <RelativeLayout
+                    android:id="@+id/addReviewRequest"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+                    <TextView
+                        android:id="@+id/add_review_request"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/no_review_warning"
+                        android:textColor="@color/darkGray"
+                        android:layout_centerHorizontal="true"
+                        android:textAlignment="center"
+                        android:layout_marginTop="60dp"
+                        android:textSize="18sp"/>
+                    <Button
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@color/AdminDarkBlue"
+                        android:textColor="@color/white"
+                        android:text="@string/add_review_now"
+                        android:layout_below="@+id/add_review_request"
+                        android:layout_marginTop="32dp"
+                        android:layout_centerHorizontal="true"
+                        android:padding="12dp"
+                        android:onClick="requestReview"
+                       />
 
-        <de.hdodenhof.circleimageview.CircleImageView
-            android:layout_width="150dp"
-            android:layout_height="150dp"
-            android:id="@+id/public_profile_image"
-            android:layout_marginTop="125dp"
-            android:layout_centerHorizontal="true"
-            />
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:id="@+id/addReviewLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+                    <RatingBar
+                        android:id="@+id/toAddRatingBar"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:numStars="5"
+                        android:layout_centerHorizontal="true"
+                        android:layout_marginTop="12dp"
+                        android:theme="@style/RatingBar"
+                        />
+                    <EditText
+                        android:id="@+id/toAddReviewDescription"
+                        android:layout_width="match_parent"
+                        android:layout_height="48dp"
+                        android:layout_below="@+id/toAddRatingBar"
+                        android:layout_marginTop="8dp"
+                        android:layout_marginLeft="12dp"
+                        android:layout_marginRight="12dp"
+                        android:inputType="textMultiLine"
+                        android:textColor="@color/AdminDarkBlue"
+                        android:hint="@string/tell_us_what_you_think_about_this_place"/>
+
+                    <Button
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/toAddReviewDescription"
+                        android:layout_marginTop="12dp"
+                        android:layout_centerHorizontal="true"
+                        android:background="@color/AdminDarkBlue"
+                        android:text="Save review"
+                        android:paddingLeft="10dp"
+                        android:paddingRight="10dp"
+                        android:paddingBottom="6dp"
+                        android:paddingTop="6dp"
+                        android:onClick="saveReview"/>
+                </RelativeLayout>
+
+            </RelativeLayout>
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/reviews_recyclerView"
+                android:background="@color/white"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="12dp"
+                />
+        </LinearLayout>
+
+
 
     </RelativeLayout>
 </android.support.v4.widget.NestedScrollView>

@@ -5,5 +5,8 @@
     <string name="email">email</string>
     <string name="password">password</string>
     <string name="title_activity_add_location">Map</string>
+    <string name="no_review_warning">You didn\'t leave any review yet</string>
+    <string name="add_review_now">Add review now</string>
+    <string name="tell_us_what_you_think_about_this_place">Tell us what you think about this place</string>
 
 </resources>

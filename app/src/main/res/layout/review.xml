@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
+    android:background="@color/white"
+    android:layout_height="wrap_content"
+    android:layout_marginLeft="8dp"
+    android:layout_marginRight="8dp">
+
+    <RatingBar
+        android:id="@+id/reviewRating"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        style="?attr/ratingBarStyleSmall"
+        android:theme="@style/RatingBar"
+        android:numStars="5"
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"/>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/reviewAuthor"
+        android:layout_marginLeft="8dp"
+        android:layout_marginTop="12dp"
+        android:text="Author dummy"
+        android:textColor="@color/black"
+        />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/reviewDate"
+        android:layout_marginLeft="8dp"
+        android:layout_marginTop="8dp"
+        android:text="Aug 16, 2018"
+        android:textColor="#a0a0a0"
+        android:layout_below="@id/reviewAuthor"
+        />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/reviewDescription"
+        android:layout_marginLeft="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="12dp"
+        android:text="Nu am primit doza de strongbow care aparea in oferta"
+        android:textColor="#a0a0a0"
+        android:layout_below="@id/reviewDate"
+        />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/lightGray"
+        android:layout_below="@id/reviewDescription"
+        />
+
+
+
+</RelativeLayout>

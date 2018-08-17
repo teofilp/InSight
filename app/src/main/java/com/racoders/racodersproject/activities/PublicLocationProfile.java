@@ -1,10 +1,9 @@
 package com.racoders.racodersproject.activities;
 
 import android.os.Build;
+import android.provider.ContactsContract;
 import android.support.annotation.NonNull;
-import android.support.design.widget.TabLayout;
-import android.support.v4.view.ViewPager;
-import android.support.v4.widget.NestedScrollView;
+import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -14,11 +13,13 @@ import android.text.Spanned;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.RatingBar;
 import android.widget.RelativeLayout;
-import android.widget.TableLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -32,19 +33,19 @@ import com.racoders.racodersproject.R;
 import com.racoders.racodersproject.classes.News;
 import com.racoders.racodersproject.classes.NewsCustomAdapter;
 import com.racoders.racodersproject.classes.PointOfInterest;
-import com.racoders.racodersproject.classes.ViewPagerAdapter;
-import com.racoders.racodersproject.fragments.AdminNews;
+import com.racoders.racodersproject.classes.Review;
+import com.racoders.racodersproject.classes.ReviewsCustomAdapter;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
-import static com.facebook.FacebookSdk.getApplicationContext;
-
 public class PublicLocationProfile extends AppCompatActivity {
 
     private CircleImageView profile_photo;
+    private ImageView bookmarkImageView;
     private TextView profileName;
     private TextView category;
     private TextView location;
@@ -54,12 +55,19 @@ public class PublicLocationProfile extends AppCompatActivity {
     private TextView websiteAddress;
     private TextView locationDescription;
     private RelativeLayout about_layout;
+    private RatingBar locationRatingBar;
+    private LinearLayout reviewLayout;
 
+    private ReviewsCustomAdapter reviewsAdapter;
+    private RecyclerView reviews_recyclerView;
 
-    private NewsCustomAdapter adapter;
+    private NewsCustomAdapter newsAdapter;
     private RecyclerView profile_posts_recyclerView;
+    private List<String> favList;
+    private String id;
 
     private PointOfInterest pointOfInterest;
+    private boolean isFav = false;
 
     private int activeScreen = 0;
     private long viewsSum = 0;
@@ -73,14 +81,16 @@ public class PublicLocationProfile extends AppCompatActivity {
         initializeView();
         profile_posts_recyclerView.setLayoutManager(new LinearLayoutManager(this));
         profile_posts_recyclerView.setNestedScrollingEnabled(false);
+        reviews_recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        reviews_recyclerView.setNestedScrollingEnabled(false);
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             getWindow().setStatusBarColor(getResources().getColor(R.color.AdminBlue));
         }
 
-        final String id = getIntent().getStringExtra("id");
+        id = getIntent().getStringExtra("id");
         getCurrentLocationNews(id);
-
+        getcurrentLocationReviews(id);
         DatabaseReference getPOisDBRef = FirebaseDatabase.getInstance().getReference().child("POIs");
         getPOisDBRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -107,38 +117,124 @@ public class PublicLocationProfile extends AppCompatActivity {
         onBackPressed();
     }
 
+    public void toggleFavorite(View view){
+        String key = pointOfInterest.getKey();
+
+        if(isFav){
+            for(int i=0; i<favList.size(); i++){
+                if(key.equals(favList.get(i))){
+                    favList.remove(i);
+                    break;
+                }
+            }
+
+
+        } else {
+            favList.add(key);
+        }
+        isFav = !isFav;
+        FirebaseDatabase.getInstance().getReference().child("FavoriteLocations")
+                .child(FirebaseAuth.getInstance().getCurrentUser().getUid()).setValue(favList, new DatabaseReference.CompletionListener() {
+            @Override
+            public void onComplete(@Nullable DatabaseError databaseError, @NonNull DatabaseReference databaseReference) {
+                if(databaseError == null){
+                    if(isFav)
+                        bookmarkImageView.setBackground(getResources().getDrawable(R.drawable.favorite_bookmark));
+                    else
+                        bookmarkImageView.setBackground(getResources().getDrawable(R.drawable.not_favorite));
+                }else
+                    Toast.makeText(PublicLocationProfile.this, "Something went wrong..", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
     public void toggleScreen(View view){
         String tag = (String)view.getTag();
 
-        Button b1 = findViewById(R.id.posts_button);
-        Button b2 = findViewById(R.id.about_button);
+        Button posts_button = findViewById(R.id.posts_button);
+        Button about_button = findViewById(R.id.about_button);
+        Button reviews_button = findViewById(R.id.reviews_button);
 
         if(tag.equals(Integer.toString(activeScreen))){
 
         }else{
             if(view.getId() == R.id.about_button){
-                profile_posts_recyclerView.animate().translationXBy(-1200).setDuration(300);
+
+                profile_posts_recyclerView.animate().translationX(-1200).setDuration(300);
                 profile_posts_recyclerView.setAdapter(null);
-                about_layout.animate().translationXBy(-1200).setDuration(300);
-                b2.setTextColor(getResources().getColor(R.color.white));
-                b2.setBackgroundColor(getResources().getColor(R.color.CustomTabLayoutActive));
-                b1.setTextColor(getResources().getColor(R.color.AdminBlue));
-                b1.setBackgroundColor(getResources().getColor(R.color.white));
+                reviewLayout.animate().translationX(1200).setDuration(300);
+                reviews_recyclerView.setAdapter(null);
+                about_layout.animate().translationX(0).setDuration(300);
+                about_button.setTextColor(getResources().getColor(R.color.white));
+                about_button.setBackgroundColor(getResources().getColor(R.color.CustomTabLayoutActive));
+                posts_button.setTextColor(getResources().getColor(R.color.AdminBlue));
+                posts_button.setBackgroundColor(getResources().getColor(R.color.white));
+                reviews_button.setBackgroundColor(getResources().getColor(R.color.white));
+                reviews_button.setTextColor(getResources().getColor(R.color.AdminBlue));
                 activeScreen = 1;
 
-            }else{
-                about_layout.animate().translationXBy(1200).setDuration(300);
-                profile_posts_recyclerView.setAdapter(adapter);
-                profile_posts_recyclerView.animate().translationXBy(1200).setDuration(300);
-                b1.setTextColor(getResources().getColor(R.color.white));
-                b1.setBackgroundColor(getResources().getColor(R.color.CustomTabLayoutActive));
-                b2.setTextColor(getResources().getColor(R.color.AdminBlue));
-                b2.setBackgroundColor(getResources().getColor(R.color.white));
+            }else if (view.getId() == R.id.posts_button){
+
+                about_layout.animate().translationX(1200).setDuration(300);
+                reviewLayout.animate().translationX(2400).setDuration(300);
+                reviews_recyclerView.setAdapter(null);
+                profile_posts_recyclerView.setAdapter(newsAdapter);
+                profile_posts_recyclerView.animate().translationX(0).setDuration(300);
+                posts_button.setTextColor(getResources().getColor(R.color.white));
+                posts_button.setBackgroundColor(getResources().getColor(R.color.CustomTabLayoutActive));
+                about_button.setTextColor(getResources().getColor(R.color.AdminBlue));
+                about_button.setBackgroundColor(getResources().getColor(R.color.white));
+                reviews_button.setTextColor(getResources().getColor(R.color.AdminBlue));
+                reviews_button.setBackgroundColor(getResources().getColor(R.color.white));
                 activeScreen = 0;
 
+            } else if (view.getId() == R.id.reviews_button){
+
+                reviews_recyclerView.setAdapter(reviewsAdapter);
+                reviewLayout.animate().translationX(0).setDuration(300);
+                profile_posts_recyclerView.setAdapter(null);
+                profile_posts_recyclerView.animate().translationX(-2400);
+                about_layout.animate().translationX(-1200).setDuration(300);
+                posts_button.setTextColor(getResources().getColor(R.color.AdminBlue));
+                posts_button.setBackgroundColor(getResources().getColor(R.color.white));
+                about_button.setTextColor(getResources().getColor(R.color.AdminBlue));
+                about_button.setBackgroundColor(getResources().getColor(R.color.white));
+                reviews_button.setTextColor(getResources().getColor(R.color.white));
+                reviews_button.setBackgroundColor(getResources().getColor(R.color.CustomTabLayoutActive));
+                activeScreen = 2;
             }
         }
     }
+    public void requestReview(View view){
+
+
+
+    }
+
+    private void getcurrentLocationReviews(String id) {
+        final List<Review> mList = new ArrayList<>();
+
+        FirebaseDatabase.getInstance().getReference().child("Reviews")
+                .child(id).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if(dataSnapshot.exists()){
+                    for(DataSnapshot child : dataSnapshot.getChildren())
+                        mList.add(child.getValue(Review.class));
+
+                    reviewsAdapter = new ReviewsCustomAdapter(mList);
+                    reviews_recyclerView.setAdapter(reviewsAdapter);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
+    }
+
     private void getCurrentLocationNews(String id){
         final List<News> mList = new ArrayList<>();
 
@@ -150,8 +246,8 @@ public class PublicLocationProfile extends AppCompatActivity {
                     for(DataSnapshot child : dataSnapshot.getChildren())
                         mList.add(child.getValue(News.class));
 
-                    adapter = new NewsCustomAdapter(mList, getResources().getColor(R.color.CustomTabLayoutActive));
-                    profile_posts_recyclerView.setAdapter(adapter);
+                    newsAdapter = new NewsCustomAdapter(mList, getResources().getColor(R.color.CustomTabLayoutActive));
+                    profile_posts_recyclerView.setAdapter(newsAdapter);
                 }
             }
 
@@ -162,15 +258,47 @@ public class PublicLocationProfile extends AppCompatActivity {
 
     private void updateInfo(PointOfInterest pointOfInterest, String id){
         updateProfileImage(id);
+        checkIfFavoriteAndAddBookmark(pointOfInterest.getKey());
         profileName.setText(pointOfInterest.getTitle());
         category.setText(pointOfInterest.getCategory());
         location.setText(pointOfInterest.getAdress());
         setLocationDescriptionTextView(pointOfInterest.getDescription());
         setViewsNumberTextView(id);
         setFollowersNumberTextView(pointOfInterest.getKey());
+        locationRatingBar.setRating(pointOfInterest.getRatingSum() / pointOfInterest.getRatingNumb());
         phoneNumber.setText(pointOfInterest.getPhoneNumber());
 
+    }
 
+    private void checkIfFavoriteAndAddBookmark(final String key) {
+        FirebaseDatabase.getInstance().getReference().child("FavoriteLocations")
+                .child(FirebaseAuth.getInstance().getCurrentUser().getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if(dataSnapshot.exists()){
+                    GenericTypeIndicator< List<String>> t = new GenericTypeIndicator< List<String>>(){};
+                    favList = dataSnapshot.getValue(t);
+
+                    for(String str : favList)
+                        if(str.equals(key)){
+                            isFav = true;
+                            break;
+                        }
+
+                    if(!isFav){
+                        bookmarkImageView.setBackground(getResources().getDrawable(R.drawable.not_favorite));
+                    } else {
+                        bookmarkImageView.setBackground(getResources().getDrawable(R.drawable.favorite_bookmark));
+                    }
+
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
     }
 
     private void updateProfileImage(String id){
@@ -244,8 +372,14 @@ public class PublicLocationProfile extends AppCompatActivity {
         phoneNumber = findViewById(R.id.phoneNumber);
         websiteAddress = findViewById(R.id.websiteAddress);
         locationDescription = findViewById(R.id.locationDescription);
+        bookmarkImageView = findViewById(R.id.bookmarkImageView);
+        locationRatingBar = findViewById(R.id.locationRating);
+        reviews_recyclerView = findViewById(R.id.reviews_recyclerView);
+        reviewLayout = findViewById(R.id.reviewLayout);
 
-        about_layout.animate().translationXBy(1200);
+        about_layout.animate().translationX(1200).setDuration(0);
+        reviewLayout.animate().translationX(2400).setDuration(0);
+
     }
 
 }

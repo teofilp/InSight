@@ -10,6 +10,7 @@
     <color name="black">#000</color>
     <color name="transparent">#0000</color>
     <color name="lightGray">#dedede</color>
+    <color name="darkGray">	#A0B3CD</color>
     <color name="AdminBlue">#4286f4</color>
     <color name="AdminDarkBlue">#3b78db</color>
     <color name="CustomTabLayoutActive">#89b6ff</color>

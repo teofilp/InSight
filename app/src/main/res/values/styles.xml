@@ -24,8 +24,12 @@
     </style>
 
     <style name="RatingBar" parent="Theme.AppCompat">
-        <item name="colorControlNormal">@color/lightGray</item>
+        <item name="colorControlNormal">@color/darkGray</item>
         <item name="colorControlActivated">@color/AdminDarkBlue</item>
+    </style>
+
+    <style name="LocationProfileEdge">
+        <item name="android:colorEdgeEffect">@color/AdminDarkBlue</item>
     </style>
 
 </resources>
