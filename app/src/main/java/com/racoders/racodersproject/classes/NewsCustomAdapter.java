@@ -59,6 +59,8 @@ public class NewsCustomAdapter extends RecyclerView.Adapter<NewsCustomAdapter.Vi
             newsImage = itemView.findViewById(R.id.imageView);
             layout = itemView.findViewById(R.id.layout);
             author_profile = itemView.findViewById(R.id.author_profile_image);
+
+            newsImage.setScaleType(ImageView.ScaleType.FIT_XY);
         }
 
         public void setTitle(String text){

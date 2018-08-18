@@ -122,7 +122,7 @@
                     android:layout_margin="0dp"
                     android:background="@color/CustomTabLayoutActive"
                     android:textColor="@color/white"
-                    android:text="POSTS"
+                    android:text="@string/posts"
                     android:onClick="toggleScreen"
                     android:tag="0"
                     />
@@ -134,7 +134,7 @@
                     android:layout_margin="0dp"
                     android:background="@color/white"
                     android:textColor="@color/AdminDarkBlue"
-                    android:text="ABOUT"
+                    android:text="@string/about"
                     android:onClick="toggleScreen"
                     android:tag="1"
                     />
@@ -146,7 +146,7 @@
                     android:layout_margin="0dp"
                     android:background="@color/white"
                     android:textColor="@color/AdminDarkBlue"
-                    android:text="Reviews"
+                    android:text="@string/reviews"
                     android:onClick="toggleScreen"
                     android:tag="2"
                     />
@@ -222,7 +222,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="12dp"
-                        android:text="www.mrv-it.ro"
+                        android:text="@string/www_mrv_it_ro"
                         android:textColor="@color/black"
                         android:layout_gravity="center_vertical"
                         android:textStyle="bold"
@@ -254,34 +254,37 @@
             android:orientation="vertical">
             <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="200dp"
+                android:layout_height="wrap_content"
                 android:background="@color/white">
+
                 <RelativeLayout
-                    android:id="@+id/addReviewRequest"
+                    android:id="@+id/addReviewRequestLayout"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent">
+
                     <TextView
                         android:id="@+id/add_review_request"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/no_review_warning"
-                        android:textColor="@color/darkGray"
                         android:layout_centerHorizontal="true"
-                        android:textAlignment="center"
                         android:layout_marginTop="60dp"
-                        android:textSize="18sp"/>
+                        android:text="@string/no_review_warning"
+                        android:textAlignment="center"
+                        android:textColor="@color/darkGray"
+                        android:textSize="18sp" />
+
                     <Button
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:background="@color/AdminDarkBlue"
-                        android:textColor="@color/white"
-                        android:text="@string/add_review_now"
                         android:layout_below="@+id/add_review_request"
-                        android:layout_marginTop="32dp"
                         android:layout_centerHorizontal="true"
-                        android:padding="12dp"
+                        android:layout_marginTop="32dp"
+                        android:background="@color/AdminDarkBlue"
                         android:onClick="requestReview"
-                       />
+                        android:padding="12dp"
+                        android:text="@string/add_review_now"
+                        android:layout_marginBottom="16dp"
+                        android:textColor="@color/white" />
 
                 </RelativeLayout>
 
@@ -298,22 +301,30 @@
                         android:layout_marginTop="12dp"
                         android:theme="@style/RatingBar"
                         />
-                    <EditText
-                        android:id="@+id/toAddReviewDescription"
+                    <ScrollView
                         android:layout_width="match_parent"
-                        android:layout_height="48dp"
+                        android:layout_height="wrap_content"
                         android:layout_below="@+id/toAddRatingBar"
+                        android:id="@+id/reviewDescriptionWrapper"
                         android:layout_marginTop="8dp"
                         android:layout_marginLeft="12dp"
-                        android:layout_marginRight="12dp"
-                        android:inputType="textMultiLine"
-                        android:textColor="@color/AdminDarkBlue"
-                        android:hint="@string/tell_us_what_you_think_about_this_place"/>
+                        android:layout_marginRight="12dp">
+                        <EditText
+                            android:id="@+id/toAddReviewDescription"
+                            android:layout_width="match_parent"
+                            android:layout_height="48dp"
+                            android:inputType="textMultiLine"
+                            android:textColor="@color/AdminDarkBlue"
+                            android:textColorHint="@color/darkGray"
+                            android:backgroundTint="@color/darkGray"
+                            android:textSize="16sp"
+                            android:hint="@string/tell_us_what_you_think_about_this_place"/>
+                    </ScrollView>
 
                     <Button
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_below="@+id/toAddReviewDescription"
+                        android:layout_below="@+id/reviewDescriptionWrapper"
                         android:layout_marginTop="12dp"
                         android:layout_centerHorizontal="true"
                         android:background="@color/AdminDarkBlue"
@@ -322,7 +333,40 @@
                         android:paddingRight="10dp"
                         android:paddingBottom="6dp"
                         android:paddingTop="6dp"
+                        android:layout_marginBottom="16dp"
                         android:onClick="saveReview"/>
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/usersReviewLayout">
+                    <RatingBar
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/usersRating"
+                        android:layout_centerHorizontal="true"
+                        android:layout_marginTop="12dp"
+                        android:theme="@style/RatingBar"
+                        />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/usersSavedReview"
+                        android:layout_below="@+id/usersRating"
+                        android:textColor="@color/AdminDarkBlue"
+                        android:layout_marginTop="24dp"
+                        android:layout_centerHorizontal="true"
+                        android:textAlignment="center"/>
+
+                    <ImageView
+                        android:layout_width="48dp"
+                        android:layout_height="48dp"
+                        app:srcCompat="@drawable/review_added"
+                        android:layout_below="@id/usersSavedReview"
+                        android:layout_marginTop="18dp"
+                        android:layout_marginBottom="12dp"
+                        android:layout_centerHorizontal="true"/>
                 </RelativeLayout>
 
             </RelativeLayout>

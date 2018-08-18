@@ -12,6 +12,7 @@ import android.widget.TextView;
 import com.racoders.racodersproject.R;
 
 import java.text.SimpleDateFormat;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -22,6 +23,7 @@ public class ReviewsCustomAdapter extends RecyclerView.Adapter<ReviewsCustomAdap
 
     public ReviewsCustomAdapter(List<Review> list){
         mList = list;
+        Collections.reverse(mList);
     }
 
     class ViewHolder extends RecyclerView.ViewHolder{
@@ -54,8 +56,8 @@ public class ReviewsCustomAdapter extends RecyclerView.Adapter<ReviewsCustomAdap
             this.date.setText(outputDate);
         }
 
-        public void setRating(int value){
-            rating.setRating(value);
+        public void setRating(double value){
+            rating.setRating((float)value);
         }
 
     }

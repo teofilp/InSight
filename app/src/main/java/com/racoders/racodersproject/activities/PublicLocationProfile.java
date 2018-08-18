@@ -1,5 +1,6 @@
 package com.racoders.racodersproject.activities;
 
+import android.animation.Animator;
 import android.os.Build;
 import android.provider.ContactsContract;
 import android.support.annotation.NonNull;
@@ -10,8 +11,10 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Html;
 import android.text.Spanned;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RatingBar;
@@ -35,6 +38,7 @@ import com.racoders.racodersproject.classes.NewsCustomAdapter;
 import com.racoders.racodersproject.classes.PointOfInterest;
 import com.racoders.racodersproject.classes.Review;
 import com.racoders.racodersproject.classes.ReviewsCustomAdapter;
+import com.racoders.racodersproject.classes.User;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -54,9 +58,19 @@ public class PublicLocationProfile extends AppCompatActivity {
     private TextView phoneNumber;
     private TextView websiteAddress;
     private TextView locationDescription;
-    private RelativeLayout about_layout;
+    private TextView usersSavedReview;
+
     private RatingBar locationRatingBar;
+    private RatingBar toAddRatingBar;
+    private RatingBar usersRatingBar;
+
+    private RelativeLayout about_layout;
     private LinearLayout reviewLayout;
+    private RelativeLayout addReviewLayout;
+    private RelativeLayout addReviewRequestLayout;
+    private RelativeLayout usersReviewLayout;
+
+    private EditText toAddReviewDescription;
 
     private ReviewsCustomAdapter reviewsAdapter;
     private RecyclerView reviews_recyclerView;
@@ -64,6 +78,7 @@ public class PublicLocationProfile extends AppCompatActivity {
     private NewsCustomAdapter newsAdapter;
     private RecyclerView profile_posts_recyclerView;
     private List<String> favList;
+    private List<String> reviewsAuthors;
     private String id;
 
     private PointOfInterest pointOfInterest;
@@ -72,6 +87,9 @@ public class PublicLocationProfile extends AppCompatActivity {
     private int activeScreen = 0;
     private long viewsSum = 0;
     private long followersSum = 0;
+    private float usersRating;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -91,6 +109,7 @@ public class PublicLocationProfile extends AppCompatActivity {
         id = getIntent().getStringExtra("id");
         getCurrentLocationNews(id);
         getcurrentLocationReviews(id);
+
         DatabaseReference getPOisDBRef = FirebaseDatabase.getInstance().getReference().child("POIs");
         getPOisDBRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -206,24 +225,104 @@ public class PublicLocationProfile extends AppCompatActivity {
         }
     }
     public void requestReview(View view){
+        addReviewRequestLayout.animate().alpha(0).setDuration(200).setListener(new Animator.AnimatorListener() {
+            @Override
+            public void onAnimationStart(Animator animation) {
 
+            }
 
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                addReviewRequestLayout.setVisibility(View.GONE);
+                addReviewLayout.setVisibility(View.VISIBLE);
+                addReviewLayout.animate().alpha(1).setDuration(200);
+                toAddRatingBar.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener() {
+                    @Override
+                    public void onRatingChanged(RatingBar ratingBar, float rating, boolean fromUser) {
+                        usersRating = rating;
+                        usersRatingBar.setRating(rating);
+                    }
+                });
+            }
+
+            @Override
+            public void onAnimationCancel(Animator animation) {
+
+            }
+
+            @Override
+            public void onAnimationRepeat(Animator animation) {
+
+            }
+        });
+    }
+
+    public void saveReview(View view){
+
+        usersSavedReview.setText(toAddReviewDescription.getText().toString());
+        FirebaseDatabase.getInstance().getReferenceFromUrl(pointOfInterest.getKey()).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if(dataSnapshot.exists()){
+                    pointOfInterest = dataSnapshot.getValue(PointOfInterest.class);
+                    pointOfInterest.setRatingNumb(pointOfInterest.getRatingNumb() + 1);
+                    pointOfInterest.setRatingSum(pointOfInterest.getRatingSum() + usersRating);
+
+                    FirebaseDatabase.getInstance().getReferenceFromUrl(pointOfInterest.getKey()).setValue(pointOfInterest, new DatabaseReference.CompletionListener() {
+                        @Override
+                        public void onComplete(@Nullable DatabaseError databaseError, @NonNull DatabaseReference databaseReference) {
+                            if(databaseError != null)
+                                Toast.makeText(PublicLocationProfile.this, "Something went wrong", Toast.LENGTH_SHORT).show();
+                            else
+                                new Review(User.getCurrentUserDisplayName(FirebaseAuth.getInstance().getCurrentUser().getUid()),
+                                    toAddReviewDescription.getText().toString(), usersRating, Calendar.getInstance().getTime()).save(id, addReviewLayout, usersReviewLayout);
+                        }
+                    });
+
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+    private void checkForGivenReview(List<Review> mList) {
+        if(reviewsAuthors.contains(User.getCurrentUserDisplayName(FirebaseAuth.getInstance().getCurrentUser().getUid()))){
+            addReviewRequestLayout.setVisibility(View.GONE);
+            usersReviewLayout.setVisibility(View.VISIBLE);
+            for(Review review : mList){
+                if(review.getAuthor().equals(User.getCurrentUserDisplayName(FirebaseAuth.getInstance().getCurrentUser().getUid()))){
+                    usersRatingBar.setRating((float)review.getRating());
+                    usersSavedReview.setText(review.getDescription());
+                    usersRatingBar.setOnRatingBarChangeListener(null);
+                    break;
+                }
+            }
+        }
 
     }
 
     private void getcurrentLocationReviews(String id) {
         final List<Review> mList = new ArrayList<>();
+        reviewsAuthors = new ArrayList<>();
 
         FirebaseDatabase.getInstance().getReference().child("Reviews")
                 .child(id).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if(dataSnapshot.exists()){
-                    for(DataSnapshot child : dataSnapshot.getChildren())
-                        mList.add(child.getValue(Review.class));
+                    for(DataSnapshot child : dataSnapshot.getChildren()){
+                        Review review = child.getValue(Review.class);
+                        mList.add(review);
+                        reviewsAuthors.add(mList.get(mList.size()-1).getAuthor());
+                    }
 
                     reviewsAdapter = new ReviewsCustomAdapter(mList);
                     reviews_recyclerView.setAdapter(reviewsAdapter);
+                    checkForGivenReview(mList);
                 }
             }
 
@@ -376,10 +475,21 @@ public class PublicLocationProfile extends AppCompatActivity {
         locationRatingBar = findViewById(R.id.locationRating);
         reviews_recyclerView = findViewById(R.id.reviews_recyclerView);
         reviewLayout = findViewById(R.id.reviewLayout);
+        addReviewLayout = findViewById(R.id.addReviewLayout);
+        addReviewRequestLayout = findViewById(R.id.addReviewRequestLayout);
+        toAddRatingBar = findViewById(R.id.toAddRatingBar);
+        toAddReviewDescription = findViewById(R.id.toAddReviewDescription);
+        usersReviewLayout = findViewById(R.id.usersReviewLayout);
+        usersRatingBar = findViewById(R.id.usersRating);
+        usersSavedReview = findViewById(R.id.usersSavedReview);
 
         about_layout.animate().translationX(1200).setDuration(0);
         reviewLayout.animate().translationX(2400).setDuration(0);
+        addReviewLayout.setAlpha(0);
+        addReviewLayout.setVisibility(View.GONE);
+        usersReviewLayout.setVisibility(View.GONE);
 
     }
+
 
 }

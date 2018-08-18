@@ -1,7 +1,9 @@
 package com.racoders.racodersproject.classes;
 
+import android.animation.Animator;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.view.View;
 import android.widget.Toast;
 
 import com.google.firebase.database.DatabaseError;
@@ -16,14 +18,14 @@ public class Review {
 
     private String author;
     private String description;
-    private int rating;
+    private double rating;
     private Date date;
 
     public Review(){
 
     }
 
-    public Review( String author, String description, int rating, Date date) {
+    public Review( String author, String description, double rating, Date date) {
         this.author = author;
         this.description = description;
         this.rating = rating;
@@ -38,7 +40,7 @@ public class Review {
         return description;
     }
 
-    public int getRating() {
+    public double getRating() {
         return rating;
     }
 
@@ -46,13 +48,38 @@ public class Review {
         return date;
     }
 
-    public void save(String locationId){
+    public void save(String locationId, final View startView, final View finalView){
         FirebaseDatabase.getInstance().getReference().child("Reviews").child(locationId)
                 .push().setValue(this, new DatabaseReference.CompletionListener() {
             @Override
             public void onComplete(@Nullable DatabaseError databaseError, @NonNull DatabaseReference databaseReference) {
-                if(databaseError == null)
+                if(databaseError == null){
                     Toast.makeText(getApplicationContext(), "Successful", Toast.LENGTH_SHORT).show();
+                    startView.animate().alpha(0).setDuration(200).setListener(new Animator.AnimatorListener() {
+                        @Override
+                        public void onAnimationStart(Animator animation) {
+
+                        }
+
+                        @Override
+                        public void onAnimationEnd(Animator animation) {
+                            startView.setVisibility(View.GONE);
+                            finalView.setVisibility(View.VISIBLE);
+                            finalView.animate().alpha(1).setDuration(200);
+                        }
+
+                        @Override
+                        public void onAnimationCancel(Animator animation) {
+
+                        }
+
+                        @Override
+                        public void onAnimationRepeat(Animator animation) {
+
+                        }
+                    });
+                }
+
             }
         });
     }

@@ -8,5 +8,9 @@
     <string name="no_review_warning">You didn\'t leave any review yet</string>
     <string name="add_review_now">Add review now</string>
     <string name="tell_us_what_you_think_about_this_place">Tell us what you think about this place</string>
+    <string name="www_mrv_it_ro">www.mrv-it.ro</string>
+    <string name="posts">POSTS</string>
+    <string name="about">ABOUT</string>
+    <string name="reviews">Reviews</string>
 
 </resources>

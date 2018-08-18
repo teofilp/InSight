@@ -2,14 +2,24 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/layout"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="300dp"
     xmlns:tools="http://schemas.android.com/tools"
-    android:background="#f00"
     android:layout_marginLeft="10dp"
     android:layout_marginRight="10dp"
     android:layout_marginTop="5dp"
     android:layout_marginBottom="5dp"
     tools:context="com.racoders.racodersproject.fragments.newsFeed">
+
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        />
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/news_overlay_gradient"/>
+
     <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/author_profile_image"
         android:layout_width="50dp"
@@ -32,8 +42,8 @@
         android:layout_height="wrap_content"
         android:textColor="@color/white"
         android:textSize="24sp"
-        android:layout_below="@id/author_profile_image"
-        android:layout_marginTop="10dp"
+        android:layout_above="@id/description"
+        android:layout_marginBottom="12dp"
         android:layout_marginLeft="10dp"
         />
     <TextView
@@ -43,17 +53,8 @@
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
         android:layout_marginTop="10dp"
-        android:layout_below="@+id/title"
-        />
-    <ImageView
-        android:id="@+id/imageView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/description"
-        android:layout_marginTop="20dp"
-        android:layout_marginBottom="5dp"
-        android:layout_marginLeft="5dp"
-        android:layout_marginRight="5dp"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="12dp"
         />
 
 

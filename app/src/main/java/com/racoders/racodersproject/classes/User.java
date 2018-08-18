@@ -62,4 +62,8 @@ public class User {
     public String getMyFavPlaces() {
         return myFavPlaces;
     }
+
+    public static String getCurrentUserDisplayName(String id){
+        return id;
+    }
 }
