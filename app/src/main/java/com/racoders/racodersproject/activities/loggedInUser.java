@@ -109,16 +109,17 @@ public class loggedInUser extends FragmentActivity {
 
         adapter = new ViewPagerAdapter(getSupportFragmentManager());
 
-        adapter.addFragment(new newsFeed(), "News Feed");
-        adapter.addFragment(new MapFragment(), "Map");
-        adapter.addFragment(new Profile(), "Profile");
+        adapter.addFragment(new newsFeed(), "");
+        adapter.addFragment(new MapFragment(), "");
+        adapter.addFragment(new Profile(), "");
 
         viewPager.setAdapter(adapter);
 
         tabLayout.setupWithViewPager(viewPager);
 
-
-
+        tabLayout.getTabAt(0).setIcon(R.drawable.tablayout_feed_icon);
+        tabLayout.getTabAt(1).setIcon(R.drawable.tablayout_map_icon);
+        tabLayout.getTabAt(2).setIcon(R.drawable.tablayout_person_icon);
     }
     public void moveCameraToMe(View view){
         MapFragment.mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(MapFragment.myLocation, 16));

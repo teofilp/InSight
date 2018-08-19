@@ -141,7 +141,7 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        super.onBackPressed();
+        startActivity(new Intent(getApplicationContext(), toggleLoginActivity.class));
         finish();
     }
 

@@ -1,9 +1,13 @@
 package com.racoders.racodersproject.activities;
 
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.racoders.racodersproject.R;
 
 import android.content.Intent;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.AppCompatEditText;
@@ -17,6 +21,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.racoders.racodersproject.classes.User;
 
 public class localRegisterActivity extends AppCompatActivity {
 
@@ -61,20 +66,34 @@ public class localRegisterActivity extends AppCompatActivity {
     @Override
     public void onStart(){
         super.onStart();
-        if(FirebaseAuth.getInstance().getCurrentUser()!=null){
-            startActivity(new Intent(getApplicationContext(), MapsActivity.class));
-            finish();
-        }
+
     }
     public void completionResult(Task<AuthResult> task){
         if (task.isSuccessful()) {
             // Sign in success, update UI with the signed-in user's information
             user = mAuth.getCurrentUser();
-            startActivity(new Intent(getApplicationContext(), loggedInUser.class));
+            saveInfo(mAuth.getCurrentUser().getUid());
         } else {
             // If sign in fails, display a message to the user.
             Toast.makeText(localRegisterActivity.this, "Authentication failed. Check your credentials or try again later",
                     Toast.LENGTH_SHORT).show();
         }
+    }
+
+    private void saveInfo(final String uid) {
+        User currentUser = new User();
+
+        currentUser.setEmail(email.getText().toString());
+        currentUser.setDisplayName(displayName.getText().toString());
+
+        FirebaseDatabase.getInstance().getReference().child("Users").child(uid).setValue(currentUser, new DatabaseReference.CompletionListener() {
+            @Override
+            public void onComplete(@Nullable DatabaseError databaseError, @NonNull DatabaseReference databaseReference) {
+                if(databaseError == null){
+                    Toast.makeText(localRegisterActivity.this, "Details saved successfully", Toast.LENGTH_SHORT).show();
+                    startActivity(new Intent(getApplicationContext(), FirstTimeSetUserProfileImage.class));
+                }
+            }
+        });
     }
 }

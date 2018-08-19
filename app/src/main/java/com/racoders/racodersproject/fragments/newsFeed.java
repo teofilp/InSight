@@ -47,7 +47,7 @@ public class newsFeed extends Fragment {
 
         recyclerView = view.findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        color = getActivity().getResources().getColor(R.color.colorPrimaryDark);
+        color = getActivity().getResources().getColor(R.color.white);
         final ArrayList<News> mArrayList = new ArrayList<>();
 
         DatabaseReference dbref = FirebaseDatabase.getInstance().getReference().child("News");

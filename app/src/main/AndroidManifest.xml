@@ -42,7 +42,6 @@
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_maps_key" />
 
-        <activity android:name=".activities.MapsActivity" />
         <activity
             android:name=".activities.MarkerDetailsPopUpWindow"
             android:theme="@style/AppTheme.CustomTheme" />
@@ -62,7 +61,8 @@
             </intent-filter>
         </activity>
         <activity android:name=".activities.toggleLoginActivity" />
-        <activity android:name=".activities.PublicLocationProfile"></activity>
+        <activity android:name=".activities.PublicLocationProfile" />
+        <activity android:name=".activities.FirstTimeSetUserProfileImage"></activity>
     </application>
 
 </manifest>

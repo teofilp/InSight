@@ -24,8 +24,12 @@ import com.racoders.racodersproject.R;
 import com.racoders.racodersproject.activities.NewsActivity;
 import com.racoders.racodersproject.activities.PublicLocationProfile;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -38,6 +42,7 @@ public class NewsCustomAdapter extends RecyclerView.Adapter<NewsCustomAdapter.Vi
 
     public NewsCustomAdapter(List<News> mList, int color){
         this.mList = mList;
+        Collections.reverse(mList);
         this.color = color;
     }
 
@@ -45,22 +50,19 @@ public class NewsCustomAdapter extends RecyclerView.Adapter<NewsCustomAdapter.Vi
 
         private final TextView title;
         private final  TextView author;
-        private final TextView description;
-        private final ImageView newsImage;
+        private final ImageView authorImageView;
+        private TextView dateTextView;
         private final RelativeLayout layout;
-        private final CircleImageView author_profile;
 
         public ViewHolder(View itemView) {
             super(itemView);
 
             title = itemView.findViewById(R.id.title);
             author = itemView.findViewById(R.id.author);
-            description = itemView.findViewById(R.id.description);
-            newsImage = itemView.findViewById(R.id.imageView);
+            dateTextView = itemView.findViewById(R.id.dateTextView);
+            authorImageView = itemView.findViewById(R.id.authorImageview);
             layout = itemView.findViewById(R.id.layout);
-            author_profile = itemView.findViewById(R.id.author_profile_image);
 
-            newsImage.setScaleType(ImageView.ScaleType.FIT_XY);
         }
 
         public void setTitle(String text){
@@ -87,27 +89,22 @@ public class NewsCustomAdapter extends RecyclerView.Adapter<NewsCustomAdapter.Vi
             });
 
         }
-
-        public void setDescription(String text){
-            if(text.length() > 125){
-                String formatedText = text.substring(0, 124) + "...";
-                description.setText(formatedText);
-            }else
-                description.setText(text);
+        public void setDateTextView(Date date){
+            String outputDate;
+            SimpleDateFormat formatter = new SimpleDateFormat("EEE, MMM d, ''yy", new Locale("en_US"));
+            outputDate = formatter.format(date);
+            this.dateTextView.setText(outputDate);
         }
+
 
         public void setLayoutTag(int tag) { layout.setTag(tag);}
 
         public Object getLayoutTag() { return layout.getTag();}
 
-        public void setNewsImage(String id){
-            StorageReference storage = FirebaseStorage.getInstance().getReference().child("images/" + id + ".jpeg");
-            GlideApp.with(getApplicationContext()).load(storage).into(newsImage);
-        }
 
         public void setAuthorImage(String id){
             StorageReference storage = FirebaseStorage.getInstance().getReference().child("images/pois/" + id + ".jpeg");
-            GlideApp.with(getApplicationContext()).load(storage).into(author_profile);
+            GlideApp.with(getApplicationContext()).load(storage).into(authorImageView);
         }
 
         public void setLayoutColor(){
@@ -128,10 +125,9 @@ public class NewsCustomAdapter extends RecyclerView.Adapter<NewsCustomAdapter.Vi
     public void onBindViewHolder(@NonNull ViewHolder holder, final int position) {
         holder.setTitle(mList.get(position).getTitle());
         holder.setAuthor(mList.get(position).getAuthor());
-        holder.setDescription(mList.get(position).getDescription());
-        holder.setNewsImage(mList.get(position).getId());
         holder.setAuthorImage(mList.get(position).getAuthor());
         holder.setLayoutTag(position);
+        holder.setDateTextView(mList.get(position).getPublicationDate());
         holder.setLayoutColor();
         final String Uid = mList.get(position).getId();
         System.out.println(Uid);
@@ -145,7 +141,7 @@ public class NewsCustomAdapter extends RecyclerView.Adapter<NewsCustomAdapter.Vi
             }
         });
 
-        holder.author_profile.setOnClickListener(new View.OnClickListener() {
+        holder.authorImageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 getApplicationContext()

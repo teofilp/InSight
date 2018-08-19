@@ -108,13 +108,17 @@ public class AdminPanel extends AppCompatActivity {
             getWindow().setStatusBarColor(getResources().getColor(R.color.AdminBlue));
             setTitle("Admin Panel");
         }
-        adapter.addFragment(new AdminNews(), "News");
-        adapter.addFragment(new AddNews(), "Add news");
-        adapter.addFragment(new AdminProfile(), "Profile");
-
+        adapter.addFragment(new AdminNews(), "");
+        adapter.addFragment(new AddNews(), "");
+        adapter.addFragment(new AdminProfile(), "");
 
         viewPager.setAdapter(adapter);
         tabLayout.setupWithViewPager(viewPager);
+
+        tabLayout.getTabAt(0).setIcon(R.drawable.tablayout_feed_icon_white);
+        tabLayout.getTabAt(1).setIcon(R.drawable.tablayout_map_icon_white);
+        tabLayout.getTabAt(2).setIcon(R.drawable.tablayout_person_icon_white);
+
     }
 
 

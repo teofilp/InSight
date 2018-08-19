@@ -66,7 +66,7 @@
                                 <PersistentState>
                                   <option name="values">
                                     <map>
-                                      <entry key="url" value="jar:file:/D:/AndroidStudio/plugins/android/lib/android.jar!/images/material_design_icons/action/ic_done_black_24dp.xml" />
+                                      <entry key="url" value="jar:file:/D:/AndroidStudio/plugins/android/lib/android.jar!/images/material_design_icons/communication/ic_message_black_24dp.xml" />
                                     </map>
                                   </option>
                                 </PersistentState>
@@ -76,12 +76,12 @@
                         </option>
                         <option name="values">
                           <map>
-                            <entry key="color" value="0084ff" />
-                            <entry key="height" value="96" />
-                            <entry key="outputName" value="review_added" />
+                            <entry key="color" value="ababab" />
+                            <entry key="height" value="48" />
+                            <entry key="outputName" value="tablayout_feed_icon" />
                             <entry key="overrideSize" value="true" />
                             <entry key="sourceFile" value="D:\AndroidStudio\bin\C:\Users\Tudor Filp" />
-                            <entry key="width" value="96" />
+                            <entry key="width" value="48" />
                           </map>
                         </option>
                       </PersistentState>
