@@ -31,12 +31,14 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FacebookAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.UserInfo;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.racoders.racodersproject.R;
 import com.racoders.racodersproject.activities.localRegisterActivity;
 import com.racoders.racodersproject.activities.loggedInUser;
+import com.racoders.racodersproject.classes.User;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -52,6 +54,7 @@ public class MainActivity extends AppCompatActivity {
     private AppCompatEditText password;
     private com.facebook.login.LoginManager FacebookLoginManager;
     private CallbackManager callbackManager;
+    private boolean facebookAccess = false;
     public void toLocalRegister(View view){
         startActivity(new Intent(getApplicationContext(), localRegisterActivity.class));
     }
@@ -122,6 +125,8 @@ public class MainActivity extends AppCompatActivity {
     public void completionResult(Task<AuthResult> task){
         if (task.isSuccessful()) {
             // Sign in success, update UI with the signed-in user's information
+            if(facebookAccess)
+                updateUsersData();
             user = mAuth.getCurrentUser();
             toLoggedInActivity();
         } else {
@@ -129,6 +134,27 @@ public class MainActivity extends AppCompatActivity {
             Toast.makeText(MainActivity.this, "Authentication failed. Check your credentials or try again later",
                     Toast.LENGTH_SHORT).show();
         }
+    }
+
+    private void updateUsersData() {
+        User user  = new User();
+
+        for(UserInfo profile : FirebaseAuth.getInstance().getCurrentUser().getProviderData()){
+            if(FacebookAuthProvider.PROVIDER_ID.equals(profile.getProviderId())){
+                user.setDisplayName(profile.getDisplayName());
+                user.setEmail(profile.getEmail());
+                user.setSocialID(profile.getUid());
+            }
+        }
+
+        FirebaseDatabase.getInstance().getReference().child("Users").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).setValue(user,
+                new DatabaseReference.CompletionListener() {
+            @Override
+            public void onComplete(@Nullable DatabaseError databaseError, @NonNull DatabaseReference databaseReference) {
+                if(databaseError != null)
+                    Toast.makeText(MainActivity.this, "Something went very wrong", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     public boolean passwordValidation(String passwordString){
@@ -152,6 +178,7 @@ public class MainActivity extends AppCompatActivity {
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
+                        facebookAccess = true;
                         completionResult(task);
                     }
                 });

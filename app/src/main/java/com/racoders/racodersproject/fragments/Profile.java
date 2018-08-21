@@ -10,7 +10,10 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.google.firebase.auth.FacebookAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.UserInfo;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
@@ -62,10 +65,11 @@ public class Profile extends Fragment {
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if(dataSnapshot.exists()){
                     User currentUser = dataSnapshot.getValue(User.class);
-                    String nameString = "Name: " + currentUser.getDisplayName();
-                    String emailString = "Email: " + currentUser.getEmail();
-                    nameTextView.setText(nameString);
-                    emailTextView.setText(emailString);
+                    if(currentUser.getSocialID() != null){
+                        getFacebookUser();
+                    } else {
+                        setUserInfo(currentUser.getDisplayName(), currentUser.getEmail());
+                    }
                 }
             }
 
@@ -76,9 +80,29 @@ public class Profile extends Fragment {
         });
     }
 
+    private void getFacebookUser() {
+        String facebookId = "";
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        for(UserInfo profile : user.getProviderData()){
+            if(FacebookAuthProvider.PROVIDER_ID.equals(profile.getProviderId())){
+                facebookId = profile.getUid();
+                setUserInfo(profile.getDisplayName(), profile.getEmail());
+            }
+        }
+        String photoUrl = "https://graph.facebook.com/" + facebookId + "/picture?height=500";
+        GlideApp.with(getApplicationContext()).load(photoUrl).into(profileImageView);
+    }
+
     private void getUserProfileImage(String id) {
         StorageReference storage = FirebaseStorage.getInstance().getReference().child("images/users/" + id + ".jpeg");
         GlideApp.with(getApplicationContext()).load(storage).into(profileImageView);
+    }
+
+    private void setUserInfo(String name, String email){
+        String nameString = "Name: " + name;
+        String emailString = "Email: " + email;
+        nameTextView.setText(nameString);
+        emailTextView.setText(emailString);
     }
 
 }

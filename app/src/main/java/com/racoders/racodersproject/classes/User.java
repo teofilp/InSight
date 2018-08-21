@@ -17,16 +17,16 @@ import java.util.logging.Logger;
 public class User {
     private String displayName;
     private String email;
-    private Long socialID;
+    private String socialID;
     private String myFavPlaces;
 
     public User(){
 
     }
-    public Long getSocialID(){
+    public String getSocialID(){
         return socialID;
     }
-    public void setSocialID(Long value){
+    public void setSocialID(String value){
         socialID = value;
     }
     public String getDisplayName(){
