@@ -2,6 +2,8 @@
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
     android:layout_height="120dp"
+    android:layout_marginLeft="8dp"
+    android:layout_marginRight="8dp"
     android:id="@+id/layout">
     <RelativeLayout
         android:layout_width="match_parent"
@@ -68,5 +70,11 @@
 
         </LinearLayout>
 
+
     </LinearLayout>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:background="@color/lightGray"
+        android:layout_alignParentBottom="true"/>
 </RelativeLayout>

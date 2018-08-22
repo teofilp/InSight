@@ -20,6 +20,14 @@
             android:layout_marginLeft="16dp"
             android:textSize="22sp"
             android:textColor="@color/colorPrimaryDark"/>
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginRight="16dp"
+            android:onClick="signOut"
+            android:background="@drawable/sign_out"/>
     </RelativeLayout>
 
     <android.support.v4.widget.NestedScrollView
@@ -33,16 +41,6 @@
             xmlns:tools="http://schemas.android.com/tools"
             xmlns:app="http://schemas.android.com/apk/res-auto"
             tools:context="com.racoders.racodersproject.activities.loggedInUser">
-            <Button
-                android:layout_width="96dp"
-                android:layout_height="24dp"
-                android:onClick="signOut"
-                android:text="Sign out"
-                android:layout_marginTop="16dp"
-                android:background="@drawable/rounded_button"
-                android:layout_alignParentEnd="true"
-                android:layout_marginRight="12dp"
-                android:textSize="12sp"/>
             <LinearLayout
                 android:id="@+id/profileLayout"
                 android:layout_width="wrap_content"

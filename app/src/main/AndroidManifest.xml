@@ -62,7 +62,8 @@
         </activity>
         <activity android:name=".activities.toggleLoginActivity" />
         <activity android:name=".activities.PublicLocationProfile" />
-        <activity android:name=".activities.FirstTimeSetUserProfileImage"></activity>
+        <activity android:name=".activities.FirstTimeSetUserProfileImage" />
+        <activity android:name=".activities.LocationWithSpecificCategory"></activity>
     </application>
 
 </manifest>
