@@ -91,7 +91,7 @@ public class loggedInUser extends FragmentActivity {
     public void moveCameraToMe(View view){
         MapFragment.mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(MapFragment.myLocation, 16));
     }
-    public void changeState(View view){
+    public static void changeState(View view){
 
         if(isFavOnly){
             isFavOnly = !isFavOnly;

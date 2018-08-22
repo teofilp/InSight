@@ -106,7 +106,7 @@ public class MarkerDetailsPopUpWindow extends Activity{
                 }
             });
         }else{
-            finish();
+            //finish();
         }
 
     }

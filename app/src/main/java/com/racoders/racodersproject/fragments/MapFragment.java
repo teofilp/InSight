@@ -51,6 +51,7 @@ import com.google.firebase.storage.StorageReference;
 import com.racoders.racodersproject.AppGlideModule.MyAppGlideModule;
 import com.racoders.racodersproject.R;
 import com.racoders.racodersproject.activities.MarkerDetailsPopUpWindow;
+import com.racoders.racodersproject.activities.loggedInUser;
 import com.racoders.racodersproject.classes.DirectionsParser;
 import com.racoders.racodersproject.classes.DistanceCalculator;
 import com.racoders.racodersproject.classes.PointOfInterest;
@@ -134,6 +135,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         });
 //        checkForNewUser(FirebaseAuth.getInstance().getUid());
         routePopUp.setVisibility(View.GONE);
+        markersState.setText("All Locations");
 
         return view;
 
@@ -280,7 +282,10 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         if(mMap == null)
             mapFragment.getMapAsync(this);
         dealWithSpinner();
-
+        if(isFavOnly)
+            markersState.setText("All Locations");
+        else
+            markersState.setText("Favorite Locations");
     }
 
     @Override
@@ -419,12 +424,11 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     }
 
     public static void getAllPOIS(){
+        mMarkers = new HashMap<>();
         DatabaseReference allLocationsReference = FirebaseDatabase.getInstance().getReference().child("POIs");
         allLocationsReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                mMarkers.clear();
-                mMarkers = new HashMap<>();
                 if(dataSnapshot.exists()){
                     for(DataSnapshot child : dataSnapshot.getChildren()){
                         for(DataSnapshot childOfChild : child.getChildren()){
@@ -480,11 +484,11 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         });
     }
     public static void getAllPOIS(final String category){
+        mMarkers = new HashMap<>();
         DatabaseReference allLocationsReference = FirebaseDatabase.getInstance().getReference().child("POIs").child(category);
         allLocationsReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                mMarkers.clear();
                 if(dataSnapshot.exists()){
                     for(DataSnapshot child : dataSnapshot.getChildren()){
                         Marker marker;
