@@ -213,6 +213,10 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
             locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationListener);
         }
 
+        dealWithSpinner();
+    }
+
+    private void dealWithSpinner() {
 
         ArrayAdapter<CharSequence> myFilterAdapter = ArrayAdapter.createFromResource(getActivity(), R.array.filter, android.R.layout.simple_spinner_item);
         myFilters.setAdapter(myFilterAdapter);
@@ -268,7 +272,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
             }
         });
 
-
     }
 
     @Override
@@ -276,13 +279,14 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         super.onStart();
         if(mMap == null)
             mapFragment.getMapAsync(this);
+        dealWithSpinner();
 
     }
 
     @Override
     public void onResume() {
         super.onResume();
-
+        dealWithSpinner();
         if(mMap!=null && myLocation!=null && !routeCreated){
             mMap.clear();
             if(ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED){
@@ -527,7 +531,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         int categoryMarker;
 
         if(fav){
-            if(category.equals("Bistro"))
+            if(category.equals("Bistro") || category.equals("Restaurant"))
                 categoryMarker = R.drawable.f_restaurant;
              else if (category.equals("Pub"))
                 categoryMarker = R.drawable.f_restaurant;

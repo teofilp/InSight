@@ -252,8 +252,11 @@ public class AddLocation extends AppCompatActivity{
             public void onComplete(@Nullable DatabaseError databaseError, @NonNull DatabaseReference databaseReference) {
                 if(databaseError == null){
                     locationSaved = true;
-                    if(imageSaved)
+                    if(imageSaved){
                         startActivity(new Intent(getApplicationContext(), AdminPanel.class));
+                        finish();
+                    }
+
                 }
             }
         });
@@ -281,8 +284,11 @@ public class AddLocation extends AppCompatActivity{
             public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                 imageSaved = true;
                 AdminAddLocationPageThreeFragment.progressBar.setVisibility(View.GONE);
-                if(locationSaved)
+                if(locationSaved){
                     startActivity(new Intent(getApplicationContext(), AdminPanel.class));
+                    finish();
+                }
+
             }
         });
 
