@@ -4,6 +4,9 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,13 +19,20 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserInfo;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.GenericTypeIndicator;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.racoders.racodersproject.AppGlideModule.GlideApp;
 import com.racoders.racodersproject.R;
+import com.racoders.racodersproject.classes.FavoriteLocationCustomAdapter;
+import com.racoders.racodersproject.classes.PointOfInterest;
 import com.racoders.racodersproject.classes.User;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -33,6 +43,10 @@ public class Profile extends Fragment {
     private CircleImageView profileImageView;
     private TextView nameTextView;
     private TextView emailTextView;
+    private RecyclerView favoriteLocationsRecyclerView;
+    private FavoriteLocationCustomAdapter adapter;
+
+
     
     public Profile() {
     }
@@ -50,14 +64,69 @@ public class Profile extends Fragment {
         nameTextView = view.findViewById(R.id.nameTextView);
         emailTextView = view.findViewById(R.id.emailTextView);
         profileImageView = view.findViewById(R.id.profileImage);
+        favoriteLocationsRecyclerView = view.findViewById(R.id.profileFavoriteLocations);
+
+        favoriteLocationsRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        favoriteLocationsRecyclerView.setNestedScrollingEnabled(false);
 
         String id = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
         getUserInfo(id);
         getUserProfileImage(id);
+        getFavoriteLocations(id);
 
         return view;
     }
+
+    private void getFavoriteLocations(String id) {
+
+        FirebaseDatabase.getInstance().getReference().child("FavoriteLocations").child(id).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if(dataSnapshot.exists()){
+                    GenericTypeIndicator<List<String>> t = new GenericTypeIndicator<List<String>>(){};
+                    List<String> list = dataSnapshot.getValue(t);
+                    getLocationsForEachKey(list);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
+    }
+
+    private void getLocationsForEachKey(List<String> list) {
+        final List<PointOfInterest> myList = new ArrayList<>();
+        for(String str : list){
+            System.out.println(str);
+            FirebaseDatabase.getInstance().getReferenceFromUrl(str).addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    if(dataSnapshot.exists()){
+                        PointOfInterest current = dataSnapshot.getValue(PointOfInterest.class);
+
+                        myList.add(current);
+                        adapter = new FavoriteLocationCustomAdapter(myList);
+                        favoriteLocationsRecyclerView.setAdapter(adapter);
+                    } else{
+
+                    }
+
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                }
+            });
+
+        }
+    }
+
+
 
     private void getUserInfo(String id) {
         FirebaseDatabase.getInstance().getReference().child("Users").child(id).addListenerForSingleValueEvent(new ValueEventListener() {

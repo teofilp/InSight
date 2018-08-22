@@ -12,5 +12,8 @@
     <string name="posts">POSTS</string>
     <string name="about">ABOUT</string>
     <string name="reviews">Reviews</string>
+    <string name="news_feed">News Feed</string>
+    <string name="categories">Categories</string>
+    <string name="profile">Profile</string>
 
 </resources>
