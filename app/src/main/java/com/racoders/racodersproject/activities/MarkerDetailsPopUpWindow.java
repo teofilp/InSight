@@ -1,10 +1,14 @@
 package com.racoders.racodersproject.activities;
 
 import com.google.android.gms.maps.model.LatLng;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.racoders.racodersproject.AppGlideModule.GlideApp;
 import com.racoders.racodersproject.fragments.MapFragment;
 import com.racoders.racodersproject.R;
 import com.racoders.racodersproject.classes.*;
 import android.app.Activity;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.provider.ContactsContract;
@@ -14,6 +18,7 @@ import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -31,32 +36,40 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import de.hdodenhof.circleimageview.CircleImageView;
+
 
 public class MarkerDetailsPopUpWindow extends Activity{
 
+    private CircleImageView locationImage;
+    private ImageView toggleFavoriteImageView;
+    private TextView address;
     private TextView title;
-    private TextView description;
-    private Button button;
     private String id;
-    private final double WIDTH_RATIO = 0.8;
-    private final double HEIGHT_RATIO = 0.7;
+    private final double WIDTH_RATIO = 0.9;
+    private final double HEIGHT_RATIO = 0.35;
     private Set<String> mFavLocationsSet;
     private PointOfInterest pointOfInterest;
     private Button createRoute;
     private String key;
+    private boolean isFav = false;
 
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.marker_details_pop_up_window);
-        button = findViewById(R.id.toggleFavoriteButton);
+
         createRoute = findViewById(R.id.createRoute);
+        locationImage = findViewById(R.id.locationImage);
+        toggleFavoriteImageView = findViewById(R.id.toggleFavoriteImage);
+        address = findViewById(R.id.address);
 
         createRoute.setEnabled(false);
 
         id = getIntent().getStringExtra("id");
 
+        loadImage(id);
 
         DisplayMetrics dm = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(dm);
@@ -69,7 +82,7 @@ public class MarkerDetailsPopUpWindow extends Activity{
         getWindow().setLayout(width, height);
 
         title = findViewById(R.id.title);
-        description = findViewById(R.id.description);
+
         /**
          * check for new user
          * if user already exists get the Array of fav locations
@@ -78,11 +91,14 @@ public class MarkerDetailsPopUpWindow extends Activity{
         if(MapFragment.getmFavLocationsString()!=null){
             mFavLocationsSet = new HashSet<>(MapFragment.getmFavLocationsString());
             if(mFavLocationsSet.contains(id)){
-                button.setText("Remove from favorites");
-                button.setBackgroundColor(getResources().getColor(R.color.red));
+                toggleFavoriteImageView.setBackground(getResources().getDrawable(R.drawable.bordered_fav_bookmark));
+                isFav = true;
+            } else{
+                toggleFavoriteImageView.setBackground(getResources().getDrawable(R.drawable.not_favorite));
             }
+
         }else{
-            mFavLocationsSet = new HashSet<>();
+                mFavLocationsSet = new HashSet<>();
         }
         if(id!=null){
             final DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReferenceFromUrl(id);
@@ -93,9 +109,7 @@ public class MarkerDetailsPopUpWindow extends Activity{
                         pointOfInterest = dataSnapshot.getValue(PointOfInterest.class);
                         createRoute.setEnabled(true);
                         title.setText(pointOfInterest.getTitle());
-                        description.setText(pointOfInterest.getDescription());
-                        System.out.println(pointOfInterest.getTitle());
-                        System.out.println(pointOfInterest.getDescription());
+                        address.setText(pointOfInterest.getAdress());
                         key = dataSnapshot.getKey();
                     }
                 }
@@ -111,9 +125,10 @@ public class MarkerDetailsPopUpWindow extends Activity{
 
     }
     public void toggleFavorite(View view){
-        Button mButton = (Button) view;
+        final View mView = view;
 
-        if(mButton.getText().toString().equals("Remove from favorites")){
+
+        if(isFav){
             mFavLocationsSet.remove(id);
             List<String> mList = new ArrayList<>(mFavLocationsSet);
             MapFragment.setmFavLocationsString(mList);
@@ -125,8 +140,8 @@ public class MarkerDetailsPopUpWindow extends Activity{
                 @Override
                 public void onComplete(@Nullable DatabaseError databaseError, @NonNull DatabaseReference databaseReference) {
                     if(databaseError == null){
-                        button.setText("Add to favorites");
-                        button.setBackgroundColor(getResources().getColor(R.color.green));
+                        mView.setBackground(getResources().getDrawable(R.drawable.not_favorite));
+                        isFav = false;
                     }
                 }
             });
@@ -143,8 +158,8 @@ public class MarkerDetailsPopUpWindow extends Activity{
                 @Override
                 public void onComplete(@Nullable DatabaseError databaseError, @NonNull DatabaseReference databaseReference) {
                     if(databaseError == null){
-                        button.setText("Remove from favorites");
-                        button.setBackgroundColor(getResources().getColor(R.color.red));
+                        mView.setBackground(getResources().getDrawable(R.drawable.bordered_fav_bookmark));
+                        isFav = true;
                     }
                 }
             });
@@ -155,9 +170,30 @@ public class MarkerDetailsPopUpWindow extends Activity{
         MapFragment.loadRouteInfo(key, pointOfInterest);
         MapFragment.createRoute(new LatLng(pointOfInterest.getLatitude(), pointOfInterest.getLongitude()));
         finish();
+    }
+
+    public void showLocationProfile(View view){
+        String[] keys = key.split("/");
+        String mKey = keys[keys.length-1];
+        startActivity(new Intent(getApplicationContext(), PublicLocationProfile.class).putExtra("id", mKey));
+
+    }
+
+    private void loadImage(String key){
+        if(key == null)
+            finish();
+        else{
+            String[] keys = key.split("/");
+            String mKey = keys[keys.length-1];
+
+            StorageReference storage = FirebaseStorage.getInstance().getReference().child("images/pois/" + mKey + ".jpeg");
+            GlideApp.with(getApplicationContext()).load(storage).into(locationImage);
+        }
 
 
     }
+
+
 
 
 }

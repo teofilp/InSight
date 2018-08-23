@@ -1,54 +1,117 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
+<RelativeLayout android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#bf1234"
-    >
-<RelativeLayout
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    >
+    android:orientation="vertical"
+    android:background="@color/white"
+    xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/title"
-        android:layout_margin="10dp"
-        android:layout_centerHorizontal="true"
-        android:text=""
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/locationImage"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginLeft="20dp"
+        android:onClick="showLocationProfile"
         />
 
     <TextView
+        android:id="@+id/title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/title"
-        android:layout_centerHorizontal="true"
-        android:layout_margin="20dp"
-        android:id="@+id/description"
-        android:text=""/>
+        android:layout_toEndOf="@id/locationImage"
+        android:layout_marginTop="50dp"
+        android:layout_marginLeft="16dp"
+        android:textColor="@color/colorPrimary"/>
+
+    <TextView
+        android:id="@+id/address"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/title"
+        android:layout_toEndOf="@id/locationImage"
+        android:layout_marginTop="24dp"
+        android:layout_marginLeft="20dp"
+        android:textColor="@color/colorPrimary"/>
+
+
+    <ImageView
+        android:id="@+id/toggleFavoriteImage"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="20dp"
+        android:layout_marginRight="20dp"
+        android:onClick="toggleFavorite"/>
+
+
+
     <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Add to favorites"
-        android:id="@+id/toggleFavoriteButton"
-        android:layout_below="@+id/description"
-        android:layout_centerHorizontal="true"
-        android:onClick="toggleFavorite"
-        android:background="#0f0"
-        android:textColor="#fff"/>
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
         android:id="@+id/createRoute"
-        android:layout_below="@id/toggleFavoriteButton"
-        android:layout_marginTop="10dp"
-        android:layout_centerHorizontal="true"
+        android:layout_width="wrap_content"
+        android:layout_height="36dp"
+        android:background="@drawable/rounded_button"
+        android:textColor="#FFF"
+        android:onClick="createRoute"
         android:text="Create route"
         android:textAllCaps="false"
-        android:onClick="createRoute"
+        android:layout_marginTop="32dp"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@id/locationImage"
+
         />
 
-</RelativeLayout>
 
-</ScrollView>
+</RelativeLayout>
+<!--<ScrollView-->
+    <!--xmlns:android="http://schemas.android.com/apk/res/android"-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="match_parent"-->
+    <!--android:background="#bf1234"-->
+    <!--&gt;-->
+<!--<RelativeLayout-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="match_parent"-->
+    <!--&gt;-->
+
+    <!--<TextView-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:id="@+id/title"-->
+        <!--android:layout_margin="10dp"-->
+        <!--android:layout_centerHorizontal="true"-->
+        <!--android:text=""-->
+        <!--/>-->
+
+    <!--<TextView-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_below="@+id/title"-->
+        <!--android:layout_centerHorizontal="true"-->
+        <!--android:layout_margin="20dp"-->
+        <!--android:id="@+id/description"-->
+        <!--android:text=""/>-->
+    <!--<Button-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:text="Add to favorites"-->
+        <!--android:id="@+id/toggleFavoriteButton"-->
+        <!--android:layout_below="@+id/description"-->
+        <!--android:layout_centerHorizontal="true"-->
+        <!--android:onClick="toggleFavorite"-->
+        <!--android:background="#0f0"-->
+        <!--android:textColor="#fff"/>-->
+    <!--<Button-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:id="@+id/createRoute"-->
+        <!--android:layout_below="@id/toggleFavoriteButton"-->
+        <!--android:layout_marginTop="10dp"-->
+        <!--android:layout_centerHorizontal="true"-->
+        <!--android:text="Create route"-->
+        <!--android:textAllCaps="false"-->
+        <!--android:onClick="createRoute"-->
+        <!--/>-->
+
+<!--</RelativeLayout>-->
+
+<!--</ScrollView>-->

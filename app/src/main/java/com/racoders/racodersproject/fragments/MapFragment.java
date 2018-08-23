@@ -279,6 +279,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         else
             markersState.setText("Favorite Locations");
 
+
     }
 
     @Override
@@ -321,12 +322,12 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
 
     public static void getFavPOIS(){
         mMap.clear();
+        mMarkers.clear();
         final DatabaseReference favDbRef = FirebaseDatabase.getInstance().getReference()
                 .child("FavoriteLocations").child(FirebaseAuth.getInstance().getUid());
         favDbRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                mMarkers.clear();
                 if(dataSnapshot.exists()){
                     GenericTypeIndicator<List<String>> t = new GenericTypeIndicator<List<String>>(){};
                     mFavLocationsString = dataSnapshot.getValue(t);
@@ -764,7 +765,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                 polylineOptions.geodesic(true);
 
             }
-            if(polylineOptions!=null){
+            if(polylineOptions!=null && mMap != null){
 
                 mMap.addPolyline(polylineOptions);
 
