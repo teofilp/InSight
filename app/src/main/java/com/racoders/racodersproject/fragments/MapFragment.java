@@ -315,6 +315,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         super.onPause();
         if(mMap!=null)
             mMap.clear();
+        routeCreated = false;
         locationManager.removeUpdates(locationListener);
     }
 

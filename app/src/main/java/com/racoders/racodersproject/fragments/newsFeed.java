@@ -104,6 +104,7 @@ public class newsFeed extends Fragment {
 
     private void loadIntoRecyclerView(List<String> list) {
         final List<News> myList = new ArrayList<>();
+        if(list!=null)
         for(String str : list){
             FirebaseDatabase.getInstance().getReferenceFromUrl(str).addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
