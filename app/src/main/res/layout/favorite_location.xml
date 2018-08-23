@@ -33,7 +33,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="8dp"
-            android:text="French Meadow Cafe"
             android:textColor="@color/black" />
 
         <TextView
@@ -41,7 +40,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="8dp"
-            android:text="2610 Lyndale Ave S, Minneapolis, MN"
             android:textColor="#767676" />
 
         <LinearLayout
@@ -52,7 +50,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="8dp"
-                android:text="13 followers"
                 android:textColor="#767676" />
             <View
                 android:layout_width="4dp"
@@ -65,8 +62,7 @@
                 android:layout_height="wrap_content"
                 android:id="@+id/locationPostsNumber"
                 android:layout_marginLeft="12dp"
-                android:textColor="#767676"
-                android:text="20 posts"/>
+                android:textColor="#767676" />
 
         </LinearLayout>
 
