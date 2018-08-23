@@ -128,6 +128,15 @@ public class loggedInUser extends FragmentActivity {
 
     }
 
+    @Override
+    public void onBackPressed() {
+        onStop();
+        finish();
+    }
 
-
+    @Override
+    protected void onStart() {
+        super.onStart();
+        MapFragment.mMap = null;
+    }
 }

@@ -50,7 +50,7 @@ public class Review {
 
     public void save(String locationId, final View startView, final View finalView){
         FirebaseDatabase.getInstance().getReference().child("Reviews").child(locationId)
-                .push().setValue(this, new DatabaseReference.CompletionListener() {
+                .child(this.getAuthor()).setValue(this, new DatabaseReference.CompletionListener() {
             @Override
             public void onComplete(@Nullable DatabaseError databaseError, @NonNull DatabaseReference databaseReference) {
                 if(databaseError == null){

@@ -9,13 +9,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.RatingBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.GenericTypeIndicator;
 import com.google.firebase.database.ValueEventListener;
@@ -25,20 +23,16 @@ import com.racoders.racodersproject.AppGlideModule.GlideApp;
 import com.racoders.racodersproject.R;
 import com.racoders.racodersproject.activities.PublicLocationProfile;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 
 import static com.facebook.FacebookSdk.getApplicationContext;
 
-public class FavoriteLocationCustomAdapter extends RecyclerView.Adapter<FavoriteLocationCustomAdapter.ViewHolder> {
+public class LocationCustomAdapter extends RecyclerView.Adapter<LocationCustomAdapter.ViewHolder> {
 
     private List<PointOfInterest> mList;
 
-    public FavoriteLocationCustomAdapter(List<PointOfInterest> list){
+    public LocationCustomAdapter(List<PointOfInterest> list){
         mList = list;
     }
 
@@ -132,14 +126,14 @@ public class FavoriteLocationCustomAdapter extends RecyclerView.Adapter<Favorite
 
     @NonNull
     @Override
-    public FavoriteLocationCustomAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public LocationCustomAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.favorite_location, parent, false);
 
         return new ViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull FavoriteLocationCustomAdapter.ViewHolder holder, final int position) {
+    public void onBindViewHolder(@NonNull LocationCustomAdapter.ViewHolder holder, final int position) {
         holder.setLocationName(mList.get(position).getTitle());
         holder.setLocationAddress(mList.get(position).getAdress());
         holder.setLocationFollowers(mList.get(position).getKey());

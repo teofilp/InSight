@@ -6,11 +6,9 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.google.firebase.auth.FacebookAuthProvider;
@@ -19,7 +17,6 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserInfo;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.GenericTypeIndicator;
 import com.google.firebase.database.ValueEventListener;
@@ -27,7 +24,7 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.racoders.racodersproject.AppGlideModule.GlideApp;
 import com.racoders.racodersproject.R;
-import com.racoders.racodersproject.classes.FavoriteLocationCustomAdapter;
+import com.racoders.racodersproject.classes.LocationCustomAdapter;
 import com.racoders.racodersproject.classes.PointOfInterest;
 import com.racoders.racodersproject.classes.User;
 
@@ -44,7 +41,7 @@ public class Profile extends Fragment {
     private TextView nameTextView;
     private TextView emailTextView;
     private RecyclerView favoriteLocationsRecyclerView;
-    private FavoriteLocationCustomAdapter adapter;
+    private LocationCustomAdapter adapter;
 
 
     
@@ -109,7 +106,7 @@ public class Profile extends Fragment {
                         PointOfInterest current = dataSnapshot.getValue(PointOfInterest.class);
 
                         myList.add(current);
-                        adapter = new FavoriteLocationCustomAdapter(myList);
+                        adapter = new LocationCustomAdapter(myList);
                         favoriteLocationsRecyclerView.setAdapter(adapter);
                     } else{
 

@@ -220,56 +220,48 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
 
     private void dealWithSpinner() {
 
-        ArrayAdapter<CharSequence> myFilterAdapter = ArrayAdapter.createFromResource(getActivity(), R.array.filter, android.R.layout.simple_spinner_item);
-        myFilters.setAdapter(myFilterAdapter);
-        myFilters.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+        final List<String> categoriesList = new ArrayList<>();
+        categoriesList.add("All");
+        FirebaseDatabase.getInstance().getReference().child("POIs").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                switch (position){
-                    case 0:
-                        activeFilter = "All";
-                        reloadMap();
-                        if(isFavOnly)
-                            getFavPOIS();
-                        else
-                            getAllPOIS();
-                        break;
-                    case 1:
-                        activeFilter = "Restaurant";
-                        reloadMap();
-                        if(isFavOnly)
-                            getFavPOIS(activeFilter);
-                        else
-                            getAllPOIS(activeFilter);
-                        break;
-                    case 2:
-                        activeFilter = "Transport";
-                        reloadMap();
-                        if(isFavOnly)
-                            getFavPOIS(activeFilter);
-                        else
-                            getAllPOIS(activeFilter);
-                        break;
-                    case 3:
-                        activeFilter = "Pub";
-                        reloadMap();
-                        if(isFavOnly)
-                            getFavPOIS(activeFilter);
-                        else
-                            getAllPOIS(activeFilter);
-                        break;
-                    case 4:
-                        activeFilter = "Sport";
-                        reloadMap();
-                        if(isFavOnly)
-                            getFavPOIS(activeFilter);
-                        else
-                            getAllPOIS(activeFilter);
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if(dataSnapshot.exists()){
+                    for(DataSnapshot child : dataSnapshot.getChildren()){
+                        categoriesList.add(child.getKey());
+                    }
+                    ArrayAdapter<String> myFilterAdapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_dropdown_item, categoriesList);
+                    myFilters.setAdapter(myFilterAdapter);
+
+                    myFilters.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                        @Override
+                        public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+
+                            activeFilter = categoriesList.get(position);
+                            reloadMap();
+                            if(isFavOnly){
+                                if(activeFilter.equals("All"))
+                                    getFavPOIS();
+                                else
+                                    getFavPOIS(activeFilter);
+                            } else{
+                                if(activeFilter.equals("All"))
+                                    getAllPOIS();
+                                else
+                                    getAllPOIS(activeFilter);
+                            }
+
+                        }
+
+                        @Override
+                        public void onNothingSelected(AdapterView<?> parent) {
+
+                        }
+                    });
                 }
             }
 
             @Override
-            public void onNothingSelected(AdapterView<?> parent) {
+            public void onCancelled(@NonNull DatabaseError databaseError) {
 
             }
         });
@@ -281,19 +273,19 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         super.onStart();
         if(mMap == null)
             mapFragment.getMapAsync(this);
-        dealWithSpinner();
         if(isFavOnly)
             markersState.setText("All Locations");
         else
             markersState.setText("Favorite Locations");
+
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        dealWithSpinner();
         if(mMap!=null && myLocation!=null && !routeCreated){
             mMap.clear();
+            dealWithSpinner();
             if(ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED){
                 ActivityCompat.requestPermissions(getActivity(), new String[] {Manifest.permission.ACCESS_FINE_LOCATION}, 1);
             } else {
@@ -312,6 +304,8 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                 else
                     getFavPOIS();
             }
+        } else{
+            onStart();
         }
     }
 
@@ -394,13 +388,14 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                                     if(dataSnapshot.exists()){
                                         PointOfInterest favPointOfInterest = dataSnapshot.getValue(PointOfInterest.class);
-                                        if(favPointOfInterest.getCategory().equals(category)){
+                                        if(favPointOfInterest.getCategory().equals("All"))
+                                            getFavPOIS();
+                                        else if (favPointOfInterest.getCategory().equals(category)){
                                             Marker marker = mMap.addMarker(new MarkerOptions()
                                                     .position(new LatLng(favPointOfInterest.getLatitude(), favPointOfInterest.getLongitude()))
                                                     .icon(BitmapDescriptorFactory.fromResource(getSpecificMarker(favPointOfInterest.getCategory(), true))));
                                             mMarkers.put(marker, favPointOfInterest.getKey());
-                                        }else if(favPointOfInterest.getCategory().equals("All"))
-                                            getFavPOIS();
+                                        }
                                     }
                                 }
 
