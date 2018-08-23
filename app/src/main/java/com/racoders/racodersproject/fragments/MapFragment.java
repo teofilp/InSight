@@ -341,11 +341,14 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                                     if(dataSnapshot.exists()){
                                         PointOfInterest favPointOfInterest = dataSnapshot.getValue(PointOfInterest.class);
-                                        Marker marker = mMap.addMarker(new MarkerOptions()
-                                                .position(new LatLng(favPointOfInterest.getLatitude(), favPointOfInterest.getLongitude()))
-                                                .icon(BitmapDescriptorFactory.fromResource(getSpecificMarker(favPointOfInterest.getCategory(), true))));
-                                        mMarkers.put(marker, favPointOfInterest.getKey());
-                                        mFavPOIs.put(dataSnapshot.getKey(), favPointOfInterest);
+                                        if(mMap!=null){
+                                            Marker marker = mMap.addMarker(new MarkerOptions()
+                                                    .position(new LatLng(favPointOfInterest.getLatitude(), favPointOfInterest.getLongitude()))
+                                                    .icon(BitmapDescriptorFactory.fromResource(getSpecificMarker(favPointOfInterest.getCategory(), true))));
+                                            mMarkers.put(marker, favPointOfInterest.getKey());
+                                            mFavPOIs.put(dataSnapshot.getKey(), favPointOfInterest);
+                                        }
+
 
                                     }
                                 }
@@ -391,7 +394,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                                         PointOfInterest favPointOfInterest = dataSnapshot.getValue(PointOfInterest.class);
                                         if(favPointOfInterest.getCategory().equals("All"))
                                             getFavPOIS();
-                                        else if (favPointOfInterest.getCategory().equals(category)){
+                                        else if (favPointOfInterest.getCategory().equals(category) && mMap != null){
                                             Marker marker = mMap.addMarker(new MarkerOptions()
                                                     .position(new LatLng(favPointOfInterest.getLatitude(), favPointOfInterest.getLongitude()))
                                                     .icon(BitmapDescriptorFactory.fromResource(getSpecificMarker(favPointOfInterest.getCategory(), true))));
@@ -431,17 +434,22 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                             Marker marker;
                             PointOfInterest pointOfInterest = childOfChild.getValue(PointOfInterest.class);
 
-                            if(mFavLocationsString!=null && mFavLocationsString.size() > 0 && mFavLocationsString.contains(pointOfInterest.getKey())){
+                            if(mFavLocationsString!=null && mFavLocationsString.size() > 0 && mFavLocationsString.contains(pointOfInterest.getKey()) && mMap != null){
                                 marker= mMap.addMarker(new MarkerOptions()
                                         .position(new LatLng(pointOfInterest.getLatitude(), pointOfInterest.getLongitude()))
                                         .icon(BitmapDescriptorFactory.fromResource(getSpecificMarker(pointOfInterest.getCategory(), true))));
+                                mMarkers.put(marker, pointOfInterest.getKey());
                             }else{
-                                marker= mMap.addMarker(new MarkerOptions()
-                                        .position(new LatLng(pointOfInterest.getLatitude(), pointOfInterest.getLongitude()))
-                                        .icon(BitmapDescriptorFactory.fromResource(getSpecificMarker(pointOfInterest.getCategory(), false))));
+                                if(mMap != null){
+                                    marker= mMap.addMarker(new MarkerOptions()
+                                            .position(new LatLng(pointOfInterest.getLatitude(), pointOfInterest.getLongitude()))
+                                            .icon(BitmapDescriptorFactory.fromResource(getSpecificMarker(pointOfInterest.getCategory(), false))));
+                                    mMarkers.put(marker, pointOfInterest.getKey());
+                                }
+
                             }
 
-                            mMarkers.put(marker, pointOfInterest.getKey());
+
                         }
 
                     }
@@ -489,6 +497,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                     for(DataSnapshot child : dataSnapshot.getChildren()){
                         Marker marker;
                         PointOfInterest pointOfInterest = child.getValue(PointOfInterest.class);
+                        if(mMap != null){
                             if(mFavLocationsString.contains(pointOfInterest.getKey())){
                                 marker= mMap.addMarker(new MarkerOptions()
                                         .position(new LatLng(pointOfInterest.getLatitude(), pointOfInterest.getLongitude()))
@@ -500,6 +509,8 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                             }
                             // check if the pois is favorite or not
                             mMarkers.put(marker, pointOfInterest.getKey());
+                            }
+
                         }
 
                     }
@@ -552,7 +563,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
             else if (category.equals("Cinema"))
                 categoryMarker = R.drawable.f_cinema;
             else
-                categoryMarker = R.drawable.you_marker;
+                categoryMarker = R.drawable.unknown;
 
         } else {
             if(category.equals("Bistro"))
@@ -578,7 +589,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
             else if (category.equals("Cinema"))
                 categoryMarker = R.drawable.cinema;
             else
-                categoryMarker = R.drawable.you_marker;
+                categoryMarker = R.drawable.unknown;
         }
 
 

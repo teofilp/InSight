@@ -42,6 +42,7 @@ public class CategoryListAdapter extends ArrayAdapter<Category> {
 
         imageView.setBackground(getContext().getResources().getDrawable(category.getImage()));
         textView.setText(category.getName());
+        layout.setBackgroundColor(getContext().getResources().getColor(Category.getBackgroundColor(category.getName())));
 
         layout.setOnClickListener(new View.OnClickListener() {
             @Override

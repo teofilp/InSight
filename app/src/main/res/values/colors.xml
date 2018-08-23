@@ -14,4 +14,11 @@
     <color name="AdminBlue">#4286f4</color>
     <color name="AdminDarkBlue">#3b78db</color>
     <color name="CustomTabLayoutActive">#89b6ff</color>
+    <color name="Bistro">#EFB0A1</color>
+    <color name="Festival">#F4AFB4</color>
+    <color name="Theatre">#94A89A</color>
+    <color name="Stadium">#797D81</color>
+    <color name="Cinema">#C86FC9</color>
+    <color name="Hotel">#F7C7DB</color>
+    <color name="Park">#678D58</color>
 </resources>

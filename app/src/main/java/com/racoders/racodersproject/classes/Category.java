@@ -33,25 +33,49 @@ public class Category {
 
     public static int getImageFromName(String category) {
         if(category.equals("Bistro") || category.equals("Restaurant"))
-            return R.drawable.f_restaurant;
+            return R.drawable.categories_restaurant;
         else if (category.equals("Pub"))
-            return R.drawable.f_restaurant;
+            return R.drawable.categories_restaurant;
         else if (category.equals("Park"))
-            return R.drawable.f_park;
+            return R.drawable.categories_park;
         else if (category.equals("Theatre"))
-            return R.drawable.f_theatre;
+            return R.drawable.categories_theatre;
         else if (category.equals("Sport"))
-            return R.drawable.f_stadium;
+            return R.drawable.categories_stadium;
         else if (category.equals("Parking"))
-            return R.drawable.f_parking;
+            return R.drawable.categories_parking;
         else if (category.equals("Festival"))
-            return R.drawable.f_festival;
+            return R.drawable.categories_festival;
         else if (category.equals("Hotel"))
-            return R.drawable.f_hotel;
+            return R.drawable.categories_hotel;
         else if (category.equals("Cinema"))
-            return R.drawable.f_cinema;
+            return R.drawable.categories_cinema;
         else
-            return R.drawable.you_marker;
+            return R.drawable.unknown;
+    }
+
+    public static int getBackgroundColor(String category){
+        if(category.equals("Bistro") || category.equals("Restaurant"))
+            return R.color.Bistro;
+        else if (category.equals("Pub"))
+            return R.color.Bistro;
+        else if (category.equals("Park"))
+            return R.color.Park;
+        else if (category.equals("Theatre"))
+            return R.color.Theatre;
+        else if (category.equals("Sport"))
+            return R.color.Stadium;
+        else if (category.equals("Parking"))
+            return R.color.lightGray;
+        else if (category.equals("Festival"))
+            return R.color.Festival;
+        else if (category.equals("Hotel"))
+            return R.color.Hotel;
+        else if (category.equals("Cinema"))
+            return R.color.Cinema;
+        else
+            return R.color.lightGray;
+
     }
 
 }
