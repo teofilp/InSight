@@ -257,6 +257,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
 
                         }
                     });
+                    myFilters.setSelection(myFilterAdapter.getPosition(activeFilter));
                 }
             }
 
