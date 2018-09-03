@@ -16,7 +16,7 @@
         android:layout_width="311dp"
         android:layout_height="217dp"
         android:layout_gravity="center"
-        app:srcCompat="@drawable/logo" />
+        app:srcCompat="@drawable/logo_blue" />
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

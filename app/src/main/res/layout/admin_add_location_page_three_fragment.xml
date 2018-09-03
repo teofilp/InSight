@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="#FFF">
     <ProgressBar
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -17,14 +18,23 @@
             android:layout_height="match_parent"
             android:orientation="vertical"
             android:paddingBottom="20dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="Who are you?"
+                android:textColor="@color/AdminBlue"
+                android:layout_marginTop="32dp"
+                android:textSize="20sp"/>
             <EditText
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="20dp"
                 android:hint="description"
-                android:textColorHint="@color/colorPrimaryDark"
-                android:textColor="@color/colorPrimaryDark"
-                android:backgroundTint="@color/colorPrimaryDark"
+                android:textColor="@color/AdminBlue"
+                android:backgroundTint="@color/AdminBlue"
+                android:textColorHint="@color/AdminBlue"
                 android:inputType="textMultiLine"
                 android:id="@+id/locationDescription"
                 />
@@ -38,7 +48,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="@color/colorPrimaryDark"
+                android:textColor="@color/AdminBlue"
                 android:layout_gravity="center"
                 android:layout_marginTop="10dp"
                 android:text="Tap the image to choose a new one"/>

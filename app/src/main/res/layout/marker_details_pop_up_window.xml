@@ -3,52 +3,76 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#bf1234"
+    android:background="#FFF"
     >
-<RelativeLayout
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    >
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        >
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/title"
-        android:layout_margin="10dp"
-        android:layout_centerHorizontal="true"
-        android:text=""
-        />
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="150dp"
+            android:scaleType="centerCrop"
+            android:src="@drawable/city"/>
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/title"
-        android:layout_centerHorizontal="true"
-        android:layout_margin="20dp"
-        android:id="@+id/description"
-        android:text=""/>
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Add to favorites"
-        android:id="@+id/toggleFavoriteButton"
-        android:layout_below="@+id/description"
-        android:layout_centerHorizontal="true"
-        android:onClick="toggleFavorite"
-        android:background="#0f0"
-        android:textColor="#fff"/>
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/createRoute"
-        android:layout_below="@id/toggleFavoriteButton"
-        android:layout_marginTop="10dp"
-        android:layout_centerHorizontal="true"
-        android:text="Create route"
-        android:textAllCaps="false"
-        android:onClick="createRoute"
-        />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:background="#0000">
 
-</RelativeLayout>
+            <TextView
+                android:id="@+id/title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_marginBottom="16dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginLeft="50dp"
+                android:text="TITLE"
+                android:textColor="@color/colorPrimary"/>
+
+            <Button
+                android:id="@+id/toggleFavoriteButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="150dp"
+                android:layout_marginTop="8dp"
+                android:background="#0000"
+                android:onClick="toggleFavorite"
+                android:textSize="12sp"
+                android:text="Add to favorites"
+                android:textColor="@color/colorPrimary" />
+
+        </LinearLayout>
+
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/title"
+            android:layout_centerHorizontal="true"
+            android:textColor="@color/colorPrimary"
+            android:layout_margin="20dp"
+            android:id="@+id/description"
+            android:text="Description
+Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown"/>
+
+
+        <Button
+            android:id="@+id/createRoute"
+            android:layout_width="wrap_content"
+            android:layout_height="36dp"
+            android:background="@drawable/rounded_button"
+            android:textColor="#FFF"
+            android:onClick="createRoute"
+            android:text="Create route"
+            android:textAllCaps="false"
+            android:layout_marginLeft="150dp"/>
+
+
+    </LinearLayout>
 
 </ScrollView>
