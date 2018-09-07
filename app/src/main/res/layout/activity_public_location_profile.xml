@@ -17,7 +17,7 @@
             android:id="@+id/coverPhoto"
             android:layout_width="match_parent"
             android:layout_height="200dp"
-            android:background="@color/AdminDarkBlue"
+            android:background="@color/colorPrimary"
             />
         <ImageView
             android:layout_width="92dp"
@@ -70,7 +70,7 @@
                 android:layout_below="@+id/category"
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="8dp"
-                android:textColor="@color/AdminBlue"/>
+                android:textColor="@color/colorPrimary"/>
             <View
                 android:id="@+id/separatorView"
                 android:layout_width="2dp"
@@ -120,7 +120,7 @@
                     android:layout_height="match_parent"
                     android:layout_weight="0.3333"
                     android:layout_margin="0dp"
-                    android:background="@color/CustomTabLayoutActive"
+                    android:background="@color/fadedPrimary"
                     android:textColor="@color/white"
                     android:text="@string/posts"
                     android:onClick="toggleScreen"
@@ -133,7 +133,7 @@
                     android:layout_weight="0.3333"
                     android:layout_margin="0dp"
                     android:background="@color/white"
-                    android:textColor="@color/AdminDarkBlue"
+                    android:textColor="@color/colorPrimary"
                     android:text="@string/about"
                     android:onClick="toggleScreen"
                     android:tag="1"
@@ -145,7 +145,7 @@
                     android:layout_weight="0.3333"
                     android:layout_margin="0dp"
                     android:background="@color/white"
-                    android:textColor="@color/AdminDarkBlue"
+                    android:textColor="@color/colorPrimary"
                     android:text="@string/reviews"
                     android:onClick="toggleScreen"
                     android:tag="2"
@@ -279,7 +279,7 @@
                         android:layout_below="@+id/add_review_request"
                         android:layout_centerHorizontal="true"
                         android:layout_marginTop="32dp"
-                        android:background="@color/AdminDarkBlue"
+                        android:background="@color/colorPrimary"
                         android:onClick="requestReview"
                         android:padding="12dp"
                         android:text="@string/add_review_now"
@@ -314,9 +314,9 @@
                             android:layout_width="match_parent"
                             android:layout_height="48dp"
                             android:inputType="textMultiLine"
-                            android:textColor="@color/AdminDarkBlue"
-                            android:textColorHint="@color/darkGray"
-                            android:backgroundTint="@color/darkGray"
+                            android:textColor="@color/colorPrimary"
+                            android:textColorHint="@color/colorPrimary"
+                            android:backgroundTint="@color/colorPrimary"
                             android:textSize="16sp"
                             android:hint="@string/tell_us_what_you_think_about_this_place"/>
                     </ScrollView>
@@ -327,7 +327,7 @@
                         android:layout_below="@+id/reviewDescriptionWrapper"
                         android:layout_marginTop="12dp"
                         android:layout_centerHorizontal="true"
-                        android:background="@color/AdminDarkBlue"
+                        android:background="@color/colorPrimary"
                         android:text="Save review"
                         android:paddingLeft="10dp"
                         android:paddingRight="10dp"
@@ -354,7 +354,7 @@
                         android:layout_height="wrap_content"
                         android:id="@+id/usersSavedReview"
                         android:layout_below="@+id/usersRating"
-                        android:textColor="@color/AdminDarkBlue"
+                        android:textColor="@color/colorPrimary"
                         android:layout_marginTop="24dp"
                         android:layout_centerHorizontal="true"
                         android:textAlignment="center"/>

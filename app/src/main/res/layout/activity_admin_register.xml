@@ -11,7 +11,7 @@
     <ImageView
         android:layout_width="160dp"
         android:layout_height="160dp"
-        android:src="@drawable/logo"
+        android:src="@drawable/logo_blue"
         android:layout_gravity="center"/>
 
     <TextView

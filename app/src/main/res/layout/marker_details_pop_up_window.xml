@@ -1,54 +1,83 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#bf1234"
-    >
-<RelativeLayout
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    >
+    android:background="#FFF">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/title"
-        android:layout_margin="10dp"
-        android:layout_centerHorizontal="true"
-        android:text=""
-        />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/title"
-        android:layout_centerHorizontal="true"
-        android:layout_margin="20dp"
-        android:id="@+id/description"
-        android:text=""/>
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Add to favorites"
-        android:id="@+id/toggleFavoriteButton"
-        android:layout_below="@+id/description"
-        android:layout_centerHorizontal="true"
-        android:onClick="toggleFavorite"
-        android:background="#0f0"
-        android:textColor="#fff"/>
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/createRoute"
-        android:layout_below="@id/toggleFavoriteButton"
-        android:layout_marginTop="10dp"
-        android:layout_centerHorizontal="true"
-        android:text="Create route"
-        android:textAllCaps="false"
-        android:onClick="createRoute"
-        />
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="150dp"
+            android:scaleType="centerCrop"
+            android:src="@drawable/city" />
 
-</RelativeLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="#0000"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_marginBottom="16dp"
+                android:layout_marginLeft="50dp"
+                android:layout_marginTop="8dp"
+                android:text="TITLE"
+                android:textColor="@color/colorPrimary" />
+
+            <Button
+                android:id="@+id/toggleFavoriteButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="150dp"
+                android:layout_marginTop="8dp"
+                android:background="#0000"
+                android:onClick="toggleFavorite"
+                android:text="Add to favorites"
+                android:textColor="@color/colorPrimary"
+                android:textSize="12sp" />
+
+        </LinearLayout>
+
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="About us:"
+            android:textColor="@color/colorPrimary"
+            android:layout_marginLeft="20dp"
+            android:layout_marginTop="16dp"/>
+
+        <TextView
+            android:id="@+id/description"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/title"
+            android:layout_centerHorizontal="true"
+            android:layout_margin="20dp"
+            android:text="Lorem imsah bujd ma[p ja kfkdkfkf jfaioifh pajfh oefy p'IFdp   '"
+            android:textColor="@color/colorPrimary" />
+
+
+        <Button
+            android:id="@+id/createRoute"
+            android:layout_width="wrap_content"
+            android:layout_height="36dp"
+            android:layout_marginLeft="150dp"
+            android:background="@drawable/rounded_button"
+            android:onClick="createRoute"
+            android:text="Create route"
+            android:textAllCaps="false"
+            android:textColor="#FFF" />
+
+
+    </LinearLayout>
 
 </ScrollView>
