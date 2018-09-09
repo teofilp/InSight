@@ -39,6 +39,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -70,8 +71,11 @@ public class AddLocation extends AppCompatActivity{
     public static LatLng locationLatLng;
     private ViewPager viewPager;
     private ViewPagerAdapter pagerAdapter;
-    private boolean locationSaved = false;
-    private boolean imageSaved = false;
+    private String locationEmailAuth;
+    private String locationPasswordAuth;
+    private String locationDisplayName;
+
+    AdminAddLocationPageOneFragment fragment1;
 
 
     @Override
@@ -106,7 +110,12 @@ public class AddLocation extends AppCompatActivity{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_location);
 
+        locationEmailAuth = getIntent().getStringExtra("email");
+        locationPasswordAuth = getIntent().getStringExtra("password");
+        locationDisplayName = getIntent().getStringExtra("displayName");
 
+        fragment1 = new AdminAddLocationPageOneFragment();
+        handleInfoForAddLocation(locationEmailAuth, locationDisplayName, fragment1);
 
         nt_button = findViewById(R.id.nt_button);
         bk_button = findViewById(R.id.bk_button);
@@ -118,9 +127,10 @@ public class AddLocation extends AppCompatActivity{
         viewPager = findViewById(R.id.addLocationViewPager);
         pagerAdapter = new ViewPagerAdapter(getSupportFragmentManager());
 
-        pagerAdapter.addFragment(new AdminAddLocationPageOneFragment());
+        pagerAdapter.addFragment(fragment1);
         pagerAdapter.addFragment(new AdminAddLocationPageTwoFragment());
         pagerAdapter.addFragment(new AdminAddLocationPageThreeFragment());
+
 
         viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
@@ -181,6 +191,15 @@ public class AddLocation extends AppCompatActivity{
 
     }
 
+    private void handleInfoForAddLocation(String locationEmailAuth, String locationDisplayName, AdminAddLocationPageOneFragment fragment) {
+
+        Bundle bundle = new Bundle();
+        bundle.putString("email", locationEmailAuth);
+        bundle.putString("displayName", locationDisplayName);
+
+        fragment.setArguments(bundle);
+    }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -210,7 +229,7 @@ public class AddLocation extends AppCompatActivity{
 
     public void saveLocation(){
         AdminAddLocationPageThreeFragment.progressBar.setVisibility(View.VISIBLE);
-        PointOfInterest mPoinOfInterest = new PointOfInterest();
+        final PointOfInterest mPoinOfInterest = new PointOfInterest();
 
         mPoinOfInterest.setTitle(AdminAddLocationPageOneFragment.getLocationName());
         mPoinOfInterest.setCategory(AdminAddLocationPageOneFragment.getLocationCategory());
@@ -223,6 +242,7 @@ public class AddLocation extends AppCompatActivity{
         if(locationLatLng!=null){
             mPoinOfInterest.setLatitude(locationLatLng.latitude);
             mPoinOfInterest.setLongitude(locationLatLng.longitude);
+            locationLatLng = null;
         }else{
             Toast.makeText(this, "Your location on the map is required", Toast.LENGTH_SHORT).show();
             AdminAddLocationPageThreeFragment.progressBar.setVisibility(View.GONE);
@@ -237,9 +257,22 @@ public class AddLocation extends AppCompatActivity{
         }
 
 
-        ImageView mPointOfInterestImageView = AdminAddLocationPageThreeFragment.getLocationImage();
+        final ImageView mPointOfInterestImageView = AdminAddLocationPageThreeFragment.getLocationImage();
 
-        DatabaseReference dbref = FirebaseDatabase.getInstance().getReference().child("POIs").child(mPoinOfInterest.getCategory())
+        FirebaseAuth.getInstance().createUserWithEmailAndPassword(locationEmailAuth, locationPasswordAuth).addOnSuccessListener(new OnSuccessListener<AuthResult>() {
+            @Override
+            public void onSuccess(AuthResult authResult) {
+                saveInfo(mPoinOfInterest, mPointOfInterestImageView);
+            }
+        });
+
+
+
+    }
+
+    private void saveInfo(final PointOfInterest mPoinOfInterest, final ImageView mPointOfInterestImageView){
+
+        final DatabaseReference dbref = FirebaseDatabase.getInstance().getReference().child("POIs").child(mPoinOfInterest.getCategory())
                 .child(FirebaseAuth.getInstance().getCurrentUser().getUid());
 
         String value = FirebaseDatabase.getInstance().getReference().child("POIs").child(mPoinOfInterest.getCategory())
@@ -251,49 +284,47 @@ public class AddLocation extends AppCompatActivity{
             @Override
             public void onComplete(@Nullable DatabaseError databaseError, @NonNull DatabaseReference databaseReference) {
                 if(databaseError == null){
-                    locationSaved = true;
-                    if(imageSaved){
-                        startActivity(new Intent(getApplicationContext(), AdminPanel.class));
-                        finish();
-                    }
+
+                    FirebaseStorage storage = FirebaseStorage.getInstance();
+                    StorageReference spaceref = storage.getReference().child("images/pois/" + FirebaseAuth.getInstance().getCurrentUser().getUid() + ".jpeg");
+
+                    mPointOfInterestImageView.setDrawingCacheEnabled(true);
+                    mPointOfInterestImageView.buildDrawingCache();
+
+                    Bitmap bitmap = ((BitmapDrawable) mPointOfInterestImageView.getDrawable()).getBitmap();
+                    ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                    bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+                    byte[] data = baos.toByteArray();
+
+                    UploadTask uploadTask = spaceref.putBytes(data);
+                    uploadTask.addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            System.out.println("Image upload failed");
+                            AdminAddLocationPageThreeFragment.progressBar.setVisibility(View.GONE);
+                        }
+                    }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                        @Override
+                        public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                            AdminAddLocationPageThreeFragment.progressBar.setVisibility(View.GONE);
+                            startActivity(new Intent(getApplicationContext(), AdminPanel.class));
+                            clearMemory();
+                            finish();
+
+                        }
+                    });
 
                 }
             }
         });
-
-        FirebaseStorage storage = FirebaseStorage.getInstance();
-        StorageReference spaceref = storage.getReference().child("images/pois/" + FirebaseAuth.getInstance().getCurrentUser().getUid() + ".jpeg");
-
-        mPointOfInterestImageView.setDrawingCacheEnabled(true);
-        mPointOfInterestImageView.buildDrawingCache();
-
-        Bitmap bitmap = ((BitmapDrawable) mPointOfInterestImageView.getDrawable()).getBitmap();
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
-        byte[] data = baos.toByteArray();
-
-        UploadTask uploadTask = spaceref.putBytes(data);
-        uploadTask.addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                System.out.println("Image upload failed");
-                AdminAddLocationPageThreeFragment.progressBar.setVisibility(View.GONE);
-            }
-        }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-            @Override
-            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                imageSaved = true;
-                AdminAddLocationPageThreeFragment.progressBar.setVisibility(View.GONE);
-                if(locationSaved){
-                    startActivity(new Intent(getApplicationContext(), AdminPanel.class));
-                    finish();
-                }
-
-            }
-        });
-
-
     }
+
+    private void clearMemory(){
+        AdminAddLocationPageTwoFragment.mMap = null;
+        AdminAddLocationPageTwoFragment.setLocationLatLng(null);
+    }
+
+
     public static Uri getLocationImageUri(){
         return locationImageUri;
     }

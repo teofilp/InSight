@@ -192,7 +192,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                         me.remove();
                     me = mMap.addMarker(new MarkerOptions().position(myLocation).title("You").icon(BitmapDescriptorFactory.fromResource(R.drawable.you_marker)));
                     if(contor==0){
-                        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(myLocation, 16));
+                        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(myLocation, 18));
                         contor++;
                     }
                 }

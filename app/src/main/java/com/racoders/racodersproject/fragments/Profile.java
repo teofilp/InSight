@@ -149,10 +149,12 @@ public class Profile extends Fragment {
     private void getFacebookUser() {
         String facebookId = "";
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-        for(UserInfo profile : user.getProviderData()){
-            if(FacebookAuthProvider.PROVIDER_ID.equals(profile.getProviderId())){
-                facebookId = profile.getUid();
-                setUserInfo(profile.getDisplayName(), profile.getEmail());
+        if(user != null){
+            for(UserInfo profile : user.getProviderData()){
+                if(FacebookAuthProvider.PROVIDER_ID.equals(profile.getProviderId())){
+                    facebookId = profile.getUid();
+                    setUserInfo(profile.getDisplayName(), profile.getEmail());
+                }
             }
         }
         String photoUrl = "https://graph.facebook.com/" + facebookId + "/picture?height=500";

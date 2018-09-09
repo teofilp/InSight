@@ -30,6 +30,17 @@ public class AdminAddLocationPageOneFragment extends Fragment {
         locationPhone = view.findViewById(R.id.locationPhone);
         locationEmail = view.findViewById(R.id.locationEmail);
 
+        String locationNameString = "";
+        String locationEmailString = "";
+
+        if(getArguments()!=null){
+            locationNameString = getArguments().getString("displayName");
+            locationEmailString = getArguments().getString("email");
+        }
+
+        locationName.setText(locationNameString);
+        locationEmail.setText(locationEmailString);
+
         return view;
     }
 
@@ -48,5 +59,6 @@ public class AdminAddLocationPageOneFragment extends Fragment {
     public static String getLocationEmail(){
         return locationEmail.getText().toString();
     }
+
 
 }

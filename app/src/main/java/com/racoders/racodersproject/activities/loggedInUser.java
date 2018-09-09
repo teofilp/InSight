@@ -89,7 +89,7 @@ public class loggedInUser extends FragmentActivity {
         tabLayout.getTabAt(3).setIcon(R.drawable.tablayout_person_icon);
     }
     public void moveCameraToMe(View view){
-        MapFragment.mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(MapFragment.myLocation, 16));
+        MapFragment.mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(MapFragment.myLocation, 18));
     }
     public static void changeState(View view){
 

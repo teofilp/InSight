@@ -52,25 +52,12 @@ public class AdminRegister extends AppCompatActivity {
                 Toast.makeText(this, "Password is required, at least 7 characters", Toast.LENGTH_LONG).show();
 
         } else {
-                mAuth.createUserWithEmailAndPassword(emailString, passwordString)
-                        .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-                            @Override
-                            public void onComplete(@NonNull Task<AuthResult> task) { completionResult(task);
-                            }
-                        });
+                startActivity(new Intent(getApplicationContext(), AddLocation.class).putExtra("email", emailString).putExtra("password", passwordString)
+                        .putExtra("displayName", displayNameString));
+                finish();
+
             }
 
-    }
-    public void completionResult(Task<AuthResult> task){
-        if (task.isSuccessful()) {
-            // Sign in success, update UI with the signed-in user's information
-
-            startActivity(new Intent(getApplicationContext(), AddLocation.class));
-        } else {
-            // If sign in fails, display a message to the user.
-            Toast.makeText(AdminRegister.this, "Authentication failed. Check your credentials or try again later",
-                    Toast.LENGTH_SHORT).show();
-        }
     }
 
     @Override

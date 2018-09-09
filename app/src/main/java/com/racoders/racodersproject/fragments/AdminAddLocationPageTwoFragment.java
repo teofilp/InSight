@@ -57,6 +57,7 @@ public class AdminAddLocationPageTwoFragment extends Fragment implements OnMapRe
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
+        locationLatLng = null;
         if(ActivityCompat.checkSelfPermission(getApplicationContext(),  android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED){
             mMap.setMyLocationEnabled(true);
             mMap.getUiSettings().setMapToolbarEnabled(false);
@@ -70,31 +71,45 @@ public class AdminAddLocationPageTwoFragment extends Fragment implements OnMapRe
                 LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
                 mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 15));
             }
-
         }
         else
             ActivityCompat.requestPermissions(getActivity(), new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION}, 0);
     }
 
     @Override
-    public void onMapClick(LatLng latLng) {
-
-        if(marker!=null)
-            marker.remove();
-        marker = mMap.addMarker(new MarkerOptions().position(latLng).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE)));
-        locationLatLng = latLng;
-        AddLocation.locationLatLng = locationLatLng;
+    public void onStart() {
+        super.onStart();
+        if (mMap == null){
+            mapFragment.getMapAsync(this);
+        }
     }
 
+    @Override
+    public void onStop() {
+        super.onStop();
+        mMap = null;
+        locationLatLng = null;
+    }
 
+    @Override
+    public void onMapClick(LatLng latLng) {
+        if(mMap != null){
+            if(marker!=null)
+                marker.remove();
+            marker = mMap.addMarker(new MarkerOptions().position(latLng).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE)));
+            locationLatLng = latLng;
+            AddLocation.locationLatLng = locationLatLng;
+        }
+    }
 
-    public static LatLng getLocationLatLng(){
-        return locationLatLng;
+    public static void setLocationLatLng(LatLng latLng){
+        locationLatLng = latLng;
     }
 
     @Override
     public boolean onMarkerClick(Marker marker) {
         marker.remove();
+        locationLatLng = null;
         return false;
     }
 

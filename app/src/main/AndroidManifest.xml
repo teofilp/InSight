@@ -46,7 +46,8 @@
             android:name=".activities.MarkerDetailsPopUpWindow"
             android:theme="@style/AppTheme.CustomTheme" />
         <activity android:name=".activities.AddNews" />
-        <activity android:name=".activities.AddLocation" />
+        <activity android:name=".activities.AddLocation"
+            android:windowSoftInputMode="stateHidden|adjustPan"/>
         <activity android:name=".activities.NewsActivity" />
         <activity android:name=".activities.AdminSignIn" />
         <activity android:name=".activities.AdminRegister" />
