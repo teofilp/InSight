@@ -43,16 +43,9 @@ public class Profile extends Fragment {
     private RecyclerView favoriteLocationsRecyclerView;
     private LocationCustomAdapter adapter;
 
-
-    
     public Profile() {
     }
 
-    /**
-     StorageReference storage = FirebaseStorage.getInstance().getReference().child("images/pois/" + id + ".jpeg");
-     GlideApp.with(getApplicationContext()).load(storage).into(authorImageView);
-
-     */
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {

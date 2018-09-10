@@ -3,6 +3,7 @@
     <color name="colorPrimary">#f84f43</color>
     <color name="colorPrimaryDark">#e73e32</color>
     <color name="inactiveDot">#d1a09c</color>
+    <color name="newsPostBottomBorder">#ffb0aa</color>
     <color name="colorAccent">#e73e32</color>
     <color name="white">#FFF</color>
     <color name="red">#F00</color>
@@ -13,7 +14,8 @@
     <color name="darkGray">	#A0B3CD</color>
     <color name="AdminBlue">#4286f4</color>
     <color name="AdminDarkBlue">#3b78db</color>
-    <color name="CustomTabLayoutActive">#89b6ff</color>
+    <color name="InactiveBlue">#8ca6d1</color>
+    <color name="CustomTabLayoutActive">#e8685f</color>
     <color name="Bistro">#EFB0A1</color>
     <color name="Festival">#F4AFB4</color>
     <color name="Theatre">#94A89A</color>

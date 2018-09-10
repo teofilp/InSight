@@ -14,7 +14,7 @@
             android:layout_height="wrap_content"
             android:text="Add a new location"
             android:textSize="20dp"
-            android:textColor="@color/colorPrimaryDark"
+            android:textColor="@color/AdminDarkBlue"
             android:layout_gravity="center"
             android:layout_marginTop="40dp"/>
 
@@ -25,7 +25,8 @@
             android:textSize="12dp"
             android:textColor="@color/black"
             android:layout_marginLeft="30dp"
-            android:layout_marginTop="30dp"/>
+            android:layout_marginTop="30dp"
+            />
         <EditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -33,11 +34,12 @@
             android:layout_marginLeft="20dp"
             android:layout_marginRight="20dp"
             android:hint="name*"
-            android:textColor="@color/colorPrimaryDark"
-            android:backgroundTint="@color/colorPrimaryDark"
-            android:textColorHint="@color/colorPrimaryDark"
+            android:textColor="@color/AdminDarkBlue"
+            android:backgroundTint="@color/AdminDarkBlue"
+            android:textColorHint="@color/AdminDarkBlue"
             android:id="@+id/locationName"
-            android:singleLine="true"/>
+            android:singleLine="true"
+            android:textCursorDrawable="@null"/>
         <TextView
             android:layout_width="260dp"
             android:layout_height="wrap_content"
@@ -52,12 +54,13 @@
             android:layout_marginTop="10dp"
             android:layout_marginLeft="20dp"
             android:layout_marginRight="20dp"
-            android:textColor="@color/colorPrimaryDark"
-            android:backgroundTint="@color/colorPrimaryDark"
-            android:textColorHint="@color/colorPrimaryDark"
+            android:textColor="@color/AdminDarkBlue"
+            android:backgroundTint="@color/AdminDarkBlue"
+            android:textColorHint="@color/AdminDarkBlue"
             android:hint="category*"
             android:id="@+id/locationCategory"
-            android:singleLine="true"/>
+            android:singleLine="true"
+            android:textCursorDrawable="@null"/>
         <TextView
             android:layout_width="260dp"
             android:layout_height="wrap_content"
@@ -73,12 +76,13 @@
             android:layout_marginLeft="20dp"
             android:layout_marginRight="20dp"
             android:inputType="phone"
-            android:textColor="@color/colorPrimaryDark"
-            android:backgroundTint="@color/colorPrimaryDark"
-            android:textColorHint="@color/colorPrimaryDark"
+            android:textColor="@color/AdminDarkBlue"
+            android:backgroundTint="@color/AdminDarkBlue"
+            android:textColorHint="@color/AdminDarkBlue"
             android:hint="phone"
             android:id="@+id/locationPhone"
             android:singleLine="true"
+            android:textCursorDrawable="@null"
             />
         <TextView
             android:layout_width="260dp"
@@ -95,11 +99,12 @@
             android:layout_marginLeft="20dp"
             android:layout_marginRight="20dp"
             android:inputType="textEmailAddress"
-            android:textColor="@color/colorPrimaryDark"
-            android:backgroundTint="@color/colorPrimaryDark"
-            android:textColorHint="@color/colorPrimaryDark"
+            android:textColor="@color/AdminDarkBlue"
+            android:backgroundTint="@color/AdminDarkBlue"
+            android:textColorHint="@color/AdminDarkBlue"
             android:hint="email"
             android:id="@+id/locationEmail"
+            android:textCursorDrawable="@null"
             />
 
 

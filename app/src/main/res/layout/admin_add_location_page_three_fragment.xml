@@ -22,9 +22,9 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="20dp"
                 android:hint="description"
-                android:textColorHint="@color/colorPrimaryDark"
-                android:textColor="@color/colorPrimaryDark"
-                android:backgroundTint="@color/colorPrimaryDark"
+                android:textColorHint="@color/AdminDarkBlue"
+                android:textColor="@color/AdminDarkBlue"
+                android:backgroundTint="@color/AdminDarkBlue"
                 android:inputType="textMultiLine"
                 android:id="@+id/locationDescription"
                 />
@@ -38,20 +38,11 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="@color/colorPrimaryDark"
+                android:textColor="@color/AdminDarkBlue"
                 android:layout_gravity="center"
                 android:layout_marginTop="10dp"
                 android:text="Tap the image to choose a new one"/>
 
-            <!--<Button-->
-                <!--android:layout_width="wrap_content"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:background="@drawable/rounded_button"-->
-                <!--android:text="Save"-->
-                <!--android:layout_marginTop="40dp"-->
-                <!--android:layout_marginBottom="40dp"-->
-                <!--android:layout_gravity="center"-->
-                <!--android:onClick="saveLocation"/>-->
         </LinearLayout>
 
 

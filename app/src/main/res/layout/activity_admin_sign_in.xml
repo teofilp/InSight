@@ -16,7 +16,7 @@
         android:layout_width="311dp"
         android:layout_height="217dp"
         android:layout_gravity="center"
-        app:srcCompat="@drawable/logo" />
+        app:srcCompat="@drawable/app_logo_blue" />
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -33,7 +33,8 @@
         android:layout_marginBottom="8dp"
         android:layout_gravity="center"
         android:id="@+id/email_TextInputLayout"
-        android:textColorHint="@color/AdminBlue">
+        android:textColorHint="@color/AdminBlue"
+        android:theme="@style/TextLabel">
 
         <android.support.v7.widget.AppCompatEditText
             android:id="@+id/email"
@@ -58,7 +59,9 @@
         android:layout_marginBottom="8dp"
         android:layout_gravity="center"
         android:id="@+id/password_TextInputLayout"
-        android:textColorHint="@color/AdminBlue">
+        android:textColorHint="@color/AdminBlue"
+        android:theme="@style/TextLabel"
+        >
 
         <android.support.v7.widget.AppCompatEditText
             android:id="@+id/password"

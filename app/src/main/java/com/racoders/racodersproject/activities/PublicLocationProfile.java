@@ -103,7 +103,7 @@ public class PublicLocationProfile extends AppCompatActivity {
         reviews_recyclerView.setNestedScrollingEnabled(false);
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            getWindow().setStatusBarColor(getResources().getColor(R.color.AdminBlue));
+            getWindow().setStatusBarColor(getResources().getColor(R.color.colorPrimaryDark));
         }
 
         id = getIntent().getStringExtra("id");
@@ -186,10 +186,10 @@ public class PublicLocationProfile extends AppCompatActivity {
                 about_layout.animate().translationX(0).setDuration(300);
                 about_button.setTextColor(getResources().getColor(R.color.white));
                 about_button.setBackgroundColor(getResources().getColor(R.color.CustomTabLayoutActive));
-                posts_button.setTextColor(getResources().getColor(R.color.AdminBlue));
+                posts_button.setTextColor(getResources().getColor(R.color.colorPrimaryDark));
                 posts_button.setBackgroundColor(getResources().getColor(R.color.white));
                 reviews_button.setBackgroundColor(getResources().getColor(R.color.white));
-                reviews_button.setTextColor(getResources().getColor(R.color.AdminBlue));
+                reviews_button.setTextColor(getResources().getColor(R.color.colorPrimaryDark));
                 activeScreen = 1;
 
             }else if (view.getId() == R.id.posts_button){
@@ -201,9 +201,9 @@ public class PublicLocationProfile extends AppCompatActivity {
                 profile_posts_recyclerView.animate().translationX(0).setDuration(300);
                 posts_button.setTextColor(getResources().getColor(R.color.white));
                 posts_button.setBackgroundColor(getResources().getColor(R.color.CustomTabLayoutActive));
-                about_button.setTextColor(getResources().getColor(R.color.AdminBlue));
+                about_button.setTextColor(getResources().getColor(R.color.colorPrimaryDark));
                 about_button.setBackgroundColor(getResources().getColor(R.color.white));
-                reviews_button.setTextColor(getResources().getColor(R.color.AdminBlue));
+                reviews_button.setTextColor(getResources().getColor(R.color.colorPrimaryDark));
                 reviews_button.setBackgroundColor(getResources().getColor(R.color.white));
                 activeScreen = 0;
 
@@ -214,9 +214,9 @@ public class PublicLocationProfile extends AppCompatActivity {
                 profile_posts_recyclerView.setAdapter(null);
                 profile_posts_recyclerView.animate().translationX(-2400);
                 about_layout.animate().translationX(-1200).setDuration(300);
-                posts_button.setTextColor(getResources().getColor(R.color.AdminBlue));
+                posts_button.setTextColor(getResources().getColor(R.color.colorPrimaryDark));
                 posts_button.setBackgroundColor(getResources().getColor(R.color.white));
-                about_button.setTextColor(getResources().getColor(R.color.AdminBlue));
+                about_button.setTextColor(getResources().getColor(R.color.colorPrimaryDark));
                 about_button.setBackgroundColor(getResources().getColor(R.color.white));
                 reviews_button.setTextColor(getResources().getColor(R.color.white));
                 reviews_button.setBackgroundColor(getResources().getColor(R.color.CustomTabLayoutActive));

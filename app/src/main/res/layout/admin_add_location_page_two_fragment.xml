@@ -18,17 +18,17 @@
             android:layout_height="wrap_content"
             android:layout_margin="20dp"
             android:hint="address"
-            android:textColor="@color/colorPrimaryDark"
-            android:backgroundTint="@color/colorPrimaryDark"
+            android:textColor="@color/AdminDarkBlue"
+            android:backgroundTint="@color/AdminDarkBlue"
             android:singleLine="true"
-            android:textColorHint="@color/colorPrimaryDark"
+            android:textColorHint="@color/AdminDarkBlue"
             android:id="@+id/locationAddress"/>
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Find your location on the map*"
-            android:textColor="@color/colorPrimaryDark"
-            android:backgroundTint="@color/colorPrimaryDark"
+            android:textColor="@color/AdminDarkBlue"
+            android:backgroundTint="@color/AdminDarkBlue"
             android:layout_marginLeft="20dp"
             android:layout_marginTop="20dp"/>
         <fragment xmlns:android="http://schemas.android.com/apk/res/android"

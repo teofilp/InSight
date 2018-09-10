@@ -11,7 +11,7 @@
     <ImageView
         android:layout_width="160dp"
         android:layout_height="160dp"
-        android:src="@drawable/logo"
+        android:src="@drawable/app_logo_blue"
         android:layout_gravity="center"/>
 
     <TextView
@@ -35,7 +35,8 @@
         android:layout_marginBottom="8dp"
         android:layout_gravity="center"
         android:id="@+id/display_name_TextInputLayout"
-        android:textColorHint="@color/AdminBlue">
+        android:textColorHint="@color/AdminBlue"
+        android:theme="@style/TextLabel">
 
         <android.support.v7.widget.AppCompatEditText
             android:id="@+id/displayName"
@@ -59,7 +60,8 @@
         android:layout_marginBottom="8dp"
         android:layout_gravity="center"
         android:id="@+id/email_TextInputLayout"
-        android:textColorHint="@color/AdminBlue">
+        android:textColorHint="@color/AdminBlue"
+        android:theme="@style/TextLabel">
 
         <android.support.v7.widget.AppCompatEditText
             android:id="@+id/email"
@@ -83,7 +85,8 @@
         android:layout_marginBottom="8dp"
         android:layout_gravity="center"
         android:id="@+id/password_TextInputLayout"
-        android:textColorHint="@color/AdminBlue">
+        android:textColorHint="@color/AdminBlue"
+        android:theme="@style/TextLabel">
 
         <android.support.v7.widget.AppCompatEditText
             android:id="@+id/password"
