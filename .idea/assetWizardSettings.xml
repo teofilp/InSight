@@ -66,7 +66,7 @@
                                 <PersistentState>
                                   <option name="values">
                                     <map>
-                                      <entry key="url" value="jar:file:/D:/AndroidStudio/plugins/android/lib/android.jar!/images/material_design_icons/action/ic_bookmark_border_black_24dp.xml" />
+                                      <entry key="url" value="jar:file:/D:/AndroidStudio/plugins/android/lib/android.jar!/images/material_design_icons/hardware/ic_keyboard_arrow_down_black_24dp.xml" />
                                     </map>
                                   </option>
                                 </PersistentState>
@@ -76,12 +76,10 @@
                         </option>
                         <option name="values">
                           <map>
-                            <entry key="color" value="989a2b" />
-                            <entry key="height" value="48" />
-                            <entry key="outputName" value="bordered_fav_bookmark" />
+                            <entry key="color" value="e73e32" />
+                            <entry key="outputName" value="arrow_down" />
                             <entry key="overrideSize" value="true" />
                             <entry key="sourceFile" value="D:\AndroidStudio\bin\C:\Users\Tudor Filp" />
-                            <entry key="width" value="48" />
                           </map>
                         </option>
                       </PersistentState>

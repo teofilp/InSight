@@ -1,0 +1,18 @@
+<TextView android:id="@android:id/text1"
+    style="@style/spinnerItemStyle"
+    android:background="@color/white"
+    android:textColor="@color/colorPrimaryDark"
+    android:textAlignment="center"
+    android:paddingLeft="8dp"
+    android:paddingRight="8dp"
+    android:paddingTop="6dp"
+    android:paddingBottom="6dp"
+    android:singleLine="true"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:ellipsize="marquee"
+    xmlns:android="http://schemas.android.com/apk/res/android" />
+
+
+
+

@@ -2,6 +2,7 @@ package com.racoders.racodersproject.activities;
 
 
 import android.Manifest;
+import android.animation.Animator;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.LocationManager;
@@ -15,6 +16,8 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Toast;
 
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.firebase.auth.FirebaseAuth;
 ;
 
@@ -22,6 +25,7 @@ import com.facebook.login.LoginManager;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.racoders.racodersproject.R;
 
+import com.racoders.racodersproject.classes.MapLocationToggleHandler;
 import com.racoders.racodersproject.classes.ViewPagerAdapter;
 import com.racoders.racodersproject.fragments.CategoriesFragment;
 import com.racoders.racodersproject.fragments.MapFragment;
@@ -30,12 +34,15 @@ import com.racoders.racodersproject.fragments.newsFeed;
 
 import static com.racoders.racodersproject.fragments.MapFragment.activeFilter;
 import static com.racoders.racodersproject.fragments.MapFragment.getAllPOIS;
+import static com.racoders.racodersproject.fragments.MapFragment.getAllTextView;
+import static com.racoders.racodersproject.fragments.MapFragment.getAnimationRadioButton;
 import static com.racoders.racodersproject.fragments.MapFragment.getFavPOIS;
+import static com.racoders.racodersproject.fragments.MapFragment.getFavTextView;
 import static com.racoders.racodersproject.fragments.MapFragment.isFavOnly;
 import static com.racoders.racodersproject.fragments.MapFragment.mFavPOIs;
 import static com.racoders.racodersproject.fragments.MapFragment.mMap;
 import static com.racoders.racodersproject.fragments.MapFragment.mMarkers;
-import static com.racoders.racodersproject.fragments.MapFragment.markersState;
+import static com.racoders.racodersproject.fragments.MapFragment.myLocation;
 import static com.racoders.racodersproject.fragments.MapFragment.reloadMap;
 import com.racoders.racodersproject.fragments.Profile;
 
@@ -81,6 +88,9 @@ public class loggedInUser extends FragmentActivity {
 
         viewPager.setAdapter(adapter);
 
+        int limit = (adapter.getCount() > 1 ? adapter.getCount() - 1 : 1);
+        viewPager.setOffscreenPageLimit(limit);
+
         tabLayout.setupWithViewPager(viewPager);
 
         tabLayout.getTabAt(0).setIcon(R.drawable.tablayout_feed_icon);
@@ -88,28 +98,11 @@ public class loggedInUser extends FragmentActivity {
         tabLayout.getTabAt(2).setIcon(R.drawable.tablayout_map_icon);
         tabLayout.getTabAt(3).setIcon(R.drawable.tablayout_person_icon);
     }
-    public void moveCameraToMe(View view){
-        MapFragment.mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(MapFragment.myLocation, 18));
-    }
-    public static void changeState(View view){
+    public void moveCameraToMe(final View view){
 
-        if(isFavOnly){
-            isFavOnly = !isFavOnly;
-            markersState.setText("Favorite Locations");
-            reloadMap();
-            if(activeFilter.equals("All"))
-                getAllPOIS();
-            else
-                getAllPOIS(activeFilter);
-        } else {
-            isFavOnly = !isFavOnly;
-            markersState.setText("All Locations");
-            reloadMap();
-            if(activeFilter.equals("All"))
-                getFavPOIS();
-            else
-                getFavPOIS(activeFilter);
-        }
+        view.animate().rotationBy(360).setDuration(500);
+        MapFragment.mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(myLocation, 18));
+
     }
 
     public void signOut(View view){
@@ -123,9 +116,7 @@ public class loggedInUser extends FragmentActivity {
         isFavOnly = true;
         MapFragment.setmFavLocationsString(null);
         MapFragment.mMap = null;
-
         finish();
-
     }
 
     @Override
@@ -138,5 +129,31 @@ public class loggedInUser extends FragmentActivity {
     protected void onStart() {
         super.onStart();
         MapFragment.mMap = null;
+    }
+
+    public void toggleAll(View view){
+
+        MapLocationToggleHandler.setContext(getApplicationContext());
+        isFavOnly = MapLocationToggleHandler.toggleAll(getAllTextView(), getFavTextView(), getAnimationRadioButton(), isFavOnly);
+
+        reloadMap();
+        if(activeFilter.equals("All"))
+            getAllPOIS();
+        else
+            getAllPOIS(activeFilter);
+
+    }
+
+    public void toggleFavorite(View view){
+
+        MapLocationToggleHandler.setContext(getApplicationContext());
+        isFavOnly = MapLocationToggleHandler.toggleFavorite(getAllTextView(), getFavTextView(), getAnimationRadioButton(), isFavOnly);
+
+        reloadMap();
+        if(activeFilter.equals("All"))
+            getFavPOIS();
+        else
+            getFavPOIS(activeFilter);
+
     }
 }

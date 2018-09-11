@@ -14,30 +14,97 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:context=".loggedInUser" />
-    <ImageButton
+    <RelativeLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:src="@drawable/location_marker"
-        android:background="#0000"
+        android:background="@drawable/location_arrow_background"
+        android:layout_marginLeft="5dp"
+        android:layout_marginTop="5dp"
         android:onClick="moveCameraToMe"
-        android:id="@+id/locationTrackerButton"/>
+        android:id="@+id/locationTrackerButton">
+        <ImageView
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:background="@drawable/orange_arrow"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"/>
+    </RelativeLayout>
 
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/markersState"
+    <RelativeLayout
+        android:layout_width="200dp"
+        android:layout_height="36dp"
+        android:id="@+id/radioWrapper"
+        android:background="@drawable/orange_round_corners"
         android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true"
-        android:onClick="changeState"/>
-    <Spinner
-        android:id="@+id/filter_spinner"
-        android:layout_width="wrap_content"
+        android:layout_marginBottom="6dp"
+        android:layout_marginLeft="5dp"
+        >
+        <View
+            android:id="@+id/animationRadioButton"
+            android:layout_width="100dp"
+            android:layout_height="32dp"
+            android:layout_marginStart="2dp"
+            android:layout_marginLeft="2dp"
+            android:layout_marginTop="2dp"
+            android:background="@drawable/white_rounded_corners"
+            />
+        <LinearLayout
+            android:layout_width="200dp"
+            android:layout_height="42dp">
+
+            <TextView
+                android:id="@+id/all"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight=".5"
+                android:gravity="center"
+                android:textColor="@color/colorPrimaryDark"
+                android:text="Favorite"
+                android:textAllCaps="true"
+                android:onClick="toggleFavorite"/>
+
+            <TextView
+                android:id="@+id/favorite"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight=".5"
+                android:gravity="center"
+                android:textColor="#fff"
+                android:text="All"
+                android:textAllCaps="true"
+                android:onClick="toggleAll"/>
+
+        </LinearLayout>
+
+    </RelativeLayout>
+
+
+    <RelativeLayout
+        android:id="@+id/spinnerWrapper"
+        android:layout_width="102dp"
         android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
         android:layout_alignParentTop="true"
-        android:background="@color/black"
         android:layout_alignParentEnd="true"
-        />
+        android:background="@color/white"
+        android:layout_marginTop="5dp"
+        android:layout_marginEnd="5dp">
+        <Spinner
+            android:id="@+id/filter_spinner"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            />
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/arrow_down"
+            android:layout_alignParentEnd="true"
+            android:layout_marginEnd="4dp"
+            android:layout_centerVertical="true"/>
+    </RelativeLayout>
+
+
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="150dp"

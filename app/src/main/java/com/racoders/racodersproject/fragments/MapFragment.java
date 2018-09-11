@@ -54,6 +54,7 @@ import com.racoders.racodersproject.activities.MarkerDetailsPopUpWindow;
 import com.racoders.racodersproject.activities.loggedInUser;
 import com.racoders.racodersproject.classes.DirectionsParser;
 import com.racoders.racodersproject.classes.DistanceCalculator;
+import com.racoders.racodersproject.classes.MapLocationToggleHandler;
 import com.racoders.racodersproject.classes.PointOfInterest;
 
 
@@ -84,12 +85,12 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     public static LocationManager locationManager;
     public static LocationListener locationListener;
     public static LatLng myLocation;
-    public static ImageButton imageButton;
+    public static RelativeLayout imageButton;
     private int contor=0;
     public static Marker me;
     public static HashMap<Marker, String> mMarkers = new HashMap<>();
     public static boolean isFavOnly = true;
-    public static Button markersState;
+
     private static List<String> mFavLocationsString;
     private static Spinner myFilters;
     public static String activeFilter;
@@ -101,6 +102,14 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     private static TextView routeTitle;
     private static TextView routeDistance;
     private ImageView cancelRouteButton;
+
+
+    private static View animationRadioButton;
+    private static TextView allTextView;
+    private static TextView favTextView;
+    private static RelativeLayout radioWrapper;
+    private static RelativeLayout spinnerWrapper;
+
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
@@ -118,7 +127,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
             mapFragment.getMapAsync(this);
         activeFilter = "All";
         imageButton = view.findViewById(R.id.locationTrackerButton);
-        markersState = view.findViewById(R.id.markersState);
+
         imageButton.setEnabled(false);
         myFilters = view.findViewById(R.id.filter_spinner);
         routePopUp = view.findViewById(R.id.routePopUp);
@@ -126,6 +135,12 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         routeTitle = view.findViewById(R.id.route_title);
         routeDistance = view.findViewById(R.id.routeDistance);
         cancelRouteButton = view.findViewById(R.id.cancel_route);
+
+        allTextView = view.findViewById(R.id.all);
+        favTextView = view.findViewById(R.id.favorite);
+        animationRadioButton = view.findViewById(R.id.animationRadioButton);
+        radioWrapper = view.findViewById(R.id.radioWrapper);
+        spinnerWrapper = view.findViewById(R.id.spinnerWrapper);
 
         cancelRouteButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -135,7 +150,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         });
 //        checkForNewUser(FirebaseAuth.getInstance().getUid());
         routePopUp.setVisibility(View.GONE);
-        markersState.setText("All Locations");
+
 
         return view;
 
@@ -183,7 +198,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
             @Override
             public void onLocationChanged(android.location.Location location) {
 
-                if(imageButton.isEnabled()==false){
+                if(!imageButton.isEnabled()){
                     imageButton.setEnabled(true);
                 }
                 myLocation = new LatLng(location.getLatitude(), location.getLongitude());
@@ -212,7 +227,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         if(ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED){
             ActivityCompat.requestPermissions(getActivity(), new String[] {Manifest.permission.ACCESS_FINE_LOCATION}, 1);
         } else {
-            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationListener);
+            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 5000, 2, locationListener);
         }
 
         dealWithSpinner();
@@ -229,7 +244,8 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                     for(DataSnapshot child : dataSnapshot.getChildren()){
                         categoriesList.add(child.getKey());
                     }
-                    ArrayAdapter<String> myFilterAdapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_dropdown_item, categoriesList);
+                    ArrayAdapter<String> myFilterAdapter = new ArrayAdapter<>(getActivity(), R.layout.simple_spinner_item, categoriesList);
+                    myFilterAdapter.setDropDownViewResource(R.layout.simple_spinner_dropdown_item);
                     myFilters.setAdapter(myFilterAdapter);
 
                     myFilters.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -274,11 +290,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         super.onStart();
         if(mMap == null)
             mapFragment.getMapAsync(this);
-        if(isFavOnly)
-            markersState.setText("All Locations");
-        else
-            markersState.setText("Favorite Locations");
-
 
     }
 
@@ -291,21 +302,12 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
             if(ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED){
                 ActivityCompat.requestPermissions(getActivity(), new String[] {Manifest.permission.ACCESS_FINE_LOCATION}, 1);
             } else {
-                locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationListener);
+                locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 5000, 2, locationListener);
             }
-            me = mMap.addMarker(new MarkerOptions().position(myLocation).title("You").icon(BitmapDescriptorFactory.fromResource(R.drawable.you_marker)));
-            if(markersState.getText().equals("Favorite Locations")) {
-                if (!activeFilter.equals("All"))
-                    getAllPOIS(activeFilter);
-                else
-                    getAllPOIS();
+            if(myLocation!=null){
+                me = mMap.addMarker(new MarkerOptions().position(myLocation).title("You").icon(BitmapDescriptorFactory.fromResource(R.drawable.you_marker)));
             }
-            else {
-                if(!activeFilter.equals("All"))
-                    getFavPOIS(activeFilter);
-                else
-                    getFavPOIS();
-            }
+
         } else{
             onStart();
         }
@@ -321,7 +323,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     }
 
     public static void getFavPOIS(){
-        mMap.clear();
         mMarkers.clear();
         final DatabaseReference favDbRef = FirebaseDatabase.getInstance().getReference()
                 .child("FavoriteLocations").child(FirebaseAuth.getInstance().getUid());
@@ -375,7 +376,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
 
     public static void getFavPOIS(final String category){
         mMarkers.clear();
-        mMap.clear();
         DatabaseReference myLocations = FirebaseDatabase.getInstance().getReference().child("FavoriteLocations").child(FirebaseAuth.getInstance().getUid());
         myLocations.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -465,6 +465,20 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
             }
         });
     }
+
+    public static View getAnimationRadioButton() {
+        return animationRadioButton;
+    }
+
+    public static TextView getAllTextView() {
+        return allTextView;
+    }
+
+    public static TextView getFavTextView() {
+        return favTextView;
+    }
+
+
     public static void checkForNewUser(String Uid){
         final DatabaseReference dbref = FirebaseDatabase.getInstance().getReference().child("FavoriteLocations").child(Uid).child("0");
         dbref.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -617,14 +631,16 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     }
 
     private static void clearView() {
-        markersState.setVisibility(View.GONE);
+        spinnerWrapper.setVisibility(View.GONE);
+        radioWrapper.setVisibility(View.GONE);
         myFilters.setVisibility(View.GONE);
         imageButton.setVisibility(View.GONE);
         animateRoutePopUp();
 
     }
     private void makeViewsVisible(){
-        markersState.setVisibility(View.VISIBLE);
+        spinnerWrapper.setVisibility(View.VISIBLE);
+        radioWrapper.setVisibility(View.VISIBLE);
         myFilters.setVisibility(View.VISIBLE);
         imageButton.setVisibility(View.VISIBLE);
     }
