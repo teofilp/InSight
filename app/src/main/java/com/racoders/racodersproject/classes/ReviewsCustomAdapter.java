@@ -9,6 +9,11 @@ import android.view.ViewGroup;
 import android.widget.RatingBar;
 import android.widget.TextView;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.racoders.racodersproject.R;
 
 import java.text.SimpleDateFormat;
@@ -40,8 +45,23 @@ public class ReviewsCustomAdapter extends RecyclerView.Adapter<ReviewsCustomAdap
             date = itemView.findViewById(R.id.reviewDate);
             rating = itemView.findViewById(R.id.reviewRating);
         }
-        public void setAuthor(String author){
-            this.author.setText(author);
+        public void setAuthor(String value){
+
+            FirebaseDatabase.getInstance().getReference().child("Users").child(value).addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    if(dataSnapshot.exists()){
+                        author.setText(dataSnapshot.getValue(User.class).getDisplayName());
+                    }
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                }
+            });
+
+
         }
 
         public void setDescription(String description){

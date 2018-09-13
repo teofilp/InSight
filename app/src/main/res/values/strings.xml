@@ -15,5 +15,7 @@
     <string name="news_feed">News Feed</string>
     <string name="categories">Categories</string>
     <string name="profile">Profile</string>
+    <string name="newPassword">new password</string>
+    <string name="oldPassword">old password</string>
 
 </resources>

@@ -9,6 +9,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.google.firebase.auth.FacebookAuthProvider;
@@ -37,8 +38,8 @@ import static com.facebook.FacebookSdk.getApplicationContext;
 
 public class Profile extends Fragment {
     private View view;
-    private CircleImageView profileImageView;
-    private TextView nameTextView;
+    private static CircleImageView profileImageView;
+    private static TextView nameTextView;
     private TextView emailTextView;
     private RecyclerView favoriteLocationsRecyclerView;
     private LocationCustomAdapter adapter;
@@ -117,7 +118,6 @@ public class Profile extends Fragment {
     }
 
 
-
     private void getUserInfo(String id) {
         FirebaseDatabase.getInstance().getReference().child("Users").child(id).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -166,4 +166,11 @@ public class Profile extends Fragment {
         emailTextView.setText(emailString);
     }
 
+    public static CircleImageView getProfileImageView() {
+        return profileImageView;
+    }
+
+    public static TextView getNameTextView() {
+        return nameTextView;
+    }
 }

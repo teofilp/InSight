@@ -156,4 +156,8 @@ public class loggedInUser extends FragmentActivity {
             getFavPOIS(activeFilter);
 
     }
+
+    public void toEditProfile(View view){
+        startActivity(new Intent(getApplicationContext(), EditUserProfile.class));
+    }
 }

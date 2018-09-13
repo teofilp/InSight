@@ -19,6 +19,19 @@ public class User {
     private String email;
     private String socialID;
     private String myFavPlaces;
+    private String imageReference;
+
+    public void setMyFavPlaces(String myFavPlaces) {
+        this.myFavPlaces = myFavPlaces;
+    }
+
+    public String getImageReference() {
+        return imageReference;
+    }
+
+    public void setImageReference(String imageReference) {
+        this.imageReference = imageReference;
+    }
 
     public User(){
 
