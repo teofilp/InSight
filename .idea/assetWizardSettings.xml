@@ -66,7 +66,7 @@
                                 <PersistentState>
                                   <option name="values">
                                     <map>
-                                      <entry key="url" value="jar:file:/D:/AndroidStudio/plugins/android/lib/android.jar!/images/material_design_icons/hardware/ic_keyboard_arrow_down_black_24dp.xml" />
+                                      <entry key="url" value="jar:file:/D:/AndroidStudio/plugins/android/lib/android.jar!/images/material_design_icons/action/ic_power_settings_new_black_24dp.xml" />
                                     </map>
                                   </option>
                                 </PersistentState>
@@ -77,7 +77,7 @@
                         <option name="values">
                           <map>
                             <entry key="color" value="e73e32" />
-                            <entry key="outputName" value="arrow_down" />
+                            <entry key="outputName" value="power_icon_admin" />
                             <entry key="overrideSize" value="true" />
                             <entry key="sourceFile" value="D:\AndroidStudio\bin\C:\Users\Tudor Filp" />
                           </map>

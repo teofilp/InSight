@@ -10,8 +10,8 @@
     <color name="green">#0F0</color>
     <color name="black">#000</color>
     <color name="transparent">#0000</color>
-    <color name="lightGray">#dedede</color>
-    <color name="darkGray">	#A0B3CD</color>
+    <color name="lightGray">#cfcfcf</color>
+    <color name="darkGray">#b8bbbf</color>
     <color name="AdminBlue">#4286f4</color>
     <color name="AdminDarkBlue">#3b78db</color>
     <color name="InactiveBlue">#8ca6d1</color>
@@ -23,4 +23,6 @@
     <color name="Cinema">#C86FC9</color>
     <color name="Hotel">#F7C7DB</color>
     <color name="Park">#678D58</color>
+    <color name="LightBlue">#33C7E0</color>
+    <color name="LightBlueText">#FF218EA1</color>
 </resources>

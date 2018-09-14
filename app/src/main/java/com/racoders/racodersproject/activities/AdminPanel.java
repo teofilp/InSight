@@ -38,7 +38,7 @@ import static com.facebook.FacebookSdk.getApplicationContext;
 
 public class AdminPanel extends AppCompatActivity {
     private boolean isValid = false;
-    private Toolbar toolbar;
+
     private TabLayout tabLayout;
     private ViewPager viewPager;
     private ViewPagerAdapter adapter;
@@ -98,14 +98,12 @@ public class AdminPanel extends AppCompatActivity {
 
         tabLayout = findViewById(R.id.tabLayout);
         viewPager = findViewById(R.id.viewPager);
-        toolbar = findViewById(R.id.toolbar);
 
-        setSupportActionBar(toolbar);
         adapter = new ViewPagerAdapter(getSupportFragmentManager());
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
 
-            getWindow().setStatusBarColor(getResources().getColor(R.color.AdminBlue));
+            getWindow().setStatusBarColor(getResources().getColor(R.color.LightBlue));
             setTitle("Admin Panel");
         }
         adapter.addFragment(new AdminNews(), "");
@@ -115,35 +113,25 @@ public class AdminPanel extends AppCompatActivity {
         viewPager.setAdapter(adapter);
         tabLayout.setupWithViewPager(viewPager);
 
+        int limit = (adapter.getCount() > 1 ? adapter.getCount() - 1 : 1);
+        viewPager.setOffscreenPageLimit(limit);
+
         tabLayout.getTabAt(0).setIcon(R.drawable.tablayout_feed_icon_white);
         tabLayout.getTabAt(1).setIcon(R.drawable.tablayout_map_icon_white);
         tabLayout.getTabAt(2).setIcon(R.drawable.tablayout_person_icon_white);
 
     }
 
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.profile_admin_menu, menu);
-
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-
-        if(item.getItemId() == R.id.logout);
-        {
-            FirebaseAuth.getInstance().signOut();
-            startActivity(new Intent(getApplicationContext(), AdminSignIn.class));
-            finish();
-        }
-        return super.onOptionsItemSelected(item);
-    }
-
     @Override
     public void onBackPressed() {
         super.onBackPressed();
         finish();
+    }
+    public void signOut(View view){
+
+        FirebaseAuth.getInstance().signOut();
+        startActivity(new Intent(getApplicationContext(), toggleLoginActivity.class));
+        finish();
+
     }
 }
