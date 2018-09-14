@@ -1,5 +1,6 @@
 package com.racoders.racodersproject.fragments;
 
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -9,9 +10,11 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.google.firebase.auth.FacebookAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -37,10 +40,13 @@ import de.hdodenhof.circleimageview.CircleImageView;
 import static com.facebook.FacebookSdk.getApplicationContext;
 
 public class Profile extends Fragment {
+
     private View view;
     private static CircleImageView profileImageView;
     private static TextView nameTextView;
     private TextView emailTextView;
+    private Button editProfile;
+
     private RecyclerView favoriteLocationsRecyclerView;
     private LocationCustomAdapter adapter;
 
@@ -56,6 +62,7 @@ public class Profile extends Fragment {
         emailTextView = view.findViewById(R.id.emailTextView);
         profileImageView = view.findViewById(R.id.profileImage);
         favoriteLocationsRecyclerView = view.findViewById(R.id.profileFavoriteLocations);
+        editProfile = view.findViewById(R.id.editProfile);
 
         favoriteLocationsRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         favoriteLocationsRecyclerView.setNestedScrollingEnabled(false);
@@ -126,6 +133,7 @@ public class Profile extends Fragment {
                     User currentUser = dataSnapshot.getValue(User.class);
                     if(currentUser.getSocialID() != null){
                         getFacebookUser();
+                        editProfile.setVisibility(View.GONE);
                     } else {
                         setUserInfo(currentUser.getDisplayName(), currentUser.getEmail());
                     }
@@ -155,8 +163,14 @@ public class Profile extends Fragment {
     }
 
     private void getUserProfileImage(String id) {
+        AsyncTask.execute(new Runnable() {
+            @Override
+            public void run() {
+                Glide.get(getApplicationContext()).clearDiskCache();
+            }
+        });
         StorageReference storage = FirebaseStorage.getInstance().getReference().child("images/users/" + id + ".jpeg");
-        GlideApp.with(getApplicationContext()).load(storage).into(profileImageView);
+        GlideApp.with(getApplicationContext()).load(storage).skipMemoryCache(true).into(profileImageView);
     }
 
     private void setUserInfo(String name, String email){

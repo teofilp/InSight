@@ -541,7 +541,8 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         });
     }
     public static void reloadMap(){
-        mMap.clear();
+        if(mMap != null)
+            mMap.clear();
         if(myLocation!=null){
             me = mMap.addMarker(new MarkerOptions().position(myLocation).icon(BitmapDescriptorFactory.fromResource(R.drawable.you_marker)));
         }

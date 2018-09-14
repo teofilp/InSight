@@ -209,35 +209,37 @@ public class EditUserProfile extends AppCompatActivity {
                         spaceref.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
                             @Override
                             public void onSuccess(Void aVoid) {
-                                profileImage.setDrawingCacheEnabled(true);
-                                profileImage.buildDrawingCache();
 
-                                final Bitmap bitmap = ((BitmapDrawable) profileImage.getDrawable()).getBitmap();
-                                ByteArrayOutputStream baos = new ByteArrayOutputStream();
-                                bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
-                                final byte[] data = baos.toByteArray();
-
-                                final UploadTask uploadTask = spaceref.putBytes(data);
-                                uploadTask.addOnFailureListener(new OnFailureListener() {
-                                    @Override
-                                    public void onFailure(@NonNull Exception e) {
-                                        Toast.makeText(EditUserProfile.this, "Something went wrong. Try again later", Toast.LENGTH_SHORT).show();
-                                    }
-                                }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                                    @Override
-                                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                                        Toast.makeText(EditUserProfile.this, "All good", Toast.LENGTH_SHORT).show();
-                                        Profile.getNameTextView().setText(currentUser.getDisplayName());
-                                        Profile.getProfileImageView().setImageBitmap(bitmap);
-
-                                        finish();
-                                    }
-                                });
                             }
                         }).addOnFailureListener(new OnFailureListener() {
                             @Override
                             public void onFailure(@NonNull Exception e) {
                                 Toast.makeText(EditUserProfile.this, "couldn;t delete the image", Toast.LENGTH_SHORT).show();
+                            }
+                        });
+
+                        profileImage.setDrawingCacheEnabled(true);
+                        profileImage.buildDrawingCache();
+
+                        final Bitmap bitmap = ((BitmapDrawable) profileImage.getDrawable()).getBitmap();
+                        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+                        final byte[] data = baos.toByteArray();
+
+                        final UploadTask uploadTask = spaceref.putBytes(data);
+                        uploadTask.addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception e) {
+                                Toast.makeText(EditUserProfile.this, "Something went wrong. Try again later", Toast.LENGTH_SHORT).show();
+                            }
+                        }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                            @Override
+                            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                                Toast.makeText(EditUserProfile.this, "All good", Toast.LENGTH_SHORT).show();
+                                Profile.getNameTextView().setText(currentUser.getDisplayName());
+                                Profile.getProfileImageView().setImageBitmap(bitmap);
+
+                                finish();
                             }
                         });
 
