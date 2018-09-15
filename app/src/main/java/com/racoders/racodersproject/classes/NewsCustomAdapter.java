@@ -27,7 +27,9 @@ import com.racoders.racodersproject.activities.PublicLocationProfile;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -40,11 +42,22 @@ public class NewsCustomAdapter extends RecyclerView.Adapter<NewsCustomAdapter.Vi
 
     private final List<News> mList;
     private final int color;
+    private boolean isAdmin;
 
     public NewsCustomAdapter(List<News> mList, int color){
         this.mList = mList;
-        Collections.reverse(mList);
+        Collections.sort(mList, new Comparator<News>() {
+            @Override
+            public int compare(News o1, News o2) {
+                return o2.getPublicationDate().compareTo(o1.getPublicationDate());
+            }
+        });
         this.color = color;
+        isAdmin = false;
+    }
+
+    public void setAdmin(boolean isAdmin){
+        this.isAdmin = isAdmin;
     }
 
     class ViewHolder extends RecyclerView.ViewHolder {
@@ -137,17 +150,24 @@ public class NewsCustomAdapter extends RecyclerView.Adapter<NewsCustomAdapter.Vi
         holder.layout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                getApplicationContext().startActivity(new Intent(getApplicationContext(), NewsActivity.class)
-                    .putExtra("reference", mList.get((int)v.getTag()).getReference()).putExtra("position", (int)v.getTag()));
+                if(isAdmin){
+                    getApplicationContext().startActivity(new Intent(getApplicationContext(), NewsActivity.class)
+                            .putExtra("reference", mList.get((int)v.getTag()).getReference()).putExtra("position", (int)v.getTag()).putExtra("admin", "admin"));
+                } else {
+                    getApplicationContext().startActivity(new Intent(getApplicationContext(), NewsActivity.class)
+                            .putExtra("reference", mList.get((int)v.getTag()).getReference()).putExtra("position", (int)v.getTag()));
+                }
+
             }
         });
 
         holder.authorImageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                getApplicationContext()
-                        .startActivity(new Intent(getApplicationContext(), PublicLocationProfile.class)
-                        .putExtra("id", mList.get(position).getAuthor()));
+                if(!isAdmin)
+                    getApplicationContext()
+                            .startActivity(new Intent(getApplicationContext(), PublicLocationProfile.class)
+                            .putExtra("id", mList.get(position).getAuthor()));
             }
         });
 

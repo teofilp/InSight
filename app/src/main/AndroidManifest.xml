@@ -45,7 +45,6 @@
         <activity
             android:name=".activities.MarkerDetailsPopUpWindow"
             android:theme="@style/AppTheme.CustomTheme" />
-        <activity android:name=".activities.AddNews" />
         <activity
             android:name=".activities.AddLocation"
             android:windowSoftInputMode="stateHidden|adjustPan" />
@@ -66,7 +65,11 @@
         <activity android:name=".activities.PublicLocationProfile" />
         <activity android:name=".activities.FirstTimeSetUserProfileImage" />
         <activity android:name=".activities.LocationWithSpecificCategory" />
-        <activity android:name=".activities.EditUserProfile"></activity>
+        <activity android:name=".activities.EditUserProfile" />
+        <activity
+            android:name=".activities.AdminMap"
+            android:label="@string/title_activity_admin_map"
+            android:theme="@style/AppTheme.CustomTheme"/>
     </application>
 
 </manifest>

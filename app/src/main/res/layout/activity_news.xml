@@ -8,56 +8,52 @@
     android:background="@color/white"
     tools:context=".activities.NewsActivity"
     >
-    <RelativeLayout
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:orientation="vertical"
         >
         <android.support.v7.widget.Toolbar
             android:id="@+id/Toolbar"
             android:layout_height="?attr/actionBarSize"
-            android:background="@color/colorPrimaryDark"
+            android:background="@color/colorPrimary"
             android:layout_width="match_parent">
         </android.support.v7.widget.Toolbar>
 
         <ImageView
             android:id="@+id/newsImage"
-            android:layout_width="150dp"
-            android:layout_height="150dp"
-            android:layout_marginStart="20dp"
-            android:layout_marginTop="20dp"
-            android:layout_below="@+id/Toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="250dp"
+            android:scaleType="centerCrop"
+
             />
         <TextView
             android:id="@+id/newsTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_toEndOf="@+id/newsImage"
-            android:textColor="@color/black"
+            android:textColor="@color/colorPrimaryDark"
             android:layout_marginLeft="20dp"
-            android:layout_alignBottom="@+id/newsImage"
+            android:layout_marginTop="24dp"
+            android:textSize="24sp"
             />
         <TextView
             android:id="@+id/viewsNumber"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_above="@+id/newsTitle"
-            android:layout_toEndOf="@+id/newsImage"
             android:textColor="@color/black"
             android:layout_marginLeft="20dp"
-            android:layout_marginBottom="20dp"/>
+            android:textSize="12sp" />
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/newsDescription"
-            android:layout_below="@+id/newsImage"
             android:textColor="@color/black"
-            android:layout_marginTop="40dp"
-            android:layout_marginLeft="30dp"
-            android:layout_marginRight="30dp"/>
+            android:layout_marginTop="36dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"/>
         <View
             android:layout_width="match_parent"
-            android:layout_height="40dp"
-            android:layout_below="@+id/newsDescription"/>
+            android:layout_height="40dp" />
 
-    </RelativeLayout>
+    </LinearLayout>
 </ScrollView>

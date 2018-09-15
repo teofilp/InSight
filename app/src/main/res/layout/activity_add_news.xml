@@ -4,58 +4,105 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
-    <RelativeLayout
+    android:layout_height="match_parent"
+    android:theme="@style/LocationProfileEdge">
+    <LinearLayout
         xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="#bababa"
-        tools:context="com.racoders.racodersproject.activities.AddNews">
+        android:background="@color/white"
+        android:orientation="vertical"
+        tools:context="com.racoders.racodersproject.fragments.AddNews">
 
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/cropButton"
-            android:layout_marginTop="16dp"
-            android:text="Import Image"
-            android:layout_centerHorizontal="true"/>
-        <ImageView
+        <de.hdodenhof.circleimageview.CircleImageView
             android:layout_width="200dp"
             android:layout_height="200dp"
             android:id="@+id/mImage"
-            android:layout_below="@+id/cropButton"
-            android:layout_centerHorizontal="true"/>
+            app:civ_border_color="@color/LightBlueText"
+            app:civ_border_width="3dp"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="80dp"
+            android:layout_gravity="center_horizontal"/>
 
-        <EditText
-            android:hint="title"
+        <!--<EditText-->
+            <!--android:hint="title"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:id="@+id/title"-->
+            <!--android:singleLine="true"-->
+            <!--android:layout_margin="16dp"-->
+            <!--android:layout_below="@+id/mImage"/>-->
+
+        <android.support.design.widget.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/title"
-            android:singleLine="true"
-            android:layout_margin="16dp"
-            android:layout_below="@+id/mImage"/>
+            android:layout_marginTop="36dp"
+            android:layout_marginLeft="32dp"
+            android:layout_marginRight="32dp"
+            android:layout_marginBottom="8dp"
+            android:layout_gravity="center"
+            android:id="@+id/title_TextInputLayout"
+            android:textColorHint="@color/LightBlue"
+            android:theme="@style/AddNewsLabels">
 
-        <EditText
+            <android.support.v7.widget.AppCompatEditText
+                android:id="@+id/title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Title"
+                android:inputType="textEmailAddress"
+                android:textColor="@color/LightBlue"
+                android:backgroundTint="@color/LightBlue"
+
+                />
+
+        </android.support.design.widget.TextInputLayout>
+
+        <android.support.design.widget.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/description"
-            android:layout_margin="16dp"
-            android:hint="description"
-            android:layout_below="@+id/title"/>
+            android:layout_marginTop="36dp"
+            android:layout_marginLeft="32dp"
+            android:layout_marginRight="32dp"
+            android:layout_marginBottom="8dp"
+            android:layout_gravity="center"
+            android:id="@+id/description_TextInputLayout"
+            android:textColorHint="@color/LightBlue"
+            android:theme="@style/AddNewsLabels">
+
+            <android.support.v7.widget.AppCompatEditText
+                android:id="@+id/description"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Description"
+                android:textColor="@color/LightBlue"
+                android:backgroundTint="@color/LightBlue"
+                android:inputType="textMultiLine"
+                />
+
+        </android.support.design.widget.TextInputLayout>
+
+        <!--<EditText-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:id="@+id/description"-->
+            <!--android:layout_margin="16dp"-->
+            <!--android:hint="description"-->
+            <!--android:layout_below="@+id/title"/>-->
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/save_button"
             android:layout_marginTop="16dp"
+            android:layout_marginBottom="40dp"
             android:text="Save"
-            android:inputType="text|textMultiLine"
-            android:layout_centerHorizontal="true"
-            android:layout_below="@+id/description"/>
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="80dp"
-            android:layout_below="@+id/save_button"/>
+            android:layout_gravity="center_horizontal"
+            android:textColor="@color/white"
+            android:background="@color/LightBlue"
 
-    </RelativeLayout>
+            />
+
+
+    </LinearLayout>
 </ScrollView>

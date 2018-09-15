@@ -1,5 +1,6 @@
 package com.racoders.racodersproject.fragments;
 
+import android.animation.Animator;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -47,7 +48,7 @@ public class AdminProfile extends Fragment implements OnMapReadyCallback {
     private RatingBar ratingBar;
     private TextView viewsNumber;
     private TextView followersNumber;
-    private TextView postsNumber;
+    private static TextView postsNumber;
     private TextView locationPhone;
     private TextView locationEmail;
 
@@ -73,6 +74,7 @@ public class AdminProfile extends Fragment implements OnMapReadyCallback {
         postsNumber = view.findViewById(R.id.postsNumber);
         locationPhone = view.findViewById(R.id.locationPhone);
         locationEmail = view.findViewById(R.id.locationEmail);
+
 
         viewsSum = 0;
         followersSum = 0;
@@ -133,6 +135,10 @@ public class AdminProfile extends Fragment implements OnMapReadyCallback {
             });
         }
     }
+    public static TextView getPostsNumber(){
+        return postsNumber;
+    }
+
 
     private void setViewsNumberTextView(String id){
         FirebaseDatabase.getInstance().getReference().child("News").child(id)
@@ -154,7 +160,7 @@ public class AdminProfile extends Fragment implements OnMapReadyCallback {
 
     }
 
-    public void setFollowersNumberTextView(final String key){
+    private void setFollowersNumberTextView(final String key){
         FirebaseDatabase.getInstance().getReference().child("FavoriteLocations")
                 .addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
@@ -180,7 +186,7 @@ public class AdminProfile extends Fragment implements OnMapReadyCallback {
                 });
     }
 
-    public void setPostsNumber(String id){
+    private void setPostsNumber(String id){
         FirebaseDatabase.getInstance().getReference().child("News").child(id).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -196,7 +202,7 @@ public class AdminProfile extends Fragment implements OnMapReadyCallback {
         });
     }
 
-    public void setAdminData(){
+    private void setAdminData(){
         DatabaseReference dbref = FirebaseDatabase.getInstance().getReference().child("POIs");
         dbref.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override

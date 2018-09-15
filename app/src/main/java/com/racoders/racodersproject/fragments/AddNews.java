@@ -11,6 +11,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.AppCompatEditText;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -37,23 +38,22 @@ import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
 
+import de.hdodenhof.circleimageview.CircleImageView;
+
 import static android.app.Activity.RESULT_OK;
 import static com.facebook.FacebookSdk.getApplicationContext;
 
 public class AddNews extends Fragment {
-    private EditText title;
-    private EditText author;
-    private EditText description;
+    private AppCompatEditText title;
+    private AppCompatEditText author;
+    private AppCompatEditText description;
     private Button saveButton;
     private Bitmap newsImage;
-    private static Button cropButton;
 //    private Uri selectedImage;
-    private static ImageView mImage;
-    public static Button getCropButton() {
-        return cropButton;
-    }
+    private static CircleImageView mImage;
 
-    public static ImageView getmImage() {
+
+    public static CircleImageView getmImage() {
         return mImage;
     }
 
@@ -68,12 +68,11 @@ public class AddNews extends Fragment {
         description = view.findViewById(R.id.description);
         saveButton = view.findViewById(R.id.save_button);
 
-        cropButton = view.findViewById(R.id.cropButton);
 
         mImage.setImageDrawable(getResources().getDrawable(R.drawable.noimage));
 
         if(ActivityCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED)
-            cropButton.setOnClickListener(new View.OnClickListener() {
+            mImage.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     Crop.pickImage(getActivity());
@@ -126,6 +125,7 @@ public class AddNews extends Fragment {
                                 public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                                     Toast.makeText(getActivity(), "Saved Successfully", Toast.LENGTH_SHORT).show();
                                     AdminNews.getmList().add(mNews);
+                                    AdminProfile.getPostsNumber().setText(Integer.toString(AdminNews.getmList().size()));
                                     AdminNews.setAdapter(AdminNews.getmList());
 
                                 }
@@ -139,10 +139,6 @@ public class AddNews extends Fragment {
 
             }
         });
-
-
-
-
 
         return view;
     }

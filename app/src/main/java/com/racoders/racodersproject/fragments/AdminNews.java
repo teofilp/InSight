@@ -41,7 +41,7 @@ public class AdminNews extends Fragment {
 
         recyclerView = view.findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        color = getActivity().getResources().getColor(R.color.AdminBlue);
+        color = getActivity().getResources().getColor(R.color.white);
         mList.clear();
         DatabaseReference dbref = FirebaseDatabase.getInstance().getReference().child("News").child(FirebaseAuth.getInstance().getCurrentUser().getUid());
         dbref.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -57,6 +57,7 @@ public class AdminNews extends Fragment {
                     }
                 });
                 adapter = new NewsCustomAdapter(mList, color);
+                adapter.setAdmin(true);
                 recyclerView.setAdapter(adapter);
 
             }
@@ -74,6 +75,7 @@ public class AdminNews extends Fragment {
     }
     public static void setAdapter(ArrayList<News> list){
         adapter = new NewsCustomAdapter(list, color);
+        adapter.setAdmin(true);
         recyclerView.setAdapter(adapter);
     }
 

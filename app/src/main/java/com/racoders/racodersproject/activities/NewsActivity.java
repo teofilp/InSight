@@ -2,6 +2,7 @@ package com.racoders.racodersproject.activities;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
@@ -34,6 +35,7 @@ import com.racoders.racodersproject.AppGlideModule.GlideApp;
 import com.racoders.racodersproject.R;
 import com.racoders.racodersproject.classes.News;
 import com.racoders.racodersproject.fragments.AdminNews;
+import com.racoders.racodersproject.fragments.AdminProfile;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -49,6 +51,8 @@ public class NewsActivity extends AppCompatActivity {
     private ImageView newsImage;
     private int position;
     private News news;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -60,11 +64,24 @@ public class NewsActivity extends AppCompatActivity {
         title = findViewById(R.id.newsTitle);
         newsImage = findViewById(R.id.newsImage);
 
-
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         position = getIntent().getIntExtra("position", 0);
         final String reference = getIntent().getStringExtra("reference");
+        final String admin = getIntent().getStringExtra("admin");
+
+        if(admin != null && admin.equals("admin")){
+            toolbar.setBackgroundColor(getResources().getColor(R.color.LightBlue));
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                getWindow().setStatusBarColor(getResources().getColor(R.color.LightBlueText));
+                title.setTextColor(getResources().getColor(R.color.LightBlue));
+            }
+        } else {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                getWindow().setStatusBarColor(getResources().getColor(R.color.colorPrimaryDark));
+            }
+        }
+
         DatabaseReference dbref = FirebaseDatabase.getInstance().getReferenceFromUrl(reference);
         dbref.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -161,8 +178,9 @@ public class NewsActivity extends AppCompatActivity {
                             if(databaseError==null){
 
                                 AdminNews.getmList().remove(position);
-                                AdminNews.setAdapter(new ArrayList<>(AdminNews.getmList()));
-
+                                ArrayList<News> newArray = new ArrayList<>(AdminNews.getmList());
+                                AdminNews.setAdapter(newArray);
+                                AdminProfile.getPostsNumber().setText(Integer.toString(newArray.size()));
                                 finish();
                             }
                         }

@@ -18,7 +18,6 @@ import android.widget.Toast;
 
 import com.racoders.racodersproject.R;
 import com.racoders.racodersproject.activities.AddLocation;
-import com.racoders.racodersproject.activities.AddNews;
 import com.soundcloud.android.crop.Crop;
 
 import static com.facebook.FacebookSdk.getApplicationContext;

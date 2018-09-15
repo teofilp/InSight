@@ -49,7 +49,7 @@ public class AdminPanel extends AppCompatActivity {
 
         if(requestCode == 0 && grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED){
             if(ActivityCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED){
-                AddNews.getCropButton().setOnClickListener(new View.OnClickListener() {
+                AddNews.getmImage().setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         Intent photoPickerIntent = new Intent(Intent.ACTION_PICK);
@@ -132,6 +132,13 @@ public class AdminPanel extends AppCompatActivity {
         FirebaseAuth.getInstance().signOut();
         startActivity(new Intent(getApplicationContext(), toggleLoginActivity.class));
         finish();
+
+    }
+
+    public void toLocationsMap(View view){
+
+        final String id = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        startActivity(new Intent(getApplicationContext(), AdminMap.class).putExtra("id", id));
 
     }
 }

@@ -14,14 +14,11 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
-import android.view.DragEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.Spinner;
@@ -48,13 +45,10 @@ import com.google.firebase.database.GenericTypeIndicator;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
-import com.racoders.racodersproject.AppGlideModule.MyAppGlideModule;
 import com.racoders.racodersproject.R;
 import com.racoders.racodersproject.activities.MarkerDetailsPopUpWindow;
-import com.racoders.racodersproject.activities.loggedInUser;
 import com.racoders.racodersproject.classes.DirectionsParser;
 import com.racoders.racodersproject.classes.DistanceCalculator;
-import com.racoders.racodersproject.classes.MapLocationToggleHandler;
 import com.racoders.racodersproject.classes.PointOfInterest;
 
 
@@ -66,7 +60,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -184,7 +177,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
             }
         });
         try{
-            boolean success = mMap.setMapStyle(MapStyleOptions.loadRawResourceStyle(getActivity(), R.raw.style_json));
+            boolean success = mMap.setMapStyle(MapStyleOptions.loadRawResourceStyle(getActivity(), R.raw.user_map_style));
             if(!success){
                 Log.i("error", "Style parsing failed");
             }

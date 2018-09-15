@@ -17,5 +17,6 @@
     <string name="profile">Profile</string>
     <string name="newPassword">new password</string>
     <string name="oldPassword">old password</string>
+    <string name="title_activity_admin_map">Map</string>
 
 </resources>
