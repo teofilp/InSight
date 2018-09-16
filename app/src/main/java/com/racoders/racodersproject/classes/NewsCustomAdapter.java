@@ -1,6 +1,5 @@
 package com.racoders.racodersproject.classes;
 
-import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
@@ -8,11 +7,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -26,15 +23,11 @@ import com.racoders.racodersproject.activities.NewsActivity;
 import com.racoders.racodersproject.activities.PublicLocationProfile;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
-
-import de.hdodenhof.circleimageview.CircleImageView;
 
 import static com.facebook.FacebookSdk.getApplicationContext;
 
@@ -64,7 +57,7 @@ public class NewsCustomAdapter extends RecyclerView.Adapter<NewsCustomAdapter.Vi
 
         private final TextView title;
         private final  TextView author;
-        private final ImageView authorImageView;
+        private final ImageView image;
         private TextView dateTextView;
         private final RelativeLayout layout;
 
@@ -74,7 +67,7 @@ public class NewsCustomAdapter extends RecyclerView.Adapter<NewsCustomAdapter.Vi
             title = itemView.findViewById(R.id.title);
             author = itemView.findViewById(R.id.author);
             dateTextView = itemView.findViewById(R.id.dateTextView);
-            authorImageView = itemView.findViewById(R.id.authorImageview);
+            image = itemView.findViewById(R.id.authorImageview);
             layout = itemView.findViewById(R.id.layout);
 
         }
@@ -117,8 +110,9 @@ public class NewsCustomAdapter extends RecyclerView.Adapter<NewsCustomAdapter.Vi
 
 
         public void setAuthorImage(String id){
-            StorageReference storage = FirebaseStorage.getInstance().getReference().child("images/pois/" + id + ".jpeg");
-            GlideApp.with(getApplicationContext()).load(storage).into(authorImageView);
+            StorageReference storageRef = FirebaseStorage.getInstance().getReference().child("images/" +
+                    id + ".jpeg");
+            GlideApp.with(getApplicationContext()).load(storageRef).into(image);
         }
 
         public void setLayoutColor(){
@@ -139,7 +133,7 @@ public class NewsCustomAdapter extends RecyclerView.Adapter<NewsCustomAdapter.Vi
     public void onBindViewHolder(@NonNull ViewHolder holder, final int position) {
         holder.setTitle(mList.get(position).getTitle());
         holder.setAuthor(mList.get(position).getAuthor());
-        holder.setAuthorImage(mList.get(position).getAuthor());
+        holder.setAuthorImage(mList.get(position).getId());
         holder.setLayoutTag(position);
         holder.setDateTextView(mList.get(position).getPublicationDate());
         holder.setLayoutColor();
@@ -161,7 +155,7 @@ public class NewsCustomAdapter extends RecyclerView.Adapter<NewsCustomAdapter.Vi
             }
         });
 
-        holder.authorImageView.setOnClickListener(new View.OnClickListener() {
+        holder.image.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if(!isAdmin)

@@ -23,6 +23,6 @@
     <color name="Cinema">#C86FC9</color>
     <color name="Hotel">#F7C7DB</color>
     <color name="Park">#678D58</color>
-    <color name="LightBlue">#33C7E0</color>
-    <color name="LightBlueText">#FF218EA1</color>
+    <color name="LightBlue">#4286f4</color>
+    <color name="LightBlueText">#3b78db</color>
 </resources>

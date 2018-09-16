@@ -146,8 +146,6 @@ public class PublicLocationProfile extends AppCompatActivity {
                     break;
                 }
             }
-
-
         } else {
             favList.add(key);
         }

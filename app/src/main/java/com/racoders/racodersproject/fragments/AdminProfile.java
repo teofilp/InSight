@@ -75,7 +75,6 @@ public class AdminProfile extends Fragment implements OnMapReadyCallback {
         locationPhone = view.findViewById(R.id.locationPhone);
         locationEmail = view.findViewById(R.id.locationEmail);
 
-
         viewsSum = 0;
         followersSum = 0;
 
@@ -187,11 +186,14 @@ public class AdminProfile extends Fragment implements OnMapReadyCallback {
     }
 
     private void setPostsNumber(String id){
+        final int sum = 0;
         FirebaseDatabase.getInstance().getReference().child("News").child(id).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if(dataSnapshot.exists()){
                     postsNumber.setText(Integer.toString((int)dataSnapshot.getChildrenCount()));
+                } else {
+                    postsNumber.setText(Integer.toString(sum));
                 }
             }
 
