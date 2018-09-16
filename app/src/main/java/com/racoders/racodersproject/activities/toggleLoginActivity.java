@@ -26,9 +26,11 @@ public class toggleLoginActivity extends AppCompatActivity {
 
     public void toNormalSignIn(View view){
         startActivity(new Intent(getApplicationContext(), MainActivity.class));
+        finish();
     }
 
     public void toAdminSignIn(View view){
         startActivity(new Intent(getApplicationContext(), AdminSignIn.class));
+        finish();
     }
 }
