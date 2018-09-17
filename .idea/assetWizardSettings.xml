@@ -66,7 +66,7 @@
                                 <PersistentState>
                                   <option name="values">
                                     <map>
-                                      <entry key="url" value="jar:file:/D:/AndroidStudio/plugins/android/lib/android.jar!/images/material_design_icons/maps/ic_map_black_24dp.xml" />
+                                      <entry key="url" value="jar:file:/D:/AndroidStudio/plugins/android/lib/android.jar!/images/material_design_icons/action/ic_settings_black_24dp.xml" />
                                     </map>
                                   </option>
                                 </PersistentState>
@@ -77,11 +77,9 @@
                         <option name="values">
                           <map>
                             <entry key="color" value="e73e32" />
-                            <entry key="height" value="32" />
-                            <entry key="outputName" value="admin_map_icon" />
+                            <entry key="outputName" value="admin_settings_icon" />
                             <entry key="overrideSize" value="true" />
                             <entry key="sourceFile" value="D:\AndroidStudio\bin\C:\Users\Tudor Filp" />
-                            <entry key="width" value="32" />
                           </map>
                         </option>
                       </PersistentState>

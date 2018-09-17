@@ -8,24 +8,26 @@
     android:background="@color/white"
     >
 
-    <android.support.v7.widget.Toolbar
-        android:id="@+id/toolbar"
-        android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize"
-        android:background="@color/AdminBlue"
-        />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".activities.AdminEditProfile"
+        tools:context=".activities.EditAdminProfile"
         android:orientation="vertical">
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="@color/AdminBlue"
+            android:elevation="4dp"
+            />
 
         <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/profileImageView"
-            android:layout_width="150dp"
-            android:layout_height="150dp"
+            android:layout_width="200dp"
+            android:layout_height="200dp"
             app:civ_border_color="@color/AdminBlue"
+            android:layout_marginTop="40dp"
             app:civ_border_width="3dp"
             android:layout_gravity="center_horizontal"/>
 
@@ -54,16 +56,18 @@
         </android.support.design.widget.TextInputLayout>
 
 
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="60dp"
+            android:layout_marginBottom="30dp"
+            android:background="@color/AdminBlue"
+            android:text="Save"
+            android:onClick="updateAdminProfile"/>
+
     </LinearLayout>
 
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom"
-        android:layout_marginTop="60dp"
-        android:layout_marginBottom="30dp"
-        android:background="@color/AdminBlue"
-        android:text="Save"
-        android:onClick="updateAdminProfile"/>
+
 
 </ScrollView>

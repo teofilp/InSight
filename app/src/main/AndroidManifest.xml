@@ -70,7 +70,7 @@
             android:name=".activities.AdminMap"
             android:label="@string/title_activity_admin_map"
             android:theme="@style/AppTheme.CustomTheme" />
-        <activity android:name=".activities.AdminEditProfile"></activity>
+        <activity android:name=".activities.EditAdminProfile"></activity>
     </application>
 
 </manifest>

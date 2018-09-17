@@ -12,19 +12,10 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.Toolbar;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
-import android.widget.TableLayout;
 import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 import com.racoders.racodersproject.R;
 import com.racoders.racodersproject.classes.ViewPagerAdapter;
 import com.racoders.racodersproject.fragments.AddNews;
@@ -33,8 +24,6 @@ import com.racoders.racodersproject.fragments.AdminProfile;
 import com.soundcloud.android.crop.Crop;
 
 import java.io.File;
-
-import static com.facebook.FacebookSdk.getApplicationContext;
 
 public class AdminPanel extends AppCompatActivity {
     private boolean isValid = false;
@@ -140,5 +129,9 @@ public class AdminPanel extends AppCompatActivity {
         final String id = FirebaseAuth.getInstance().getCurrentUser().getUid();
         startActivity(new Intent(getApplicationContext(), AdminMap.class).putExtra("id", id));
 
+    }
+
+    public void toAdminEditProfile(View view){
+        startActivity(new Intent(getApplicationContext(), EditAdminProfile.class));
     }
 }
