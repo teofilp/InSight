@@ -163,12 +163,7 @@ public class Profile extends Fragment {
     }
 
     private void getUserProfileImage(String id) {
-        AsyncTask.execute(new Runnable() {
-            @Override
-            public void run() {
-                Glide.get(getApplicationContext()).clearDiskCache();
-            }
-        });
+
         StorageReference storage = FirebaseStorage.getInstance().getReference().child("images/users/" + id + ".jpeg");
         GlideApp.with(getApplicationContext()).load(storage).skipMemoryCache(true).into(profileImageView);
     }

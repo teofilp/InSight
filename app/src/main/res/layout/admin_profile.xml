@@ -34,6 +34,15 @@
                 android:background="@drawable/map_icon_admin"
                 android:onClick="toLocationsMap"/>
 
+            <ImageView
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="72dp"
+                android:background="@drawable/admin_settings_icon"
+                android:onClick="toEditProfile"
+                />
+
             <de.hdodenhof.circleimageview.CircleImageView
                 android:id="@+id/locationProfileImage"
                 android:layout_width="100dp"

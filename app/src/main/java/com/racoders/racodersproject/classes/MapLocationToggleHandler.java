@@ -23,13 +23,14 @@ public class MapLocationToggleHandler {
             animationRadioButton.animate().translationXBy(96*scale).setDuration(150).setListener(new Animator.AnimatorListener() {
                 @Override
                 public void onAnimationStart(Animator animation) {
-
+                    animationRadioButton.setEnabled(false);
                 }
 
                 @Override
                 public void onAnimationEnd(Animator animation) {
                     allTextView.setTextColor(context.getResources().getColor(R.color.white));
                     favTextView.setTextColor(context.getResources().getColor(R.color.colorPrimaryDark));
+                    animationRadioButton.setEnabled(true);
                 }
 
                 @Override
@@ -54,13 +55,14 @@ public class MapLocationToggleHandler {
             animationRadioButton.animate().translationXBy(-96*scale).setDuration(150).setListener(new Animator.AnimatorListener() {
                 @Override
                 public void onAnimationStart(Animator animation) {
-
+                    animationRadioButton.setEnabled(false);
                 }
 
                 @Override
                 public void onAnimationEnd(Animator animation) {
                     allTextView.setTextColor(context.getResources().getColor(R.color.colorPrimaryDark));
                     favTextView.setTextColor(context.getResources().getColor(R.color.white));
+                    animationRadioButton.setEnabled(true);
                 }
 
                 @Override

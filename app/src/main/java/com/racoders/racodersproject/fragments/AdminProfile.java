@@ -42,9 +42,9 @@ import static com.facebook.FacebookSdk.getApplicationContext;
 
 public class AdminProfile extends Fragment implements OnMapReadyCallback {
 
-    private CircleImageView profileImage;
+    private static CircleImageView profileImage;
     private TextView title;
-    private TextView description;
+    private static TextView description;
     private RatingBar ratingBar;
     private TextView viewsNumber;
     private TextView followersNumber;
@@ -138,6 +138,9 @@ public class AdminProfile extends Fragment implements OnMapReadyCallback {
         return postsNumber;
     }
 
+    public static CircleImageView getProfileImage() { return profileImage; }
+
+    public static TextView getDescription() { return  description; }
 
     private void setViewsNumberTextView(String id){
         FirebaseDatabase.getInstance().getReference().child("News").child(id)

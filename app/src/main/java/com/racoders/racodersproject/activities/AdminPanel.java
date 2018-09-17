@@ -130,4 +130,10 @@ public class AdminPanel extends AppCompatActivity {
         startActivity(new Intent(getApplicationContext(), AdminMap.class).putExtra("id", id));
 
     }
+
+    public void toEditProfile(View view){
+
+        startActivity(new Intent(getApplicationContext(), EditAdminProfile.class));
+
+    }
 }
