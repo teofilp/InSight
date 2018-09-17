@@ -18,9 +18,9 @@ import android.widget.Toast;
 import com.google.firebase.auth.FirebaseAuth;
 import com.racoders.racodersproject.R;
 import com.racoders.racodersproject.classes.ViewPagerAdapter;
-import com.racoders.racodersproject.fragments.AddNews;
-import com.racoders.racodersproject.fragments.AdminNews;
-import com.racoders.racodersproject.fragments.AdminProfile;
+import com.racoders.racodersproject.fragments.AdminAddNewsFragment;
+import com.racoders.racodersproject.fragments.AdminNewsFragment;
+import com.racoders.racodersproject.fragments.AdminProfileFragment;
 import com.soundcloud.android.crop.Crop;
 
 import java.io.File;
@@ -38,7 +38,7 @@ public class AdminPanel extends AppCompatActivity {
 
         if(requestCode == 0 && grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED){
             if(ActivityCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED){
-                AddNews.getmImage().setOnClickListener(new View.OnClickListener() {
+                AdminAddNewsFragment.getmImage().setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         Intent photoPickerIntent = new Intent(Intent.ACTION_PICK);
@@ -61,7 +61,7 @@ public class AdminPanel extends AppCompatActivity {
                 Uri destination_uri = Uri.fromFile(new File(getCacheDir(), "cropped"));
 
                 Crop.of(source_uri, destination_uri).asSquare().start(this);
-                AddNews.getmImage().setImageURI(Crop.getOutput(data));
+                AdminAddNewsFragment.getmImage().setImageURI(Crop.getOutput(data));
 
             }
             else if (requestCode == Crop.REQUEST_CROP){
@@ -72,7 +72,7 @@ public class AdminPanel extends AppCompatActivity {
     public void handle_crop(int code, Intent data){
 
         if(code == RESULT_OK){
-            AddNews.getmImage().setImageURI(Crop.getOutput(data));
+            AdminAddNewsFragment.getmImage().setImageURI(Crop.getOutput(data));
         }
         else if (code == Crop.RESULT_ERROR){
             Toast.makeText(getApplicationContext(), "Something went wrong", Toast.LENGTH_SHORT).show();
@@ -95,9 +95,9 @@ public class AdminPanel extends AppCompatActivity {
             getWindow().setStatusBarColor(getResources().getColor(R.color.LightBlue));
             setTitle("Admin Panel");
         }
-        adapter.addFragment(new AdminNews(), "");
-        adapter.addFragment(new AddNews(), "");
-        adapter.addFragment(new AdminProfile(), "");
+        adapter.addFragment(new AdminNewsFragment(), "");
+        adapter.addFragment(new AdminAddNewsFragment(), "");
+        adapter.addFragment(new AdminProfileFragment(), "");
 
         viewPager.setAdapter(adapter);
         tabLayout.setupWithViewPager(viewPager);

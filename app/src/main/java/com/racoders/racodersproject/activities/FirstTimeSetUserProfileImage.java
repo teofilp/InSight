@@ -23,16 +23,12 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.racoders.racodersproject.R;
-import com.racoders.racodersproject.fragments.AddNews;
-import com.racoders.racodersproject.fragments.AdminNews;
 import com.soundcloud.android.crop.Crop;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 
 import de.hdodenhof.circleimageview.CircleImageView;
-
-import static com.facebook.FacebookSdk.getApplicationContext;
 
 public class FirstTimeSetUserProfileImage extends AppCompatActivity {
 

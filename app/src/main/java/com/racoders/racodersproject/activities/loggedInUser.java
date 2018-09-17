@@ -2,7 +2,6 @@ package com.racoders.racodersproject.activities;
 
 
 import android.Manifest;
-import android.animation.Animator;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.LocationManager;
@@ -16,8 +15,6 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Toast;
 
-import com.google.android.gms.maps.model.BitmapDescriptorFactory;
-import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.firebase.auth.FirebaseAuth;
 ;
 
@@ -28,22 +25,22 @@ import com.racoders.racodersproject.R;
 import com.racoders.racodersproject.classes.MapLocationToggleHandler;
 import com.racoders.racodersproject.classes.ViewPagerAdapter;
 import com.racoders.racodersproject.fragments.CategoriesFragment;
-import com.racoders.racodersproject.fragments.MapFragment;
-import com.racoders.racodersproject.fragments.newsFeed;
+import com.racoders.racodersproject.fragments.UserMapFragment;
+import com.racoders.racodersproject.fragments.UserNewsfeedFragment;
 
 
-import static com.racoders.racodersproject.fragments.MapFragment.activeFilter;
-import static com.racoders.racodersproject.fragments.MapFragment.getAllPOIS;
-import static com.racoders.racodersproject.fragments.MapFragment.getAllTextView;
-import static com.racoders.racodersproject.fragments.MapFragment.getAnimationRadioButton;
-import static com.racoders.racodersproject.fragments.MapFragment.getFavPOIS;
-import static com.racoders.racodersproject.fragments.MapFragment.getFavTextView;
-import static com.racoders.racodersproject.fragments.MapFragment.isFavOnly;
-import static com.racoders.racodersproject.fragments.MapFragment.mFavPOIs;
-import static com.racoders.racodersproject.fragments.MapFragment.mMap;
-import static com.racoders.racodersproject.fragments.MapFragment.mMarkers;
-import static com.racoders.racodersproject.fragments.MapFragment.myLocation;
-import static com.racoders.racodersproject.fragments.MapFragment.reloadMap;
+import static com.racoders.racodersproject.fragments.UserMapFragment.activeFilter;
+import static com.racoders.racodersproject.fragments.UserMapFragment.getAllPOIS;
+import static com.racoders.racodersproject.fragments.UserMapFragment.getAllTextView;
+import static com.racoders.racodersproject.fragments.UserMapFragment.getAnimationRadioButton;
+import static com.racoders.racodersproject.fragments.UserMapFragment.getFavPOIS;
+import static com.racoders.racodersproject.fragments.UserMapFragment.getFavTextView;
+import static com.racoders.racodersproject.fragments.UserMapFragment.isFavOnly;
+import static com.racoders.racodersproject.fragments.UserMapFragment.mFavPOIs;
+import static com.racoders.racodersproject.fragments.UserMapFragment.mMap;
+import static com.racoders.racodersproject.fragments.UserMapFragment.mMarkers;
+import static com.racoders.racodersproject.fragments.UserMapFragment.myLocation;
+import static com.racoders.racodersproject.fragments.UserMapFragment.reloadMap;
 import com.racoders.racodersproject.fragments.Profile;
 
 public class loggedInUser extends FragmentActivity {
@@ -60,7 +57,7 @@ public class loggedInUser extends FragmentActivity {
 
             if(grantResults[0] == PackageManager.PERMISSION_GRANTED){
                 if(ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED){
-                    MapFragment.locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, MapFragment.locationListener);
+                    UserMapFragment.locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, UserMapFragment.locationListener);
                 }
             }else{
                 Toast.makeText(this, "We need your location for..", Toast.LENGTH_SHORT).show();
@@ -81,9 +78,9 @@ public class loggedInUser extends FragmentActivity {
 
         adapter = new ViewPagerAdapter(getSupportFragmentManager());
 
-        adapter.addFragment(new newsFeed(), "");
+        adapter.addFragment(new UserNewsfeedFragment(), "");
         adapter.addFragment(new CategoriesFragment(), "");
-        adapter.addFragment(new MapFragment(), "");
+        adapter.addFragment(new UserMapFragment(), "");
         adapter.addFragment(new Profile(), "");
 
         viewPager.setAdapter(adapter);
@@ -101,21 +98,21 @@ public class loggedInUser extends FragmentActivity {
     public void moveCameraToMe(final View view){
 
         view.animate().rotationBy(360).setDuration(500);
-        MapFragment.mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(myLocation, 18));
+        UserMapFragment.mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(myLocation, 18));
 
     }
 
     public void signOut(View view){
         FirebaseAuth.getInstance().signOut();
         LoginManager.getInstance().logOut();
-        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+        Intent intent = new Intent(getApplicationContext(), UserSignIn.class);
         startActivity(intent);
         mMap.clear();
         mMarkers.clear();
         mFavPOIs.clear();
         isFavOnly = true;
-        MapFragment.setmFavLocationsString(null);
-        MapFragment.mMap = null;
+        UserMapFragment.setmFavLocationsString(null);
+        UserMapFragment.mMap = null;
         finish();
     }
 
@@ -128,7 +125,7 @@ public class loggedInUser extends FragmentActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        MapFragment.mMap = null;
+        UserMapFragment.mMap = null;
     }
 
     public void toggleAll(View view){

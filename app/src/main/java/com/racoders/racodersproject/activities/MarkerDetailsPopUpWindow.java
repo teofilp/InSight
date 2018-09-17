@@ -4,23 +4,19 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.racoders.racodersproject.AppGlideModule.GlideApp;
-import com.racoders.racodersproject.fragments.MapFragment;
+import com.racoders.racodersproject.fragments.UserMapFragment;
 import com.racoders.racodersproject.R;
 import com.racoders.racodersproject.classes.*;
 import android.app.Activity;
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
-import android.provider.ContactsContract;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -28,10 +24,9 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.racoders.racodersproject.fragments.UserNewsfeedFragment;
 
-import java.sql.BatchUpdateException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -88,8 +83,8 @@ public class MarkerDetailsPopUpWindow extends Activity{
          * if user already exists get the Array of fav locations
          * else create a new Array
          */
-        if(MapFragment.getmFavLocationsString()!=null){
-            mFavLocationsSet = new HashSet<>(MapFragment.getmFavLocationsString());
+        if(UserMapFragment.getmFavLocationsString()!=null){
+            mFavLocationsSet = new HashSet<>(UserMapFragment.getmFavLocationsString());
             if(mFavLocationsSet.contains(id)){
                 toggleFavoriteImageView.setBackground(getResources().getDrawable(R.drawable.bordered_fav_bookmark));
                 isFav = true;
@@ -127,11 +122,10 @@ public class MarkerDetailsPopUpWindow extends Activity{
     public void toggleFavorite(View view){
         final View mView = view;
 
-
         if(isFav){
             mFavLocationsSet.remove(id);
             List<String> mList = new ArrayList<>(mFavLocationsSet);
-            MapFragment.setmFavLocationsString(mList);
+            UserMapFragment.setmFavLocationsString(mList);
 
             DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference()
                     .child("FavoriteLocations").child(FirebaseAuth.getInstance().getUid());
@@ -149,7 +143,7 @@ public class MarkerDetailsPopUpWindow extends Activity{
         }else{
             mFavLocationsSet.add(id);
             List<String> mList = new ArrayList<>(mFavLocationsSet);
-            MapFragment.setmFavLocationsString(mList);
+            UserMapFragment.setmFavLocationsString(mList);
 
             DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference()
                     .child("FavoriteLocations").child(FirebaseAuth.getInstance().getUid());
@@ -165,10 +159,12 @@ public class MarkerDetailsPopUpWindow extends Activity{
             });
 
         }
+
+        UserNewsfeedFragment.getInstance().populateRecyclerViewWithFavoriteNews();
     }
     public void createRoute(View view){
-        MapFragment.loadRouteInfo(key, pointOfInterest);
-        MapFragment.createRoute(new LatLng(pointOfInterest.getLatitude(), pointOfInterest.getLongitude()));
+        UserMapFragment.loadRouteInfo(key, pointOfInterest);
+        UserMapFragment.createRoute(new LatLng(pointOfInterest.getLatitude(), pointOfInterest.getLongitude()));
         finish();
     }
 

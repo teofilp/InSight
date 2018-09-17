@@ -34,7 +34,7 @@ import com.google.firebase.storage.UploadTask;
 import com.racoders.racodersproject.AppGlideModule.GlideApp;
 import com.racoders.racodersproject.R;
 import com.racoders.racodersproject.classes.PointOfInterest;
-import com.racoders.racodersproject.fragments.AdminProfile;
+import com.racoders.racodersproject.fragments.AdminProfileFragment;
 import com.soundcloud.android.crop.Crop;
 
 import java.io.ByteArrayOutputStream;
@@ -217,8 +217,8 @@ public class EditAdminProfile extends AppCompatActivity {
                     }
                 });
 
-                AdminProfile.getProfileImage().setImageBitmap(bitmap);
-                AdminProfile.getDescription().setText(description.getText().toString());
+                AdminProfileFragment.getProfileImage().setImageBitmap(bitmap);
+                AdminProfileFragment.getDescription().setText(description.getText().toString());
 
                 finish();
             }

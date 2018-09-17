@@ -1,29 +1,21 @@
 package com.racoders.racodersproject.activities;
 
 import android.content.Intent;
-import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager;
-import android.content.pm.Signature;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.AppCompatEditText;
-import android.util.Base64;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.Toast;
 
 import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
-import com.facebook.FacebookSdk;
-import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
-import com.facebook.login.widget.LoginButton;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthCredential;
@@ -38,16 +30,11 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.racoders.racodersproject.R;
-import com.racoders.racodersproject.activities.localRegisterActivity;
-import com.racoders.racodersproject.activities.loggedInUser;
 import com.racoders.racodersproject.classes.User;
 
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
-public class MainActivity extends AppCompatActivity {
+
+public class UserSignIn extends AppCompatActivity {
 
     public static FirebaseAuth mAuth;
     public static FirebaseUser user;
@@ -70,16 +57,18 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_user_sign_in);
 
-        Button fb_login =findViewById(R.id.fb_login);
+        Button fb_login = findViewById(R.id.fb_login);
         email = findViewById(R.id.email);
         password = findViewById(R.id.password);
+        findViewById(R.id.progressBar).setVisibility(View.GONE);
+
         FacebookLoginManager= com.facebook.login.LoginManager.getInstance();
         fb_login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                FacebookLoginManager.logInWithReadPermissions(MainActivity.this, Arrays.asList("email", "public_profile", "user_birthday"));
+                FacebookLoginManager.logInWithReadPermissions(UserSignIn.this, Arrays.asList("email", "public_profile", "user_birthday"));
             }
         });
         callbackManager = CallbackManager.Factory.create();
@@ -88,10 +77,10 @@ public class MainActivity extends AppCompatActivity {
         FacebookLoginManager.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
             @Override
             public void onSuccess(LoginResult loginResult) {
-                Log.i("result", "Successful" + loginResult.getAccessToken().getUserId()
-                + " " + loginResult.getAccessToken().getToken());
+
                 FbUserID = AccessToken.getCurrentAccessToken().getUserId();
                 handleFacebookAccessToken(loginResult.getAccessToken());
+
             }
 
             @Override
@@ -104,14 +93,19 @@ public class MainActivity extends AppCompatActivity {
                 Log.i("result", "Failed" + error.toString());
             }
         });
-        Toast.makeText(this, "Welcome to our test app", Toast.LENGTH_SHORT).show();
+
     }
 
     public void signIn(View view){
+        view.setEnabled(false);
+
+        findViewById(R.id.progressBar).setVisibility(View.VISIBLE);
+
         String emailString = email.getText().toString();
         String passwordString = password.getText().toString();
 
         if(passwordValidation(passwordString) && emailValidation(emailString)){
+
             mAuth.signInWithEmailAndPassword(emailString, passwordString)
                     .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                         @Override
@@ -119,22 +113,27 @@ public class MainActivity extends AppCompatActivity {
                             completionResult(task);
                         }
                     });
+
         } else {
             Toast.makeText(this, "Something went wrong, check your credentials again or try later", Toast.LENGTH_SHORT).show();
+            findViewById(R.id.progressBar).setVisibility(View.GONE);
         }
 
     }
     public void completionResult(Task<AuthResult> task){
+        findViewById(R.id.button).setEnabled(true);
         if (task.isSuccessful()) {
+
             // Sign in success, update UI with the signed-in user's information
             if(facebookAccess)
                 updateUsersData();
+
             user = mAuth.getCurrentUser();
             toLoggedInActivity();
         } else {
             // If sign in fails, display a message to the user.
-            Toast.makeText(MainActivity.this, "Authentication failed. Check your credentials or try again later",
-                    Toast.LENGTH_SHORT).show();
+            Toast.makeText(UserSignIn.this, "Make sure your connection is working and credentials are correct",
+                    Toast.LENGTH_LONG).show();
         }
     }
 
@@ -154,7 +153,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onComplete(@Nullable DatabaseError databaseError, @NonNull DatabaseReference databaseReference) {
                 if(databaseError != null)
-                    Toast.makeText(MainActivity.this, "Something went very wrong", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(UserSignIn.this, "Something went very wrong", Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -198,6 +197,9 @@ public class MainActivity extends AppCompatActivity {
                 {
                     startActivity(new Intent(getApplicationContext(), AdminPanel.class));
                 }
+
+                findViewById(R.id.progressBar).setVisibility(View.GONE);
+
                 finish();
             }
 

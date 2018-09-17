@@ -16,12 +16,10 @@ import android.support.v7.widget.AppCompatEditText;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
-import android.widget.ProgressBar;
 import android.widget.Toast;
 
 
 import com.bumptech.glide.Glide;
-import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.AuthCredential;
@@ -46,8 +44,6 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 
 import de.hdodenhof.circleimageview.CircleImageView;
-
-import static com.facebook.FacebookSdk.getApplicationContext;
 
 
 public class EditUserProfile extends AppCompatActivity {
@@ -106,7 +102,7 @@ public class EditUserProfile extends AppCompatActivity {
         setContentView(R.layout.activity_edit_user_profile);
 
         if(FirebaseAuth.getInstance().getCurrentUser() == null){
-            startActivity(new Intent(getApplicationContext(), MainActivity.class));
+            startActivity(new Intent(getApplicationContext(), UserSignIn.class));
             finish();
         }
 
@@ -115,6 +111,7 @@ public class EditUserProfile extends AppCompatActivity {
         profileImage = findViewById(R.id.userProfileImage);
         oldPassword = findViewById(R.id.oldPassword);
         toolbar = findViewById(R.id.toolbar);
+        findViewById(R.id.progressBar).setVisibility(View.GONE);
 
         setTitle("Edit Profile");
         setSupportActionBar(toolbar);
@@ -165,6 +162,8 @@ public class EditUserProfile extends AppCompatActivity {
 
     public void saveNewProfile(View view){
 
+        findViewById(R.id.progressBar).setVisibility(View.VISIBLE);
+
         final String newPasswordString = newPassword.getText().toString();
         String oldPasswordString = oldPassword.getText().toString();
 
@@ -206,8 +205,6 @@ public class EditUserProfile extends AppCompatActivity {
                 @Override
                 public void onComplete(@Nullable DatabaseError databaseError, @NonNull DatabaseReference databaseReference) {
                     if(databaseError == null){
-
-
                         final StorageReference spaceref = FirebaseStorage.getInstance().getReference().child("images").child("users").child(id + ".jpeg");
 
                         spaceref.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
@@ -218,7 +215,7 @@ public class EditUserProfile extends AppCompatActivity {
                         }).addOnFailureListener(new OnFailureListener() {
                             @Override
                             public void onFailure(@NonNull Exception e) {
-                                Toast.makeText(EditUserProfile.this, "couldn;t delete the image", Toast.LENGTH_SHORT).show();
+                                findViewById(R.id.progressBar).setVisibility(View.GONE);
                             }
                         });
 
@@ -235,11 +232,12 @@ public class EditUserProfile extends AppCompatActivity {
                             @Override
                             public void onFailure(@NonNull Exception e) {
                                 Toast.makeText(EditUserProfile.this, "Something went wrong. Try again later", Toast.LENGTH_SHORT).show();
+                                findViewById(R.id.progressBar).setVisibility(View.GONE);
                             }
                         }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                             @Override
                             public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                                Toast.makeText(EditUserProfile.this, "All good", Toast.LENGTH_SHORT).show();
+
                                 Profile.getNameTextView().setText(currentUser.getDisplayName());
                                 Profile.getProfileImageView().setImageBitmap(bitmap);
 
@@ -249,13 +247,16 @@ public class EditUserProfile extends AppCompatActivity {
                                         Glide.get(getApplicationContext()).clearDiskCache();
                                     }
                                 });
-                                
+
+                                findViewById(R.id.progressBar).setVisibility(View.GONE);
+
                                 finish();
                             }
                         });
 
                     } else {
                         Toast.makeText(EditUserProfile.this, "Something went wrong", Toast.LENGTH_SHORT).show();
+                        findViewById(R.id.progressBar).setVisibility(View.GONE);
                     }
                 }
             });

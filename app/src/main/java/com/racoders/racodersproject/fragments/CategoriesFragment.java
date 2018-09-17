@@ -32,7 +32,7 @@ public class CategoriesFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
-        View view = inflater.inflate(R.layout.categories_fragment, container, false);
+        View view = inflater.inflate(R.layout.user_categories_fragment, container, false);
 
         categoriesGridView = view.findViewById(R.id.categoryGrid);
         list = new ArrayList<>();

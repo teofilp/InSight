@@ -1,20 +1,18 @@
 package com.racoders.racodersproject.fragments;
 
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
 import com.google.firebase.auth.FacebookAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -46,6 +44,7 @@ public class Profile extends Fragment {
     private static TextView nameTextView;
     private TextView emailTextView;
     private Button editProfile;
+    private SwipeRefreshLayout swipeRefreshLayout;
 
     private RecyclerView favoriteLocationsRecyclerView;
     private LocationCustomAdapter adapter;
@@ -56,22 +55,31 @@ public class Profile extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        view = inflater.inflate(R.layout.profile_fragment, container, false);
+        view = inflater.inflate(R.layout.user_profile_fragment, container, false);
 
         nameTextView = view.findViewById(R.id.nameTextView);
         emailTextView = view.findViewById(R.id.emailTextView);
         profileImageView = view.findViewById(R.id.profileImage);
         favoriteLocationsRecyclerView = view.findViewById(R.id.profileFavoriteLocations);
         editProfile = view.findViewById(R.id.editProfile);
+        swipeRefreshLayout = view.findViewById(R.id.swipeRefreshLayout);
 
         favoriteLocationsRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         favoriteLocationsRecyclerView.setNestedScrollingEnabled(false);
 
-        String id = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        final String id = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
         getUserInfo(id);
         getUserProfileImage(id);
         getFavoriteLocations(id);
+
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                getFavoriteLocations(id);
+                swipeRefreshLayout.setColorSchemeColors(getResources().getColor(R.color.colorPrimaryDark));
+            }
+        });
 
         return view;
     }
@@ -109,6 +117,9 @@ public class Profile extends Fragment {
                         myList.add(current);
                         adapter = new LocationCustomAdapter(myList);
                         favoriteLocationsRecyclerView.setAdapter(adapter);
+
+                        swipeRefreshLayout.setRefreshing(false);
+
                     } else{
 
                     }

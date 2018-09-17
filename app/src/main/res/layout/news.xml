@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="100dp"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context="com.racoders.racodersproject.fragments.newsFeed"
+    tools:context="com.racoders.racodersproject.fragments.UserNewsfeedFragment"
     android:background="@color/white">
 
     <ImageView
@@ -20,7 +20,6 @@
         android:layout_marginTop="10dp"
         android:textSize="14sp"
         android:layout_toEndOf="@+id/authorImageview"
-        android:text="dummy text is here to make you say wow"
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
         />
@@ -37,7 +36,6 @@
             android:id="@+id/author"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Marty delivery"
             android:textColor="@color/black" />
         <View
             android:layout_width="2dp"
@@ -49,7 +47,6 @@
             android:id="@+id/dateTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Fri Sep 11, 2015 9:35pm EDT"
             android:textSize="12sp"
             android:textColor="@color/black"
             android:layout_marginLeft="6dp"/>

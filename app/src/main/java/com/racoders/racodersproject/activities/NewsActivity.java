@@ -1,7 +1,6 @@
 package com.racoders.racodersproject.activities;
 
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -13,16 +12,12 @@ import android.text.Html;
 import android.text.Spanned;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -34,14 +29,10 @@ import com.google.firebase.storage.StorageReference;
 import com.racoders.racodersproject.AppGlideModule.GlideApp;
 import com.racoders.racodersproject.R;
 import com.racoders.racodersproject.classes.News;
-import com.racoders.racodersproject.fragments.AdminNews;
-import com.racoders.racodersproject.fragments.AdminProfile;
+import com.racoders.racodersproject.fragments.AdminNewsFragment;
+import com.racoders.racodersproject.fragments.AdminProfileFragment;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-
-import static com.facebook.FacebookSdk.getApplicationContext;
 
 public class NewsActivity extends AppCompatActivity {
     private Toolbar toolbar;
@@ -177,10 +168,10 @@ public class NewsActivity extends AppCompatActivity {
                         public void onComplete(@Nullable DatabaseError databaseError, @NonNull DatabaseReference databaseReference) {
                             if(databaseError==null){
 
-                                AdminNews.getmList().remove(position);
-                                ArrayList<News> newArray = new ArrayList<>(AdminNews.getmList());
-                                AdminNews.setAdapter(newArray);
-                                AdminProfile.getPostsNumber().setText(Integer.toString(newArray.size()));
+                                AdminNewsFragment.getmList().remove(position);
+                                ArrayList<News> newArray = new ArrayList<>(AdminNewsFragment.getmList());
+                                AdminNewsFragment.setAdapter(newArray);
+                                AdminProfileFragment.getPostsNumber().setText(Integer.toString(newArray.size()));
                                 finish();
                             }
                         }

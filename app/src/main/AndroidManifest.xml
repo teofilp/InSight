@@ -20,7 +20,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".activities.MainActivity"
+            android:name=".activities.UserSignIn"
             android:screenOrientation="portrait" />
         <activity android:name="com.soundcloud.android.crop.CropImageActivity" />
 

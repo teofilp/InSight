@@ -32,7 +32,22 @@ public class localRegisterActivity extends AppCompatActivity {
     private AppCompatEditText password;
 
 
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_local_register);
+
+        displayName = findViewById(R.id.displayName);
+        email = findViewById(R.id.email);
+        password = findViewById(R.id.password);
+        findViewById(R.id.progressBar).setVisibility(View.GONE);
+
+        mAuth = FirebaseAuth.getInstance();
+    }
+
     public void onSubmit(View view) {
+
+        findViewById(R.id.progressBar).setVisibility(View.VISIBLE);
 
         String displayNameString = displayName.getText().toString();
         String emailString = email.getText().toString();
@@ -53,22 +68,9 @@ public class localRegisterActivity extends AppCompatActivity {
         }
     }
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_local_register);
+    private void completionResult(Task<AuthResult> task){
 
-        displayName = findViewById(R.id.displayName);
-        email = findViewById(R.id.email);
-        password = findViewById(R.id.password);
-        mAuth = FirebaseAuth.getInstance();
-    }
-    @Override
-    public void onStart(){
-        super.onStart();
 
-    }
-    public void completionResult(Task<AuthResult> task){
         if (task.isSuccessful()) {
             // Sign in success, update UI with the signed-in user's information
             user = mAuth.getCurrentUser();
@@ -77,6 +79,8 @@ public class localRegisterActivity extends AppCompatActivity {
             // If sign in fails, display a message to the user.
             Toast.makeText(localRegisterActivity.this, "Authentication failed. Check your credentials or try again later",
                     Toast.LENGTH_SHORT).show();
+            findViewById(R.id.progressBar).setVisibility(View.GONE);
+
         }
     }
 
@@ -90,7 +94,9 @@ public class localRegisterActivity extends AppCompatActivity {
             @Override
             public void onComplete(@Nullable DatabaseError databaseError, @NonNull DatabaseReference databaseReference) {
                 if(databaseError == null){
-                    Toast.makeText(localRegisterActivity.this, "Details saved successfully", Toast.LENGTH_SHORT).show();
+
+                    findViewById(R.id.progressBar).setVisibility(View.GONE);
+
                     startActivity(new Intent(getApplicationContext(), FirstTimeSetUserProfileImage.class));
                 }
             }

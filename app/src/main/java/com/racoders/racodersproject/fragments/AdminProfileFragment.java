@@ -40,7 +40,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 import static com.facebook.FacebookSdk.getApplicationContext;
 
-public class AdminProfile extends Fragment implements OnMapReadyCallback {
+public class AdminProfileFragment extends Fragment implements OnMapReadyCallback {
 
     private static CircleImageView profileImage;
     private TextView title;

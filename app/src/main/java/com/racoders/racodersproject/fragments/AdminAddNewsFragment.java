@@ -1,11 +1,9 @@
 package com.racoders.racodersproject.fragments;
 
 import android.Manifest;
-import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -16,8 +14,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnFailureListener;
@@ -35,15 +31,12 @@ import com.soundcloud.android.crop.Crop;
 
 import java.io.ByteArrayOutputStream;
 import java.util.Calendar;
-import java.util.Collections;
-import java.util.Comparator;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
-import static android.app.Activity.RESULT_OK;
 import static com.facebook.FacebookSdk.getApplicationContext;
 
-public class AddNews extends Fragment {
+public class AdminAddNewsFragment extends Fragment {
     private AppCompatEditText title;
     private AppCompatEditText author;
     private AppCompatEditText description;
@@ -124,9 +117,9 @@ public class AddNews extends Fragment {
                                 @Override
                                 public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                                     Toast.makeText(getActivity(), "Saved Successfully", Toast.LENGTH_SHORT).show();
-                                    AdminNews.getmList().add(mNews);
-                                    AdminProfile.getPostsNumber().setText(Integer.toString(AdminNews.getmList().size()));
-                                    AdminNews.setAdapter(AdminNews.getmList());
+                                    AdminNewsFragment.getmList().add(mNews);
+                                    AdminProfileFragment.getPostsNumber().setText(Integer.toString(AdminNewsFragment.getmList().size()));
+                                    AdminNewsFragment.setAdapter(AdminNewsFragment.getmList());
 
                                 }
                             });

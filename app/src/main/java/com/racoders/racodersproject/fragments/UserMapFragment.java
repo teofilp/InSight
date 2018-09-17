@@ -71,7 +71,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
 import static com.facebook.FacebookSdk.getApplicationContext;
 
 
-public class MapFragment extends Fragment implements OnMapReadyCallback {
+public class UserMapFragment extends Fragment implements OnMapReadyCallback {
 
     public static GoogleMap mMap;
     SupportMapFragment mapFragment;
@@ -114,7 +114,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
-        View view = inflater.inflate(R.layout.map_fragment, container, false);
+        View view = inflater.inflate(R.layout.user_map_fragment, container, false);
         mapFragment = (SupportMapFragment)getChildFragmentManager().findFragmentById(R.id.map_fragment1);
         if(mMap == null)
             mapFragment.getMapAsync(this);
@@ -166,9 +166,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
             @Override
             public boolean onMarkerClick(Marker marker) {
                 if(!marker.equals(me)) {
-                    System.out.println("markerCLicked");
                     String markerId = mMarkers.get(marker);
-                    System.out.println(markerId);
                     startActivity(new Intent(getApplicationContext(), MarkerDetailsPopUpWindow.class).putExtra("id", markerId));
                 } else {
                     Toast.makeText(getContext(), "This is your location", Toast.LENGTH_SHORT).show();
@@ -325,11 +323,10 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                 if(dataSnapshot.exists()){
                     GenericTypeIndicator<List<String>> t = new GenericTypeIndicator<List<String>>(){};
                     mFavLocationsString = dataSnapshot.getValue(t);
-                    System.out.println("mFavLocationsString size " + mFavLocationsString.size());
                     for(int i = 0; i< mFavLocationsString.size(); i++){
-                        System.out.println("i: " + i);
+
                         str = mFavLocationsString.get(i);
-                        System.out.println(str);
+
                         if(str!=null){
                             final DatabaseReference dbref = FirebaseDatabase.getInstance().getReferenceFromUrl(str);
                             dbref.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -545,7 +542,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     }
 
     public static void setmFavLocationsString(List<String> mFavLocationsString) {
-        MapFragment.mFavLocationsString = mFavLocationsString;
+        UserMapFragment.mFavLocationsString = mFavLocationsString;
     }
 
     private static int getSpecificMarker(final String category,final boolean fav){
