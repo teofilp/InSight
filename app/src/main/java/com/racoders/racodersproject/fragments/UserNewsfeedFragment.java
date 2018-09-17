@@ -10,6 +10,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -76,6 +77,7 @@ public class UserNewsfeedFragment extends Fragment {
                             Collections.reverse(list);
                             loadIntoRecyclerView(list);
                         } else {
+                            view.findViewById(R.id.warningText).setVisibility(View.VISIBLE);
                             recyclerView.setAdapter(null);
                             swipeRefreshLayout.setRefreshing(false);
                         }
@@ -91,8 +93,11 @@ public class UserNewsfeedFragment extends Fragment {
     }
 
     private void loadIntoRecyclerView(List<String> list) {
+
         final List<News> myList = new ArrayList<>();
-        if(list!=null)
+        final NewsCustomAdapter adapter = new NewsCustomAdapter(myList, getResources().getColor(R.color.white));
+        recyclerView.setAdapter(adapter);
+            if(list!=null)
         for(String str : list){
             FirebaseDatabase.getInstance().getReferenceFromUrl(str).addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
@@ -110,16 +115,14 @@ public class UserNewsfeedFragment extends Fragment {
                                     for(DataSnapshot child : dataSnapshot.getChildren())
                                         myList.add(child.getValue(News.class));
 
+                                    adapter.notifyDataSetChanged();
+
                                 } else {
-                                    myList.clear();
                                     view.findViewById(R.id.warningText).setVisibility(View.VISIBLE);
                                 }
 
-                                NewsCustomAdapter adapter = new NewsCustomAdapter(myList, getResources().getColor(R.color.white));
-
-                                recyclerView.setAdapter(adapter);
-
                                 swipeRefreshLayout.setRefreshing(false);
+
                             }
 
                             @Override
@@ -136,6 +139,7 @@ public class UserNewsfeedFragment extends Fragment {
                 }
             });
         }
+
     }
 
 }
