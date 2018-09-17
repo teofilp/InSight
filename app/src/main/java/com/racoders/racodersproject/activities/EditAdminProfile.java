@@ -105,9 +105,7 @@ public class EditAdminProfile extends AppCompatActivity {
         toolbar.setTitleTextColor(getResources().getColor(R.color.white));
         setTitle("Edit Profile");
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-
             getWindow().setStatusBarColor(getResources().getColor(R.color.AdminDarkBlue));
-
         }
 
         profileImage.setOnClickListener(new View.OnClickListener() {
