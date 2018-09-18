@@ -28,7 +28,8 @@
             android:name="com.facebook.sdk.ApplicationId"
             android:value="@string/facebook_app_id" />
 
-        <activity android:name=".activities.loggedInUser" />
+        <activity android:name=".activities.loggedInUser"
+            android:screenOrientation="portrait"/>
         <activity android:name=".activities.localRegisterActivity" />
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.
@@ -44,33 +45,47 @@
 
         <activity
             android:name=".activities.MarkerDetailsPopUpWindow"
-            android:theme="@style/AppTheme.CustomTheme" />
+            android:theme="@style/AppTheme.CustomTheme"
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".activities.AddLocation"
-            android:windowSoftInputMode="stateHidden|adjustPan" />
-        <activity android:name=".activities.NewsActivity" />
-        <activity android:name=".activities.AdminSignIn" />
-        <activity android:name=".activities.AdminRegister" />
+            android:windowSoftInputMode="stateHidden|adjustPan"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".activities.NewsActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".activities.AdminSignIn"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".activities.AdminRegister"
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".activities.AdminPanel"
-            android:windowSoftInputMode="stateHidden|adjustPan" />
-        <activity android:name=".activities.LauncherActivity">
+            android:windowSoftInputMode="stateHidden|adjustPan"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".activities.LauncherActivity"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".activities.toggleLoginActivity" />
-        <activity android:name=".activities.PublicLocationProfile" />
-        <activity android:name=".activities.FirstTimeSetUserProfileImage" />
-        <activity android:name=".activities.LocationWithSpecificCategory" />
-        <activity android:name=".activities.EditUserProfile" />
+        <activity android:name=".activities.toggleLoginActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".activities.PublicLocationProfile"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".activities.FirstTimeSetUserProfileImage"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".activities.LocationWithSpecificCategory"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".activities.EditUserProfile"
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".activities.AdminMap"
             android:label="@string/title_activity_admin_map"
-            android:theme="@style/AppTheme.CustomTheme" />
-        <activity android:name=".activities.EditAdminProfile"></activity>
+            android:theme="@style/AppTheme.CustomTheme"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".activities.EditAdminProfile"
+            android:screenOrientation="portrait"></activity>
     </application>
 
 </manifest>

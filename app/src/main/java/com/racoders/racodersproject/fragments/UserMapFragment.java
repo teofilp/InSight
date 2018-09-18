@@ -468,31 +468,6 @@ public class UserMapFragment extends Fragment implements OnMapReadyCallback {
         return favTextView;
     }
 
-
-    public static void checkForNewUser(String Uid){
-        final DatabaseReference dbref = FirebaseDatabase.getInstance().getReference().child("FavoriteLocations").child(Uid).child("0");
-        dbref.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                if(!dataSnapshot.exists()){
-                    dbref.setValue("", new DatabaseReference.CompletionListener() {
-                        @Override
-                        public void onComplete(@Nullable DatabaseError databaseError, @NonNull DatabaseReference databaseReference) {
-                            if(databaseError==null){
-
-                            } else {
-                                Toast.makeText(getApplicationContext(), "Could create new record, try again later", Toast.LENGTH_SHORT).show();
-                            }
-                        }
-                    });
-                }
-            }
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
-    }
     public static void getAllPOIS(final String category){
         mMarkers = new HashMap<>();
         DatabaseReference allLocationsReference = FirebaseDatabase.getInstance().getReference().child("POIs").child(category);
@@ -605,19 +580,25 @@ public class UserMapFragment extends Fragment implements OnMapReadyCallback {
 
     public static void createRoute(LatLng locationLatLng){
 
-        clearView();
-        mMap.clear();
-        routeCreated = true;
-        me = mMap.addMarker(new MarkerOptions().position(new LatLng(myLocation.latitude, myLocation.longitude))
-                .icon(BitmapDescriptorFactory.fromResource(R.drawable.you_marker)));
+        if(myLocation != null && mMap != null){
+            clearView();
+            mMap.clear();
+            routeCreated = true;
+            me = mMap.addMarker(new MarkerOptions().position(new LatLng(myLocation.latitude, myLocation.longitude))
+                    .icon(BitmapDescriptorFactory.fromResource(R.drawable.you_marker)));
 
-        Marker destination = mMap.addMarker(new MarkerOptions().position(new LatLng(locationLatLng.latitude, locationLatLng.longitude))
+            Marker destination = mMap.addMarker(new MarkerOptions().position(new LatLng(locationLatLng.latitude, locationLatLng.longitude))
                     .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE)));
 
-        String url = getRequestUrl(myLocation, locationLatLng);
-        TaskRequestDirections taskRequestDirections = new TaskRequestDirections();
-        taskRequestDirections.execute(url);
-
+            String url = getRequestUrl(myLocation, locationLatLng);
+            TaskRequestDirections taskRequestDirections = new TaskRequestDirections();
+            taskRequestDirections.execute(url);
+        } else {
+            Toast.makeText(getApplicationContext(), "Could not create route", Toast.LENGTH_SHORT).show();
+            clearView();
+            makeViewsVisible();
+            routePopUp.setVisibility(View.GONE);
+        }
 
     }
 
@@ -629,7 +610,7 @@ public class UserMapFragment extends Fragment implements OnMapReadyCallback {
         animateRoutePopUp();
 
     }
-    private void makeViewsVisible(){
+    private static void makeViewsVisible(){
         spinnerWrapper.setVisibility(View.VISIBLE);
         radioWrapper.setVisibility(View.VISIBLE);
         myFilters.setVisibility(View.VISIBLE);
