@@ -17,6 +17,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -163,9 +164,14 @@ public class MarkerDetailsPopUpWindow extends Activity{
         UserNewsfeedFragment.getInstance().populateRecyclerViewWithFavoriteNews();
     }
     public void createRoute(View view){
-        UserMapFragment.loadRouteInfo(key, pointOfInterest);
-        UserMapFragment.createRoute(new LatLng(pointOfInterest.getLatitude(), pointOfInterest.getLongitude()));
-        finish();
+        if(UserMapFragment.myLocation!=null){
+            UserMapFragment.loadRouteInfo(key, pointOfInterest);
+            UserMapFragment.createRoute(new LatLng(pointOfInterest.getLatitude(), pointOfInterest.getLongitude()));
+            finish();
+        } else {
+            Toast.makeText(this, "Wait for your location to load", Toast.LENGTH_SHORT).show();
+        }
+
     }
 
     public void showLocationProfile(View view){

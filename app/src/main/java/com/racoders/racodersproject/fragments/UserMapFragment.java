@@ -624,6 +624,7 @@ public class UserMapFragment extends Fragment implements OnMapReadyCallback {
 
     }
     public static void loadRouteInfo(String id, PointOfInterest pointOfInterest){
+
         StorageReference storage = FirebaseStorage.getInstance().getReference().child("images/pois/" + id + ".jpeg");
         com.racoders.racodersproject.AppGlideModule.GlideApp.with(getApplicationContext()).load(storage).into(routeProfile);
         routeTitle.setText(pointOfInterest.getTitle());
